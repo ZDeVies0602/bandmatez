@@ -635,6 +635,7 @@ button {
     left: 50%;
     transform: translateX(-50%) rotate(0deg);
     transition: transform 0.5s ease-in-out, background 0.5s ease, box-shadow 0.5s ease;
+    z-index: 2; /* Above the center line */
     /* Default styling if no theme is applied */
     background: linear-gradient(to bottom, #64b5f6, #ffffff);
     box-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
@@ -714,6 +715,63 @@ button {
     font-weight: 600;
 }
 
+/* Center line for all themes - STATIC, no animations */
+.metronome-center-line {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: calc(100% - 20px);
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 1px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+    z-index: 1;
+    /* Removed transition properties - line is completely static */
+}
+
+/* Default Theme */
+body.theme-default .metronome-center-line {
+    background: rgba(100, 181, 246, 0.4);
+    box-shadow: 0 0 6px rgba(100, 181, 246, 0.3);
+}
+
+/* Grand Canyon Theme */
+body.theme-grand-canyon .metronome-center-line {
+    background: rgba(255, 140, 0, 0.4);
+    box-shadow: 0 0 6px rgba(255, 140, 0, 0.3);
+}
+
+/* Moon Theme */
+body.theme-moon .metronome-center-line {
+    background: rgba(192, 192, 192, 0.4);
+    box-shadow: 0 0 6px rgba(192, 192, 192, 0.3);
+}
+
+/* Sunset Beach Theme */
+body.theme-sunset-beach .metronome-center-line {
+    background: rgba(255, 215, 0, 0.4);
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
+}
+
+/* North Pole Theme */
+body.theme-north-pole .metronome-center-line {
+    background: rgba(135, 206, 235, 0.4);
+    box-shadow: 0 0 6px rgba(135, 206, 235, 0.3);
+}
+
+/* Rainforest Theme */
+body.theme-rainforest .metronome-center-line {
+    background: rgba(144, 238, 144, 0.4);
+    box-shadow: 0 0 6px rgba(144, 238, 144, 0.3);
+}
+
+/* Ocean Depths Theme */
+body.theme-ocean-depths .metronome-center-line {
+    background: rgba(32, 178, 170, 0.4);
+    box-shadow: 0 0 6px rgba(32, 178, 170, 0.3);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -748,6 +806,11 @@ button {
     
     .metronome-pendulum {
         height: 160px;
+    }
+    
+    .metronome-center-line {
+        width: 1.5px; /* Slightly thinner on mobile */
+        height: calc(100% - 15px);
     }
     
     .theme-menu {

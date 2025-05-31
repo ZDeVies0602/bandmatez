@@ -379,84 +379,63 @@ class Metronome {
             // Quarter notes only - pendulum drives everything
             this.startPendulumDrivenTiming(baseInterval);
         } else {
-            // Subdivisions - hybrid approach
-            this.startHybridTiming(baseInterval, subdivisionInterval);
+            // Subdivisions - single timer drives both audio and pendulum
+            this.startSynchronizedTiming(subdivisionInterval, baseInterval);
         }
     }
     
-    startPendulumDrivenTiming(beatInterval) {
-        // Each swing should take the full beat interval, not half
-        const swingDuration = beatInterval; // Full beat interval for one swing
+    // NEW: Single timer drives both audio and pendulum animation
+    startSynchronizedTiming(subdivisionInterval, beatInterval) {
+        // Reset counters
+        this.subdivisionCount = 0;
         
-        // Set starting position
+        // Set up pendulum initial position
         this.pendulum.style.transform = 'translateX(-50%) rotate(-20deg)';
         this.pendulumDirection = 1;
+        this.pendulumSwingDuration = beatInterval; // How long each swing takes
         
-        // Start the cycle
-        this.pendulumBeatCycle(swingDuration);
+        // Single timer handles everything
+        this.intervalId = setInterval(() => {
+            this.handleSynchronizedBeat();
+        }, subdivisionInterval);
     }
     
-    pendulumBeatCycle(swingDuration) {
-        if (!this.isPlaying || !this.pendulum) {
-            this.stopPendulumWithSound();
-            return;
+    // Handle both audio and pendulum from single timer
+    handleSynchronizedBeat() {
+        const isMainBeat = this.subdivisionCount === 0;
+        const isAccent = this.isAccentBeat();
+        
+        if (isMainBeat) {
+            // MAIN BEAT: Play audio AND trigger pendulum swing
+            this.createSound(this.soundType, isAccent, 1.2);
+            this.updateMainBeatVisual(isAccent);
+            this.updateBeatDisplay();
+            this.currentBeat = (this.currentBeat % this.beatsPerMeasure) + 1;
+            
+            // Trigger pendulum swing to opposite side
+            this.triggerPendulumSwing();
+            
+        } else {
+            // SUBDIVISION: Only play audio (no pendulum movement)
+            this.createSound(this.soundType, false, 0.6);
+            this.updateSubdivisionVisual();
         }
+        
+        this.subdivisionCount = (this.subdivisionCount + 1) % this.subdivision;
+    }
+    
+    // Trigger pendulum swing synchronized with main beats
+    triggerPendulumSwing() {
+        if (!this.pendulum) return;
         
         const targetRotation = this.pendulumDirection === 1 ? 20 : -20;
         
         // Start smooth animation to target
-        this.pendulum.style.transition = `transform ${swingDuration}ms ease-in-out`;
+        this.pendulum.style.transition = `transform ${this.pendulumSwingDuration}ms ease-in-out`;
         this.pendulum.style.transform = `translateX(-50%) rotate(${targetRotation}deg)`;
-        
-        // Sound plays at center crossing (halfway through the swing)
-        setTimeout(() => {
-            if (this.isPlaying) {
-                this.handleMainBeat();
-            }
-        }, swingDuration / 2);
         
         // Switch direction for next swing
         this.pendulumDirection *= -1;
-        
-        // Schedule next swing after the full swing duration
-        this.pendulumTimeout = setTimeout(() => {
-            this.pendulumBeatCycle(swingDuration);
-        }, swingDuration);
-    }
-    
-    startHybridTiming(beatInterval, subdivisionInterval) {
-        // Start visual pendulum at quarter note speed
-        this.startVisualPendulum(beatInterval);
-        
-        // Start subdivision timer
-        this.intervalId = setInterval(() => {
-            this.handleSubdivisionBeat();
-        }, subdivisionInterval);
-    }
-    
-    startVisualPendulum(beatInterval) {
-        // Same fix for visual pendulum in subdivision mode
-        const swingDuration = beatInterval; // Full beat interval
-        this.pendulum.style.transform = 'translateX(-50%) rotate(-20deg)';
-        this.pendulumDirection = 1;
-        this.visualPendulumCycle(swingDuration);
-    }
-    
-    visualPendulumCycle(swingDuration) {
-        if (!this.isPlaying || !this.pendulum) {
-            return;
-        }
-        
-        const targetRotation = this.pendulumDirection === 1 ? 20 : -20;
-        
-        this.pendulum.style.transition = `transform ${swingDuration}ms ease-in-out`;
-        this.pendulum.style.transform = `translateX(-50%) rotate(${targetRotation}deg)`;
-        
-        this.pendulumDirection *= -1;
-        
-        this.pendulumTimeout = setTimeout(() => {
-            this.visualPendulumCycle(swingDuration);
-        }, swingDuration);
     }
     
     stopPendulumWithSound() {
@@ -476,36 +455,6 @@ class Metronome {
             this.pendulum.style.transition = 'transform 0.3s ease-out';
             this.pendulum.style.transform = 'translateX(-50%) rotate(0deg)';
         }
-    }
-    
-    // Handle main beats (driven by pendulum center crossing)
-    handleMainBeat() {
-        const isAccent = this.isAccentBeat();
-        
-        // Play main beat sound
-        this.createSound(this.soundType, isAccent, 1.2);
-        
-        // Update visual feedback for main beat
-        this.updateMainBeatVisual(isAccent);
-        
-        // Update beat counters
-        this.updateBeatDisplay();
-        this.currentBeat = (this.currentBeat % this.beatsPerMeasure) + 1;
-    }
-    
-    // Handle subdivision beats (between main beats)
-    handleSubdivisionBeat() {
-        // Skip the downbeat (first subdivision) since it's handled by pendulum
-        if (this.subdivisionCount === 0) {
-            this.subdivisionCount = 1; // Move to next subdivision
-            return; // Don't play sound - pendulum handles this
-        }
-        
-        // This is a subdivision between main beats - play quieter
-        this.createSound(this.soundType, false, 0.6);
-        this.updateSubdivisionVisual();
-        
-        this.subdivisionCount = (this.subdivisionCount + 1) % this.subdivision;
     }
     
     updateMainBeatVisual(isAccent) {
