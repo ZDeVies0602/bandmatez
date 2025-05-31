@@ -382,108 +382,88 @@ body.theme-ocean-depths {
 }
 
 .container {
-    max-width: 700px;
-    margin: 30px auto;
-    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
 }
 
 h1 {
     text-align: center;
-    margin-bottom: 40px;
-    color: var(--text-primary);
-    font-size: 2.5rem;
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 15px;
     font-weight: 300;
-    letter-spacing: 2px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: 3px;
 }
 
 .metronome {
-    background: var(--bg-primary);
-    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
     border-radius: 20px;
-    box-shadow: 
-        20px 20px 40px rgba(0, 0, 0, 0.4),
-        -20px -20px 40px rgba(255, 255, 255, 0.02);
+    padding: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
 }
 
 .tempo-display {
     text-align: center;
-    font-size: 3.8rem;
-    font-weight: 200;
-    margin-bottom: 30px;
-    color: var(--text-primary);
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 10px;
+    font-weight: 500;
 }
 
 .tempo-marking {
-    font-size: 1.4rem;
-    color: var(--primary-color);
-    font-weight: 300;
-    margin-top: 10px;
-    letter-spacing: 1px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 3px;
 }
 
 .time-signature-section, .subdivision-section {
+    margin-bottom: 8px;
     text-align: center;
-    margin-bottom: 25px;
 }
 
 .time-signature-section label, .subdivision-section label {
     display: block;
-    margin-bottom: 8px;
-    color: var(--text-secondary);
-    font-weight: 400;
-    font-size: 1.1rem;
-    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+    margin-bottom: 3px;
+    font-weight: 300;
 }
 
 .time-signature-section select, .subdivision-section select {
-    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    font-size: 1.1rem;
-    cursor: pointer;
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: white;
+    font-size: 0.9rem;
+    width: 180px;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.time-signature-section select:focus, .subdivision-section select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 15px rgba(100, 181, 246, 0.3);
-}
-
-.time-signature-section select:hover, .subdivision-section select:hover {
-    border-color: var(--primary-color);
 }
 
 .beat-counter {
     text-align: center;
-    font-size: 1.8rem;
-    font-weight: 300;
-    color: var(--text-primary);
-    margin-bottom: 30px;
-    letter-spacing: 1px;
+    font-size: 1rem;
+    color: white;
+    margin: 8px 0;
+    font-weight: 500;
 }
 
 .subdivision-indicator {
     display: flex;
     justify-content: center;
-    gap: 12px;
-    margin-top: 15px;
+    gap: 6px;
+    margin-top: 6px;
 }
 
 .subdivision-dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.3);
     transition: all 0.2s ease;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .subdivision-dot.active {
@@ -499,69 +479,61 @@ h1 {
 }
 
 .tempo-settings {
-    margin-bottom: 40px;
+    margin: 15px 0;
 }
 
 .slider {
     width: 100%;
-    height: 8px;
-    border-radius: 4px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.2);
     outline: none;
-    -webkit-appearance: none;
-    transition: all 0.3s ease;
+    margin: 8px 0;
 }
 
 .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
     appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+    background: #64b5f6;
     cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px var(--primary-color);
-}
-
-.slider::-webkit-slider-thumb:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px var(--primary-color);
 }
 
 .tempo-text {
     display: flex;
     justify-content: space-between;
-    margin-top: 15px;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.7rem;
+    margin-top: 3px;
 }
 
 .controls {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 40px;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
 }
 
 button {
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 180px;
-    font-weight: 400;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    backdrop-filter: blur(10px);
 }
 
 #start-stop {
-    background: linear-gradient(145deg, #4caf50, #45a049);
-    color: white;
-    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    background: rgba(100, 181, 246, 0.2);
+    border-color: #64b5f6;
+    padding: 10px 20px;
 }
 
 #start-stop:hover {
@@ -591,27 +563,27 @@ button {
 
 /* Enhanced Pendulum Animation */
 .metronome-visual {
-    margin: 40px 0;
+    margin: 20px 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 350px;
+    height: 200px;
     position: relative;
 }
 
 .metronome-base {
     position: relative;
-    width: 200px;
-    height: 300px;
+    width: 120px;
+    height: 180px;
     display: flex;
     justify-content: center;
     align-items: flex-end;
 }
 
 .metronome-body {
-    width: 180px;
-    height: 250px;
-    border-radius: 15px 15px 40px 40px;
+    width: 110px;
+    height: 150px;
+    border-radius: 12px 12px 25px 25px;
     position: relative;
     display: flex;
     align-items: center;
@@ -619,26 +591,26 @@ button {
     transition: all 0.5s ease;
     /* Default styling if no theme is applied */
     background: linear-gradient(145deg, #1a1a2e, #16213e);
-    border: 3px solid #64b5f6;
+    border: 2px solid #64b5f6;
     box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.5),
-        inset 0 2px 10px rgba(100, 181, 246, 0.1);
+        0 6px 20px rgba(0, 0, 0, 0.5),
+        inset 0 1px 6px rgba(100, 181, 246, 0.1);
 }
 
 .metronome-pendulum {
     position: absolute;
-    width: 6px;
-    height: 220px;
-    border-radius: 3px;
+    width: 4px;
+    height: 130px;
+    border-radius: 2px;
     transform-origin: top center;
-    top: 30px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%) rotate(0deg);
     transition: transform 0.5s ease-in-out, background 0.5s ease, box-shadow 0.5s ease;
-    z-index: 2; /* Above the center line */
+    z-index: 2;
     /* Default styling if no theme is applied */
     background: linear-gradient(to bottom, #64b5f6, #ffffff);
-    box-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+    box-shadow: 0 0 6px rgba(100, 181, 246, 0.5);
 }
 
 .metronome-weight {
@@ -646,13 +618,13 @@ button {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     transition: background 0.5s ease, box-shadow 0.5s ease;
     /* Default styling if no theme is applied */
     background: radial-gradient(circle, #64b5f6, #1976d2);
-    box-shadow: 0 0 15px rgba(100, 181, 246, 0.7);
+    box-shadow: 0 0 10px rgba(100, 181, 246, 0.7);
 }
 
 /* Tempo input section */
@@ -660,26 +632,26 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .tempo-input-section label {
     color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    margin-bottom: 8px;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
     font-weight: 300;
 }
 
 .tempo-input {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 10px 15px;
+    border-radius: 6px;
+    padding: 6px 10px;
     color: white;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
     text-align: center;
-    width: 100px;
+    width: 80px;
     transition: all 0.3s ease;
 }
 
@@ -718,14 +690,14 @@ button {
 /* Center line for all themes - STATIC, no animations */
 .metronome-center-line {
     position: absolute;
-    top: 10px;
+    top: 8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 2px;
-    height: calc(100% - 20px);
+    width: 1.5px;
+    height: calc(100% - 16px);
     background: rgba(255, 255, 255, 0.3);
     border-radius: 1px;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.2);
     z-index: 1;
     /* Removed transition properties - line is completely static */
 }
@@ -779,38 +751,40 @@ body.theme-ocean-depths .metronome-center-line {
     }
     
     .metronome {
-        padding: 20px;
+        padding: 12px;
     }
     
     .tempo-display {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
     
     h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
     }
     
     .metronome-visual {
-        height: 280px;
+        height: 160px;
+        margin: 15px 0;
     }
     
     .metronome-base {
-        width: 150px;
-        height: 220px;
+        width: 100px;
+        height: 140px;
     }
     
     .metronome-body {
-        width: 130px;
-        height: 180px;
+        width: 90px !important;
+        height: 120px !important;
     }
     
     .metronome-pendulum {
-        height: 160px;
+        height: 100px;
     }
     
     .metronome-center-line {
-        width: 1.5px; /* Slightly thinner on mobile */
-        height: calc(100% - 15px);
+        width: 1px;
+        height: calc(100% - 12px);
     }
     
     .theme-menu {
@@ -835,132 +809,132 @@ body.theme-ocean-depths .metronome-center-line {
 /* Default Theme Metronome */
 body.theme-default .metronome-body {
     background: linear-gradient(145deg, #1a1a2e, #16213e);
-    border: 3px solid #64b5f6;
+    border: 2px solid #64b5f6;
     box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.5),
-        inset 0 2px 10px rgba(100, 181, 246, 0.1);
+        0 6px 20px rgba(0, 0, 0, 0.5),
+        inset 0 1px 6px rgba(100, 181, 246, 0.1);
 }
 
 body.theme-default .metronome-pendulum {
     background: linear-gradient(to bottom, #64b5f6, #ffffff);
-    box-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+    box-shadow: 0 0 6px rgba(100, 181, 246, 0.5);
 }
 
 body.theme-default .metronome-weight {
     background: radial-gradient(circle, #64b5f6, #1976d2);
-    box-shadow: 0 0 15px rgba(100, 181, 246, 0.7);
+    box-shadow: 0 0 10px rgba(100, 181, 246, 0.7);
 }
 
 /* Grand Canyon Theme Metronome */
 body.theme-grand-canyon .metronome-body {
     background: linear-gradient(145deg, #8b4513, #a0522d);
-    border: 3px solid #ff8c00;
+    border: 2px solid #ff8c00;
     box-shadow: 
-        0 10px 30px rgba(139, 69, 19, 0.5),
-        inset 0 2px 10px rgba(255, 140, 0, 0.2);
+        0 6px 20px rgba(139, 69, 19, 0.5),
+        inset 0 1px 6px rgba(255, 140, 0, 0.2);
 }
 
 body.theme-grand-canyon .metronome-pendulum {
     background: linear-gradient(to bottom, #ff8c00, #ffd700);
-    box-shadow: 0 0 10px rgba(255, 140, 0, 0.6);
+    box-shadow: 0 0 6px rgba(255, 140, 0, 0.6);
 }
 
 body.theme-grand-canyon .metronome-weight {
     background: radial-gradient(circle, #ff8c00, #d2691e);
-    box-shadow: 0 0 15px rgba(255, 140, 0, 0.8);
+    box-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
 }
 
 /* Moon Theme Metronome */
 body.theme-moon .metronome-body {
     background: linear-gradient(145deg, #2c2c2c, #404040);
-    border: 3px solid #c0c0c0;
+    border: 2px solid #c0c0c0;
     box-shadow: 
-        0 10px 30px rgba(44, 44, 44, 0.5),
-        inset 0 2px 10px rgba(192, 192, 192, 0.1);
+        0 6px 20px rgba(44, 44, 44, 0.5),
+        inset 0 1px 6px rgba(192, 192, 192, 0.1);
 }
 
 body.theme-moon .metronome-pendulum {
     background: linear-gradient(to bottom, #c0c0c0, #f5f5f5);
-    box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    box-shadow: 0 0 6px rgba(192, 192, 192, 0.5);
 }
 
 body.theme-moon .metronome-weight {
     background: radial-gradient(circle, #c0c0c0, #808080);
-    box-shadow: 0 0 15px rgba(192, 192, 192, 0.7);
+    box-shadow: 0 0 10px rgba(192, 192, 192, 0.7);
 }
 
 /* Sunset Beach Theme Metronome */
 body.theme-sunset-beach .metronome-body {
     background: linear-gradient(145deg, #ff6347, #ff4500);
-    border: 3px solid #ffd700;
+    border: 2px solid #ffd700;
     box-shadow: 
-        0 10px 30px rgba(255, 99, 71, 0.5),
-        inset 0 2px 10px rgba(255, 215, 0, 0.2);
+        0 6px 20px rgba(255, 99, 71, 0.5),
+        inset 0 1px 6px rgba(255, 215, 0, 0.2);
 }
 
 body.theme-sunset-beach .metronome-pendulum {
     background: linear-gradient(to bottom, #ffd700, #ffffe0);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
 }
 
 body.theme-sunset-beach .metronome-weight {
     background: radial-gradient(circle, #ffd700, #ff8c00);
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
 }
 
 /* North Pole Theme Metronome */
 body.theme-north-pole .metronome-body {
     background: linear-gradient(145deg, #4682b4, #5f9ea0);
-    border: 3px solid #87ceeb;
+    border: 2px solid #87ceeb;
     box-shadow: 
-        0 10px 30px rgba(70, 130, 180, 0.5),
-        inset 0 2px 10px rgba(135, 206, 235, 0.2);
+        0 6px 20px rgba(70, 130, 180, 0.5),
+        inset 0 1px 6px rgba(135, 206, 235, 0.2);
 }
 
 body.theme-north-pole .metronome-pendulum {
     background: linear-gradient(to bottom, #87ceeb, #f0f8ff);
-    box-shadow: 0 0 10px rgba(135, 206, 235, 0.6);
+    box-shadow: 0 0 6px rgba(135, 206, 235, 0.6);
 }
 
 body.theme-north-pole .metronome-weight {
     background: radial-gradient(circle, #87ceeb, #4682b4);
-    box-shadow: 0 0 15px rgba(135, 206, 235, 0.8);
+    box-shadow: 0 0 10px rgba(135, 206, 235, 0.8);
 }
 
 /* Rainforest Theme Metronome */
 body.theme-rainforest .metronome-body {
     background: linear-gradient(145deg, #228b22, #32cd32);
-    border: 3px solid #90ee90;
+    border: 2px solid #90ee90;
     box-shadow: 
-        0 10px 30px rgba(34, 139, 34, 0.5),
-        inset 0 2px 10px rgba(144, 238, 144, 0.2);
+        0 6px 20px rgba(34, 139, 34, 0.5),
+        inset 0 1px 6px rgba(144, 238, 144, 0.2);
 }
 
 body.theme-rainforest .metronome-pendulum {
     background: linear-gradient(to bottom, #90ee90, #f0fff0);
-    box-shadow: 0 0 10px rgba(144, 238, 144, 0.6);
+    box-shadow: 0 0 6px rgba(144, 238, 144, 0.6);
 }
 
 body.theme-rainforest .metronome-weight {
     background: radial-gradient(circle, #90ee90, #228b22);
-    box-shadow: 0 0 15px rgba(144, 238, 144, 0.8);
+    box-shadow: 0 0 10px rgba(144, 238, 144, 0.8);
 }
 
 /* Ocean Depths Theme Metronome */
 body.theme-ocean-depths .metronome-body {
     background: linear-gradient(145deg, #191970, #000080);
-    border: 3px solid #20b2aa;
+    border: 2px solid #20b2aa;
     box-shadow: 
-        0 10px 30px rgba(25, 25, 112, 0.5),
-        inset 0 2px 10px rgba(32, 178, 170, 0.2);
+        0 6px 20px rgba(25, 25, 112, 0.5),
+        inset 0 1px 6px rgba(32, 178, 170, 0.2);
 }
 
 body.theme-ocean-depths .metronome-pendulum {
     background: linear-gradient(to bottom, #20b2aa, #afeeee);
-    box-shadow: 0 0 10px rgba(32, 178, 170, 0.6);
+    box-shadow: 0 0 6px rgba(32, 178, 170, 0.6);
 }
 
 body.theme-ocean-depths .metronome-weight {
     background: radial-gradient(circle, #20b2aa, #008b8b);
-    box-shadow: 0 0 15px rgba(32, 178, 170, 0.8);
+    box-shadow: 0 0 10px rgba(32, 178, 170, 0.8);
 } 

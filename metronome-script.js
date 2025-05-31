@@ -71,6 +71,8 @@ class Metronome {
     }
     
     init() {
+        console.log('Initializing metronome...');
+        
         // Get DOM elements
         this.slider = document.getElementById('tempo-slider');
         this.tempoInput = document.getElementById('tempo-input');
@@ -85,6 +87,23 @@ class Metronome {
         this.subdivisionIndicator = document.getElementById('subdivision-indicator');
         this.pendulum = document.getElementById('pendulum');
         
+        console.log('DOM elements found:', {
+            slider: !!this.slider,
+            tempoInput: !!this.tempoInput,
+            startStopButton: !!this.startStopButton,
+            pendulum: !!this.pendulum
+        });
+        
+        if (!this.startStopButton) {
+            console.error('Start/stop button not found!');
+            return;
+        }
+        
+        if (!this.pendulum) {
+            console.error('Pendulum element not found!');
+            return;
+        }
+        
         // Theme and sound menu elements
         this.themeToggle = document.getElementById('theme-toggle');
         this.themeMenu = document.getElementById('theme-menu');
@@ -97,7 +116,13 @@ class Metronome {
         this.slider.addEventListener('input', (e) => this.updateTempo(e.target.value));
         this.tempoInput.addEventListener('input', (e) => this.updateTempoFromInput(e.target.value));
         this.tempoInput.addEventListener('blur', (e) => this.validateTempoInput(e.target.value));
-        this.startStopButton.addEventListener('click', () => this.togglePlay());
+        
+        // Debug the start/stop button
+        this.startStopButton.addEventListener('click', () => {
+            console.log('Start/stop button clicked');
+            this.togglePlay();
+        });
+        
         this.tapTempoButton.addEventListener('click', () => this.handleTapTempo());
         this.timeSignatureSelect.addEventListener('change', () => this.updateTimeSignature());
         this.subdivisionSelect.addEventListener('change', () => this.updateSubdivision());
@@ -127,11 +152,14 @@ class Metronome {
             }
         });
         
-        // Sound option listeners
-        this.soundOptions.addEventListener('click', (e) => {
+        // Sound option listeners with better debugging
+        this.soundOptions.addEventListener('click', async (e) => {
+            console.log('Sound options clicked:', e.target);
+            
             if (e.target.classList.contains('sound-option') || e.target.closest('.sound-option')) {
                 const soundButton = e.target.closest('.sound-option');
                 const soundType = soundButton.dataset.sound;
+                console.log('Sound option selected:', soundType);
                 this.changeSound(soundType);
             }
             
@@ -140,7 +168,8 @@ class Metronome {
                 e.stopPropagation();
                 const soundButton = e.target.closest('.sound-option');
                 const soundType = soundButton.dataset.sound;
-                this.previewSound(soundType);
+                console.log('Preview button clicked for:', soundType);
+                await this.previewSound(soundType);
             }
         });
         
@@ -151,6 +180,8 @@ class Metronome {
         this.updateTempoMarking();
         this.loadSavedTheme();
         this.loadSavedSound();
+        
+        console.log('Metronome initialization complete');
     }
     
     // Theme Menu Methods
@@ -236,40 +267,32 @@ class Metronome {
         }
     }
     
-    previewSound(soundType) {
-        if (!this.audioContext) return;
-        this.createSound(soundType, true, 1.0);
-    }
-    
-    // Add method to ensure audio context is resumed
-    async ensureAudioContext() {
-        if (!this.audioContext) {
-            try {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            } catch (error) {
-                console.warn('Could not create audio context:', error);
-                return false;
-            }
+    // Fix the previewSound method to be async and properly handle audio context
+    async previewSound(soundType) {
+        console.log('Previewing sound:', soundType);
+        
+        // Ensure audio context is ready
+        const audioReady = await this.ensureAudioContext();
+        if (!audioReady) {
+            console.warn('Audio context not available for preview');
+            return;
         }
         
-        if (this.audioContext.state === 'suspended') {
-            try {
-                await this.audioContext.resume();
-            } catch (error) {
-                console.warn('Could not resume audio context:', error);
-            }
-        }
-        
-        return this.audioContext.state === 'running';
+        // Play preview sound with accent for better demonstration
+        await this.createSound(soundType, true, 1.0);
     }
     
-    // Enhanced Sound Generation with error handling
+    // Fix createSound to handle all sound types properly
     async createSound(soundType, isAccent, volume) {
+        console.log('Creating sound:', { soundType, isAccent, volume });
+        
         const audioReady = await this.ensureAudioContext();
         if (!audioReady) {
             console.warn('Audio context not available');
             return;
         }
+        
+        console.log('Audio context state:', this.audioContext.state);
         
         try {
             const oscillator = this.audioContext.createOscillator();
@@ -283,6 +306,7 @@ class Metronome {
             const baseVolume = volume * (isAccent ? 1.5 : 1.0);
             const currentTime = this.audioContext.currentTime;
             
+            // Complete sound type handling
             switch (soundType) {
                 case 'digital':
                     oscillator.frequency.value = isAccent ? 1400 : 1000;
@@ -348,6 +372,7 @@ class Metronome {
                     break;
                     
                 default:
+                    console.log('Using default digital sound');
                     oscillator.frequency.value = isAccent ? 1400 : 1000;
                     oscillator.type = 'square';
                     gainNode.gain.value = baseVolume * 0.3;
@@ -355,15 +380,19 @@ class Metronome {
             
             const duration = isAccent ? 0.12 : 0.08;
             
+            console.log('Playing sound with frequency:', oscillator.frequency.value, 'volume:', gainNode.gain.value);
+            
             oscillator.start(currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + duration);
             oscillator.stop(currentTime + duration);
+            
+            console.log('Sound started successfully');
         } catch (error) {
-            console.warn('Error creating sound:', error);
+            console.error('Error creating sound:', error);
         }
     }
     
-    // FIXED: Pendulum-driven timing with center-crossing sound
+    // Updated: Handle both quarter notes and subdivisions
     startPendulumWithSound() {
         if (!this.pendulum || this.pendulumAnimating) return;
         
@@ -371,67 +400,67 @@ class Metronome {
         
         // Calculate intervals based on subdivision
         const baseInterval = (60 / this.tempo) * 1000; // Quarter note interval
-        const subdivisionInterval = this.subdivision === 3 ? 
-            baseInterval / 3 : 
-            baseInterval / this.subdivision;
+        
+        console.log('Starting metronome:', { subdivision: this.subdivision, baseInterval, tempo: this.tempo });
         
         if (this.subdivision === 1) {
-            // Quarter notes only - pendulum drives everything
-            this.startPendulumDrivenTiming(baseInterval);
+            // Quarter notes only - use simple dedicated method
+            this.startQuarterNoteMode(baseInterval);
         } else {
-            // Subdivisions - single timer drives both audio and pendulum
+            // Subdivisions - use synchronized timing
+            const subdivisionInterval = this.subdivision === 3 ? 
+                baseInterval / 3 : 
+                baseInterval / this.subdivision;
             this.startSynchronizedTiming(subdivisionInterval, baseInterval);
         }
     }
     
-    // NEW: Single timer drives both audio and pendulum animation
-    startSynchronizedTiming(subdivisionInterval, beatInterval) {
+    // NEW: Dedicated simple method for quarter notes only
+    startQuarterNoteMode(beatInterval) {
+        console.log('Starting quarter note mode with interval:', beatInterval);
+        
         // Reset counters
-        this.subdivisionCount = 0;
+        this.currentBeat = 1;
         
         // Set up pendulum initial position
         this.pendulum.style.transform = 'translateX(-50%) rotate(-20deg)';
         this.pendulumDirection = 1;
-        this.pendulumSwingDuration = beatInterval; // How long each swing takes
         
-        // Single timer handles everything
+        // Simple timer for quarter notes only
         this.intervalId = setInterval(() => {
-            this.handleSynchronizedBeat();
-        }, subdivisionInterval);
+            this.handleQuarterNote();
+        }, beatInterval);
     }
     
-    // Handle both audio and pendulum from single timer
-    handleSynchronizedBeat() {
-        const isMainBeat = this.subdivisionCount === 0;
+    // Handle quarter notes (simple, no subdivision logic)
+    handleQuarterNote() {
+        console.log('Playing quarter note, beat:', this.currentBeat);
+        
         const isAccent = this.isAccentBeat();
         
-        if (isMainBeat) {
-            // MAIN BEAT: Play audio AND trigger pendulum swing
-            this.createSound(this.soundType, isAccent, 1.2);
-            this.updateMainBeatVisual(isAccent);
-            this.updateBeatDisplay();
-            this.currentBeat = (this.currentBeat % this.beatsPerMeasure) + 1;
-            
-            // Trigger pendulum swing to opposite side
-            this.triggerPendulumSwing();
-            
-        } else {
-            // SUBDIVISION: Only play audio (no pendulum movement)
-            this.createSound(this.soundType, false, 0.6);
-            this.updateSubdivisionVisual();
-        }
+        // Play main beat sound
+        this.createSound(this.soundType, isAccent, 1.2);
         
-        this.subdivisionCount = (this.subdivisionCount + 1) % this.subdivision;
+        // Update visual feedback
+        this.updateMainBeatVisual(isAccent);
+        this.updateBeatDisplay();
+        
+        // Trigger pendulum swing
+        this.triggerQuarterNotePendulum();
+        
+        // Update beat counter
+        this.currentBeat = (this.currentBeat % this.beatsPerMeasure) + 1;
     }
     
-    // Trigger pendulum swing synchronized with main beats
-    triggerPendulumSwing() {
+    // Simple pendulum swing for quarter notes
+    triggerQuarterNotePendulum() {
         if (!this.pendulum) return;
         
         const targetRotation = this.pendulumDirection === 1 ? 20 : -20;
+        const swingDuration = (60 / this.tempo) * 1000; // Full beat interval
         
         // Start smooth animation to target
-        this.pendulum.style.transition = `transform ${this.pendulumSwingDuration}ms ease-in-out`;
+        this.pendulum.style.transition = `transform ${swingDuration}ms ease-in-out`;
         this.pendulum.style.transform = `translateX(-50%) rotate(${targetRotation}deg)`;
         
         // Switch direction for next swing
@@ -600,22 +629,33 @@ class Metronome {
         this.updateTempoFromInput(tempo);
     }
     
-    // Main play/stop methods
+    // Main play/stop methods with debugging
     async play() {
+        console.log('Play button clicked, isPlaying:', this.isPlaying);
+        
         if (!this.isPlaying) {
+            console.log('Starting metronome...');
+            
             // Ensure audio context is ready
-            await this.ensureAudioContext();
+            const audioReady = await this.ensureAudioContext();
+            console.log('Audio context ready:', audioReady);
             
             this.isPlaying = true;
             this.startStopButton.textContent = 'Stop';
             this.startStopButton.classList.add('playing');
             
+            console.log('About to start pendulum with sound...');
+            
             // Start pendulum-driven timing
             this.startPendulumWithSound();
+            
+            console.log('startPendulumWithSound called');
         }
     }
     
     stop() {
+        console.log('Stop called, isPlaying:', this.isPlaying);
+        
         if (this.isPlaying) {
             this.isPlaying = false;
             this.startStopButton.textContent = 'Start';
@@ -628,10 +668,13 @@ class Metronome {
             this.currentBeat = 1;
             this.subdivisionCount = 0;
             this.updateBeatDisplay();
+            
+            console.log('Metronome stopped');
         }
     }
     
     togglePlay() {
+        console.log('Toggle play called');
         if (this.isPlaying) {
             this.stop();
         } else {
@@ -667,6 +710,95 @@ class Metronome {
             this.tempoInput.value = clampedTempo;
             this.updateTempo(clampedTempo);
         }
+    }
+    
+    // ADD: Missing startSynchronizedTiming method for subdivisions
+    startSynchronizedTiming(subdivisionInterval, beatInterval) {
+        console.log('Starting synchronized timing:', { subdivisionInterval, beatInterval });
+        
+        // Reset counters
+        this.subdivisionCount = 0;
+        
+        // Set up pendulum initial position
+        this.pendulum.style.transform = 'translateX(-50%) rotate(-20deg)';
+        this.pendulumDirection = 1;
+        this.pendulumSwingDuration = beatInterval; // How long each swing takes
+        
+        // Single timer handles everything
+        this.intervalId = setInterval(() => {
+            this.handleSynchronizedBeat();
+        }, subdivisionInterval);
+    }
+    
+    // ADD: Missing handleSynchronizedBeat method
+    handleSynchronizedBeat() {
+        const isMainBeat = this.subdivisionCount === 0;
+        const isAccent = this.isAccentBeat();
+        
+        console.log('Synchronized beat:', { subdivisionCount: this.subdivisionCount, isMainBeat });
+        
+        if (isMainBeat) {
+            // MAIN BEAT: Play audio AND trigger pendulum swing
+            this.createSound(this.soundType, isAccent, 1.2);
+            this.updateMainBeatVisual(isAccent);
+            this.updateBeatDisplay();
+            this.currentBeat = (this.currentBeat % this.beatsPerMeasure) + 1;
+            
+            // Trigger pendulum swing to opposite side
+            this.triggerPendulumSwing();
+            
+        } else {
+            // SUBDIVISION: Only play audio (no pendulum movement)
+            this.createSound(this.soundType, false, 0.6);
+            this.updateSubdivisionVisual();
+        }
+        
+        this.subdivisionCount = (this.subdivisionCount + 1) % this.subdivision;
+    }
+    
+    // ADD: Missing triggerPendulumSwing method
+    triggerPendulumSwing() {
+        if (!this.pendulum) return;
+        
+        const targetRotation = this.pendulumDirection === 1 ? 20 : -20;
+        
+        console.log('Triggering pendulum swing to:', targetRotation);
+        
+        // Start smooth animation to target
+        this.pendulum.style.transition = `transform ${this.pendulumSwingDuration}ms ease-in-out`;
+        this.pendulum.style.transform = `translateX(-50%) rotate(${targetRotation}deg)`;
+        
+        // Switch direction for next swing
+        this.pendulumDirection *= -1;
+    }
+    
+    // Add method to ensure audio context is resumed
+    async ensureAudioContext() {
+        console.log('Ensuring audio context...');
+        
+        if (!this.audioContext) {
+            try {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log('Created new audio context');
+            } catch (error) {
+                console.error('Could not create audio context:', error);
+                return false;
+            }
+        }
+        
+        console.log('Audio context state:', this.audioContext.state);
+        
+        if (this.audioContext.state === 'suspended') {
+            try {
+                await this.audioContext.resume();
+                console.log('Resumed audio context');
+            } catch (error) {
+                console.error('Could not resume audio context:', error);
+            }
+        }
+        
+        console.log('Final audio context state:', this.audioContext.state);
+        return this.audioContext.state === 'running';
     }
 }
 
