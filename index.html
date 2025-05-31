@@ -3,16 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metronome</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Advanced Metronome</title>
+    <link rel="stylesheet" href="metronome-styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Metronome</h1>
+        <h1>METRONOME</h1>
         <div class="metronome">
             <div class="tempo-display">
                 <span id="bpm-number">120</span> BPM
+                <div class="tempo-marking" id="tempo-marking"></div>
             </div>
+            
+            <!-- Time Signature Section -->
+            <div class="time-signature-section">
+                <label for="time-signature">Time Signature</label>
+                <select id="time-signature">
+                    <option value="4/4">4/4</option>
+                    <option value="3/4">3/4</option>
+                    <option value="2/4">2/4</option>
+                    <option value="6/8">6/8</option>
+                    <option value="5/4">5/4</option>
+                    <option value="7/8">7/8</option>
+                </select>
+            </div>
+
+            <!-- Subdivision Section -->
+            <div class="subdivision-section">
+                <label for="subdivision">Subdivision</label>
+                <select id="subdivision">
+                    <option value="1">Quarter Notes (♩)</option>
+                    <option value="2">Eighth Notes (♫)</option>
+                    <option value="4">Sixteenth Notes (♬)</option>
+                    <option value="3">Triplets (♩♩♩)</option>
+                </select>
+            </div>
+
+            <!-- Beat Counter -->
+            <div class="beat-counter">
+                <span id="current-beat">1</span> / <span id="total-beats">4</span>
+                <div class="subdivision-indicator" id="subdivision-indicator"></div>
+            </div>
+
+            <!-- Physical Metronome Visual -->
+            <div class="metronome-visual">
+                <div class="metronome-base">
+                    <div class="metronome-body">
+                        <div class="metronome-face">♪</div>
+                    </div>
+                    <div class="metronome-pendulum" id="pendulum">
+                        <div class="metronome-weight"></div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="tempo-settings">
                 <input type="range" min="15" max="500" value="120" class="slider" id="tempo-slider">
                 <div class="tempo-text">
@@ -27,9 +71,8 @@
                     <button id="tap-tempo">Tap Tempo</button>
                 </div>
             </div>
-            <div class="visual-indicator" id="visual-indicator"></div>
         </div>
     </div>
-    <script src="metronome.js"></script>
+    <script src="metronome-script.js"></script>
 </body>
 </html> 

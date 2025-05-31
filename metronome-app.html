@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Metronome</title>
+    <link rel="stylesheet" href="metronome-styles.css">
+</head>
+<body class="theme-default">
+    <!-- Theme Menu -->
+    <div class="theme-menu" id="theme-menu">
+        <div class="theme-menu-toggle" id="theme-toggle">
+            <span class="palette-icon">🎨</span>
+        </div>
+        <div class="theme-options" id="theme-options">
+            <h3>Choose Your Vibe</h3>
+            <div class="theme-grid">
+                <button class="theme-option" data-theme="default">
+                    <div class="theme-preview theme-preview-default"></div>
+                    <span>Midnight Sky</span>
+                </button>
+                <button class="theme-option" data-theme="grand-canyon">
+                    <div class="theme-preview theme-preview-canyon"></div>
+                    <span>Grand Canyon</span>
+                </button>
+                <button class="theme-option" data-theme="moon">
+                    <div class="theme-preview theme-preview-moon"></div>
+                    <span>Lunar Surface</span>
+                </button>
+                <button class="theme-option" data-theme="sunset-beach">
+                    <div class="theme-preview theme-preview-sunset"></div>
+                    <span>LA Beach Sunset</span>
+                </button>
+                <button class="theme-option" data-theme="north-pole">
+                    <div class="theme-preview theme-preview-pole"></div>
+                    <span>Arctic Ice</span>
+                </button>
+                <button class="theme-option" data-theme="rainforest">
+                    <div class="theme-preview theme-preview-forest"></div>
+                    <span>Amazon Depths</span>
+                </button>
+                <button class="theme-option" data-theme="ocean-depths">
+                    <div class="theme-preview theme-preview-ocean"></div>
+                    <span>Ocean Abyss</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sound Menu -->
+    <div class="sound-menu" id="sound-menu">
+        <div class="sound-menu-toggle" id="sound-toggle">
+            <span class="sound-icon">🔊</span>
+        </div>
+        <div class="sound-options" id="sound-options">
+            <h3>Sound Selection</h3>
+            <div class="sound-list">
+                <button class="sound-option active" data-sound="digital">
+                    <span class="sound-name">Digital Beep</span>
+                    <span class="sound-preview">▶</span>
+                </button>
+                <button class="sound-option" data-sound="wood">
+                    <span class="sound-name">Wood Block</span>
+                    <span class="sound-preview">▶</span>
+                </button>
+                <button class="sound-option" data-sound="mechanical">
+                    <span class="sound-name">Mechanical Click</span>
+                    <span class="sound-preview">▶</span>
+                </button>
+                <button class="sound-option" data-sound="cowbell">
+                    <span class="sound-name">Cowbell</span>
+                    <span class="sound-preview">▶</span>
+                </button>
+                <button class="sound-option" data-sound="rimshot">
+                    <span class="sound-name">Rim Shot</span>
+                    <span class="sound-preview">▶</span>
+                </button>
+                <button class="sound-option" data-sound="sine">
+                    <span class="sound-name">Pure Tone</span>
+                    <span class="sound-preview">▶</span>
+                </button>
+                <button class="sound-option" data-sound="triangle">
+                    <span class="sound-name">Triangle Wave</span>
+                    <span class="sound-preview">▶</span>
+                </button>
+                <button class="sound-option" data-sound="tick">
+                    <span class="sound-name">Classic Tick</span>
+                    <span class="sound-preview">▶</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>METRONOME</h1>
+        <div class="metronome">
+            <div class="tempo-display">
+                <span id="bpm-number">120</span> BPM
+                <div class="tempo-marking" id="tempo-marking"></div>
+            </div>
+            
+            <!-- Time Signature Section -->
+            <div class="time-signature-section">
+                <label for="time-signature">Time Signature</label>
+                <select id="time-signature">
+                    <option value="4/4">4/4</option>
+                    <option value="3/4">3/4</option>
+                    <option value="2/4">2/4</option>
+                    <option value="6/8">6/8</option>
+                    <option value="5/4">5/4</option>
+                    <option value="7/8">7/8</option>
+                </select>
+            </div>
+
+            <!-- Subdivision Section -->
+            <div class="subdivision-section">
+                <label for="subdivision">Subdivision</label>
+                <select id="subdivision">
+                    <option value="1">Quarter Notes (♩)</option>
+                    <option value="2">Eighth Notes (♫)</option>
+                    <option value="4">Sixteenth Notes (♬)</option>
+                    <option value="3">Triplets (♩♩♩)</option>
+                </select>
+            </div>
+
+            <!-- Beat Counter -->
+            <div class="beat-counter">
+                <span id="current-beat">1</span> / <span id="total-beats">4</span>
+                <div class="subdivision-indicator" id="subdivision-indicator"></div>
+            </div>
+
+            <!-- Physical Metronome Visual -->
+            <div class="metronome-visual">
+                <div class="metronome-base">
+                    <div class="metronome-body">
+                        <div class="metronome-face">♪</div>
+                    </div>
+                    <div class="metronome-pendulum" id="pendulum">
+                        <div class="metronome-weight"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tempo-settings">
+                <input type="range" min="15" max="500" value="120" class="slider" id="tempo-slider">
+                <div class="tempo-text">
+                    <span>15</span>
+                    <span>BPM</span>
+                    <span>500</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="start-stop">Start</button>
+                <div class="tap-tempo">
+                    <button id="tap-tempo">Tap Tempo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="metronome-script.js"></script>
+</body>
+</html> 
