@@ -133,7 +133,7 @@
             <div class="metronome-visual">
                 <div class="metronome-base">
                     <div class="metronome-body">
-                        <div class="metronome-face">♪</div>
+                        <!-- Removed the music note graphic -->
                     </div>
                     <div class="metronome-pendulum" id="pendulum">
                         <div class="metronome-weight"></div>
@@ -142,11 +142,15 @@
             </div>
             
             <div class="tempo-settings">
-                <input type="range" min="15" max="500" value="120" class="slider" id="tempo-slider">
+                <div class="tempo-input-section">
+                    <label for="tempo-input">Tempo (BPM)</label>
+                    <input type="number" min="30" max="300" value="120" id="tempo-input" class="tempo-input">
+                </div>
+                <input type="range" min="30" max="300" value="120" class="slider" id="tempo-slider">
                 <div class="tempo-text">
-                    <span>15</span>
+                    <span>30</span>
                     <span>BPM</span>
-                    <span>500</span>
+                    <span>300</span>
                 </div>
             </div>
             <div class="controls">

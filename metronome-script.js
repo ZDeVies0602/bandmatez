@@ -1,51 +1,49 @@
 class Metronome {
     constructor() {
+        // Initialize audio context immediately
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (error) {
+            console.warn('Web Audio API not supported:', error);
+            this.audioContext = null;
+        }
+        
+        // Metronome settings
         this.tempo = 120;
         this.isPlaying = false;
-        this.intervalId = null;
-        this.pendulumTimeout = null;
-        
-        // Audio Context
-        this.audioContext = null;
-        
-        // Sound settings
-        this.soundType = 'digital';
-        
-        // Tap Tempo variables
-        this.tapTimes = [];
-        this.lastTapTime = 0;
-        
-        // Time Signature & Beat Tracking
-        this.timeSignature = '4/4';
         this.currentBeat = 1;
         this.beatsPerMeasure = 4;
-        
-        // Subdivision
+        this.timeSignature = '4/4';
         this.subdivision = 1;
         this.subdivisionCount = 0;
-        
-        // Pendulum animation state
-        this.pendulumDirection = 1; // 1 for right, -1 for left
+        this.pendulumDirection = 1;
         this.pendulumAnimating = false;
+        this.pendulumTimeout = null;
+        this.intervalId = null;
+        this.soundType = 'digital';
+        
+        // Tap tempo
+        this.tapTimes = [];
+        this.lastTapTime = 0;
         
         // Theme management
         this.currentTheme = 'default';
         
-        // Tempo Markings
+        // Tempo markings
         this.tempoMarkings = {
-            'Grave': [40, 60],
-            'Largo': [60, 66],
-            'Adagio': [66, 76],
+            'Largo': [30, 60],
+            'Adagio': [60, 76],
             'Andante': [76, 108],
             'Moderato': [108, 120],
-            'Allegro': [120, 168],
-            'Presto': [168, 200],
-            'Prestissimo': [200, 500]
+            'Allegretto': [120, 168],
+            'Allegro': [168, 200],
+            'Presto': [200, 300]
         };
         
         // DOM Elements
         this.tempoDisplay = document.getElementById('bpm-number');
         this.slider = document.getElementById('tempo-slider');
+        this.tempoInput = document.getElementById('tempo-input');
         this.startStopButton = document.getElementById('start-stop');
         this.tapTempoButton = document.getElementById('tap-tempo');
         this.timeSignatureSelect = document.getElementById('time-signature');
@@ -73,8 +71,32 @@ class Metronome {
     }
     
     init() {
-        // Set up event listeners
-        this.slider.addEventListener('input', () => this.updateTempo(this.slider.value));
+        // Get DOM elements
+        this.slider = document.getElementById('tempo-slider');
+        this.tempoInput = document.getElementById('tempo-input');
+        this.tempoDisplay = document.getElementById('bpm-number');
+        this.tempoMarkingDisplay = document.getElementById('tempo-marking');
+        this.startStopButton = document.getElementById('start-stop');
+        this.tapTempoButton = document.getElementById('tap-tempo');
+        this.timeSignatureSelect = document.getElementById('time-signature');
+        this.subdivisionSelect = document.getElementById('subdivision');
+        this.currentBeatDisplay = document.getElementById('current-beat');
+        this.totalBeatsDisplay = document.getElementById('total-beats');
+        this.subdivisionIndicator = document.getElementById('subdivision-indicator');
+        this.pendulum = document.getElementById('pendulum');
+        
+        // Theme and sound menu elements
+        this.themeToggle = document.getElementById('theme-toggle');
+        this.themeMenu = document.getElementById('theme-menu');
+        this.themeOptions = document.getElementById('theme-options');
+        this.soundToggle = document.getElementById('sound-toggle');
+        this.soundMenu = document.getElementById('sound-menu');
+        this.soundOptions = document.getElementById('sound-options');
+        
+        // Add event listeners
+        this.slider.addEventListener('input', (e) => this.updateTempo(e.target.value));
+        this.tempoInput.addEventListener('input', (e) => this.updateTempoFromInput(e.target.value));
+        this.tempoInput.addEventListener('blur', (e) => this.validateTempoInput(e.target.value));
         this.startStopButton.addEventListener('click', () => this.togglePlay());
         this.tapTempoButton.addEventListener('click', () => this.handleTapTempo());
         this.timeSignatureSelect.addEventListener('change', () => this.updateTimeSignature());
@@ -82,46 +104,50 @@ class Metronome {
         
         // Theme menu listeners
         this.themeToggle.addEventListener('click', () => this.toggleThemeMenu());
-        this.themeButtons.forEach(button => {
-            button.addEventListener('click', (e) => this.changeTheme(e.target.closest('.theme-option').dataset.theme));
-        });
-        
-        // Sound menu listeners
-        this.soundToggle.addEventListener('click', () => this.toggleSoundMenu());
-        this.soundButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const soundOption = e.target.closest('.sound-option');
-                this.changeSound(soundOption.dataset.sound);
-            });
-            
-            // Preview sound on play button
-            const previewBtn = button.querySelector('.sound-preview');
-            previewBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.previewSound(button.dataset.sound);
-            });
-        });
-        
-        // Close menus when clicking outside
         document.addEventListener('click', (e) => {
             if (!this.themeMenu.contains(e.target)) {
                 this.closeThemeMenu();
             }
+        });
+        
+        // Sound menu listeners  
+        this.soundToggle.addEventListener('click', () => this.toggleSoundMenu());
+        document.addEventListener('click', (e) => {
             if (!this.soundMenu.contains(e.target)) {
                 this.closeSoundMenu();
             }
         });
         
-        // Initialize audio context on first user interaction
-        document.addEventListener('click', () => {
-            if (!this.audioContext) {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // Theme option listeners
+        this.themeOptions.addEventListener('click', (e) => {
+            if (e.target.classList.contains('theme-option') || e.target.closest('.theme-option')) {
+                const themeButton = e.target.closest('.theme-option');
+                const themeName = themeButton.dataset.theme;
+                this.changeTheme(themeName);
             }
-        }, { once: true });
+        });
+        
+        // Sound option listeners
+        this.soundOptions.addEventListener('click', (e) => {
+            if (e.target.classList.contains('sound-option') || e.target.closest('.sound-option')) {
+                const soundButton = e.target.closest('.sound-option');
+                const soundType = soundButton.dataset.sound;
+                this.changeSound(soundType);
+            }
+            
+            // Handle preview button clicks
+            if (e.target.classList.contains('sound-preview')) {
+                e.stopPropagation();
+                const soundButton = e.target.closest('.sound-option');
+                const soundType = soundButton.dataset.sound;
+                this.previewSound(soundType);
+            }
+        });
         
         // Initialize settings
         this.updateTimeSignature();
         this.updateSubdivision();
+        this.createSubdivisionIndicator();
         this.updateTempoMarking();
         this.loadSavedTheme();
         this.loadSavedSound();
@@ -215,96 +241,126 @@ class Metronome {
         this.createSound(soundType, true, 1.0);
     }
     
-    // Enhanced Sound Generation
-    createSound(soundType, isAccent, volume) {
-        if (!this.audioContext) return;
-        
-        const oscillator = this.audioContext.createOscillator();
-        const gainNode = this.audioContext.createGain();
-        const filter = this.audioContext.createBiquadFilter();
-        
-        oscillator.connect(filter);
-        filter.connect(gainNode);
-        gainNode.connect(this.audioContext.destination);
-        
-        const baseVolume = volume * (isAccent ? 2.0 : 1.0);
-        const currentTime = this.audioContext.currentTime;
-        
-        switch (soundType) {
-            case 'digital':
-                oscillator.frequency.value = isAccent ? 1400 : 1000;
-                oscillator.type = 'square';
-                gainNode.gain.value = baseVolume * 0.3;
-                break;
-                
-            case 'wood':
-                oscillator.frequency.value = isAccent ? 800 : 600;
-                oscillator.type = 'sawtooth';
-                filter.type = 'lowpass';
-                filter.frequency.value = 2000;
-                gainNode.gain.value = baseVolume * 0.4;
-                break;
-                
-            case 'mechanical':
-                oscillator.frequency.value = isAccent ? 1200 : 900;
-                oscillator.type = 'square';
-                filter.type = 'bandpass';
-                filter.frequency.value = 1500;
-                gainNode.gain.value = baseVolume * 0.35;
-                break;
-                
-            case 'cowbell':
-                oscillator.frequency.value = isAccent ? 800 : 560;
-                oscillator.type = 'square';
-                filter.type = 'highpass';
-                filter.frequency.value = 400;
-                gainNode.gain.value = baseVolume * 0.45;
-                break;
-                
-            case 'rimshot':
-                oscillator.frequency.value = isAccent ? 2000 : 1500;
-                oscillator.type = 'sawtooth';
-                filter.type = 'highpass';
-                filter.frequency.value = 1000;
-                gainNode.gain.value = baseVolume * 0.25;
-                oscillator.frequency.exponentialRampToValueAtTime(
-                    oscillator.frequency.value * 0.5, 
-                    currentTime + 0.01
-                );
-                break;
-                
-            case 'sine':
-                oscillator.frequency.value = isAccent ? 1200 : 880;
-                oscillator.type = 'sine';
-                gainNode.gain.value = baseVolume * 0.4;
-                break;
-                
-            case 'triangle':
-                oscillator.frequency.value = isAccent ? 1100 : 850;
-                oscillator.type = 'triangle';
-                gainNode.gain.value = baseVolume * 0.35;
-                break;
-                
-            case 'tick':
-                oscillator.frequency.value = isAccent ? 1500 : 1200;
-                oscillator.type = 'square';
-                filter.type = 'bandpass';
-                filter.frequency.value = 2000;
-                filter.Q.value = 5;
-                gainNode.gain.value = baseVolume * 0.3;
-                break;
-                
-            default:
-                oscillator.frequency.value = isAccent ? 1400 : 1000;
-                oscillator.type = 'square';
-                gainNode.gain.value = baseVolume * 0.3;
+    // Add method to ensure audio context is resumed
+    async ensureAudioContext() {
+        if (!this.audioContext) {
+            try {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (error) {
+                console.warn('Could not create audio context:', error);
+                return false;
+            }
         }
         
-        const duration = isAccent ? 0.12 : 0.08;
+        if (this.audioContext.state === 'suspended') {
+            try {
+                await this.audioContext.resume();
+            } catch (error) {
+                console.warn('Could not resume audio context:', error);
+            }
+        }
         
-        oscillator.start(currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + duration);
-        oscillator.stop(currentTime + duration);
+        return this.audioContext.state === 'running';
+    }
+    
+    // Enhanced Sound Generation with error handling
+    async createSound(soundType, isAccent, volume) {
+        const audioReady = await this.ensureAudioContext();
+        if (!audioReady) {
+            console.warn('Audio context not available');
+            return;
+        }
+        
+        try {
+            const oscillator = this.audioContext.createOscillator();
+            const gainNode = this.audioContext.createGain();
+            const filter = this.audioContext.createBiquadFilter();
+            
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(this.audioContext.destination);
+            
+            const baseVolume = volume * (isAccent ? 1.5 : 1.0);
+            const currentTime = this.audioContext.currentTime;
+            
+            switch (soundType) {
+                case 'digital':
+                    oscillator.frequency.value = isAccent ? 1400 : 1000;
+                    oscillator.type = 'square';
+                    gainNode.gain.value = baseVolume * 0.3;
+                    break;
+                    
+                case 'wood':
+                    oscillator.frequency.value = isAccent ? 800 : 600;
+                    oscillator.type = 'sawtooth';
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 2000;
+                    gainNode.gain.value = baseVolume * 0.4;
+                    break;
+                    
+                case 'mechanical':
+                    oscillator.frequency.value = isAccent ? 1200 : 900;
+                    oscillator.type = 'square';
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 1500;
+                    gainNode.gain.value = baseVolume * 0.35;
+                    break;
+                    
+                case 'cowbell':
+                    oscillator.frequency.value = isAccent ? 800 : 560;
+                    oscillator.type = 'square';
+                    filter.type = 'highpass';
+                    filter.frequency.value = 400;
+                    gainNode.gain.value = baseVolume * 0.45;
+                    break;
+                    
+                case 'rimshot':
+                    oscillator.frequency.value = isAccent ? 2000 : 1500;
+                    oscillator.type = 'sawtooth';
+                    filter.type = 'highpass';
+                    filter.frequency.value = 1000;
+                    gainNode.gain.value = baseVolume * 0.25;
+                    oscillator.frequency.exponentialRampToValueAtTime(
+                        oscillator.frequency.value * 0.5, 
+                        currentTime + 0.01
+                    );
+                    break;
+                    
+                case 'sine':
+                    oscillator.frequency.value = isAccent ? 1200 : 880;
+                    oscillator.type = 'sine';
+                    gainNode.gain.value = baseVolume * 0.4;
+                    break;
+                    
+                case 'triangle':
+                    oscillator.frequency.value = isAccent ? 1100 : 850;
+                    oscillator.type = 'triangle';
+                    gainNode.gain.value = baseVolume * 0.35;
+                    break;
+                    
+                case 'tick':
+                    oscillator.frequency.value = isAccent ? 1500 : 1200;
+                    oscillator.type = 'square';
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 2000;
+                    filter.Q.value = 5;
+                    gainNode.gain.value = baseVolume * 0.3;
+                    break;
+                    
+                default:
+                    oscillator.frequency.value = isAccent ? 1400 : 1000;
+                    oscillator.type = 'square';
+                    gainNode.gain.value = baseVolume * 0.3;
+            }
+            
+            const duration = isAccent ? 0.12 : 0.08;
+            
+            oscillator.start(currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + duration);
+            oscillator.stop(currentTime + duration);
+        } catch (error) {
+            console.warn('Error creating sound:', error);
+        }
     }
     
     // FIXED: Pendulum-driven timing with center-crossing sound
@@ -557,6 +613,7 @@ class Metronome {
     
     updateTempo(newTempo) {
         this.tempo = Number(newTempo);
+        this.tempoInput.value = this.tempo;
         this.updateTempoMarking();
         
         if (this.isPlaying) {
@@ -565,9 +622,41 @@ class Metronome {
         }
     }
     
+    // New method to handle tempo input
+    updateTempoFromInput(newTempo) {
+        const tempo = parseInt(newTempo);
+        if (!isNaN(tempo) && tempo >= 30 && tempo <= 300) {
+            this.tempo = tempo;
+            this.slider.value = tempo;
+            this.updateTempoMarking();
+            
+            if (this.isPlaying) {
+                this.stop();
+                this.play();
+            }
+        }
+    }
+    
+    // New method to validate tempo input
+    validateTempoInput(newTempo) {
+        let tempo = parseInt(newTempo);
+        
+        if (isNaN(tempo) || tempo < 30) {
+            tempo = 30;
+        } else if (tempo > 300) {
+            tempo = 300;
+        }
+        
+        this.tempoInput.value = tempo;
+        this.updateTempoFromInput(tempo);
+    }
+    
     // Main play/stop methods
-    play() {
+    async play() {
         if (!this.isPlaying) {
+            // Ensure audio context is ready
+            await this.ensureAudioContext();
+            
             this.isPlaying = true;
             this.startStopButton.textContent = 'Stop';
             this.startStopButton.classList.add('playing');
@@ -623,9 +712,10 @@ class Metronome {
             averageInterval /= (this.tapTimes.length - 1);
             
             const newTempo = Math.round(60000 / averageInterval);
-            const clampedTempo = Math.min(Math.max(newTempo, 15), 500);
+            const clampedTempo = Math.min(Math.max(newTempo, 30), 300);
             
             this.slider.value = clampedTempo;
+            this.tempoInput.value = clampedTempo;
             this.updateTempo(clampedTempo);
         }
     }
