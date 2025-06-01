@@ -836,49 +836,133 @@ body.theme-sunset-beach .metronome-center-line {
     box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
 }
 
-/* North Pole Theme - Dark Blue text with arctic feel */
+/* Arctic Ice Theme - Make ALL text dark blue */
 body.theme-north-pole h1 {
-    color: #1e3a8a;
-    text-shadow: 0 0 20px rgba(30, 58, 138, 0.4), 0 0 5px rgba(30, 58, 138, 0.3);
+    color: #1a365d !important;
+    text-shadow: 0 0 20px rgba(26, 54, 93, 0.3) !important;
 }
 
 body.theme-north-pole .tempo-display {
-    color: #1e3a8a;
-    text-shadow: 0 0 15px rgba(30, 58, 138, 0.3);
+    color: #1a365d !important;
 }
 
 body.theme-north-pole .tempo-marking {
-    color: #1e40af;
-    text-shadow: 0 0 8px rgba(30, 64, 175, 0.3);
+    color: #1a365d !important;
 }
 
 body.theme-north-pole .time-signature-section label,
 body.theme-north-pole .subdivision-section label,
 body.theme-north-pole .tempo-input-section label {
-    color: #1e40af;
-    text-shadow: 0 0 6px rgba(30, 64, 175, 0.2);
+    color: #1a365d !important;
 }
 
 body.theme-north-pole .beat-counter {
-    color: #1e3a8a;
-    text-shadow: 0 0 12px rgba(30, 58, 138, 0.3);
+    color: #1a365d !important;
 }
 
 body.theme-north-pole .tempo-text {
-    color: #2563eb;
+    color: #1a365d !important;
 }
 
 body.theme-north-pole button {
-    color: #1e40af;
-    border-color: rgba(30, 58, 138, 0.4);
-    text-shadow: 0 0 4px rgba(30, 64, 175, 0.2);
+    color: #1a365d !important;
+    border-color: #1a365d !important;
 }
 
 body.theme-north-pole #start-stop {
-    color: white;
-    background: rgba(30, 58, 138, 0.2);
-    border-color: #1e3a8a;
-    text-shadow: 0 0 8px rgba(30, 58, 138, 0.3);
+    background: rgba(26, 54, 93, 0.1) !important;
+    border-color: #1a365d !important;
+    color: #1a365d !important;
+}
+
+/* Arctic Ice Theme - Tuner Text */
+body.theme-north-pole .note-display {
+    color: #1a365d !important;
+    text-shadow: 0 0 20px rgba(26, 54, 93, 0.3) !important;
+}
+
+body.theme-north-pole .frequency-display {
+    color: #1a365d !important;
+}
+
+body.theme-north-pole .cents-display {
+    color: #1a365d !important;
+}
+
+body.theme-north-pole .pitch-labels {
+    color: #1a365d !important;
+}
+
+body.theme-north-pole .reference-tone label {
+    color: #1a365d !important;
+}
+
+body.theme-north-pole .calibration label {
+    color: #1a365d !important;
+}
+
+body.theme-north-pole .tuner-controls button {
+    color: #1a365d !important;
+    border-color: #1a365d !important;
+}
+
+/* Arctic Ice Theme - Dropdown Menus */
+body.theme-north-pole select {
+    color: #1a365d !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #1a365d !important;
+}
+
+body.theme-north-pole select option {
+    color: #1a365d !important;
+    background: white !important;
+}
+
+body.theme-north-pole .tempo-input {
+    color: #1a365d !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #1a365d !important;
+}
+
+body.theme-north-pole .reference-tone select {
+    color: #1a365d !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #1a365d !important;
+}
+
+body.theme-north-pole .calibration input {
+    color: #1a365d !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #1a365d !important;
+}
+
+/* Arctic Ice Theme - Tab Navigation */
+body.theme-north-pole .tab-button {
+    color: #1a365d !important;
+}
+
+body.theme-north-pole .tab-button:hover {
+    color: #1a365d !important;
+}
+
+body.theme-north-pole .tab-button.active {
+    color: #1a365d !important;
+}
+
+/* Arctic Ice Theme - Override tuner color changes for accuracy indication */
+body.theme-north-pole .note-display.tuning-accurate {
+    color: #0d4f3c !important; /* Dark green for accurate tuning */
+    text-shadow: 0 0 20px rgba(13, 79, 60, 0.6) !important;
+}
+
+body.theme-north-pole .note-display.tuning-close {
+    color: #8b4513 !important; /* Dark brown/orange for close tuning */
+    text-shadow: 0 0 20px rgba(139, 69, 19, 0.6) !important;
+}
+
+body.theme-north-pole .note-display.tuning-off {
+    color: #8b0000 !important; /* Dark red for off tuning */
+    text-shadow: 0 0 20px rgba(139, 0, 0, 0.6) !important;
 }
 
 /* Rainforest Theme */
@@ -1435,4 +1519,373 @@ h1 {
 .sound-option.active .sound-name,
 .sound-option.active .sound-preview {
     color: white !important;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 5px;
+    backdrop-filter: blur(10px);
+}
+
+.tab-button {
+    background: transparent;
+    border: none;
+    padding: 12px 24px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.tab-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.tab-button.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Tuner Styles */
+.tuner {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.tuner-display {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+}
+
+.note-display {
+    font-size: 4rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.frequency-display {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 5px;
+}
+
+.cents-display {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Pitch Indicator */
+.pitch-indicator {
+    position: relative;
+    padding: 20px 0;
+}
+
+.pitch-scale {
+    height: 40px;
+    background: linear-gradient(to right, 
+        #ff4444 0%, 
+        #ffaa44 25%, 
+        #44ff44 45%, 
+        #44ff44 55%, 
+        #ffaa44 75%, 
+        #ff4444 100%);
+    border-radius: 20px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.pitch-marker {
+    position: absolute;
+    top: -5px;
+    width: 2px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.8);
+    transform: translateX(-50%);
+}
+
+.center-marker {
+    width: 4px;
+    background: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.pitch-needle {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    width: 4px;
+    height: 60px;
+    background: white;
+    border-radius: 2px;
+    transform: translateX(-50%);
+    transition: left 0.1s ease;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    z-index: 10;
+}
+
+.pitch-labels {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* Reference Tone */
+.reference-tone {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.reference-tone label {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.reference-tone select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: white;
+    font-size: 1rem;
+}
+
+.reference-tone select:focus {
+    outline: none;
+    border-color: #64b5f6;
+    background: rgba(100, 181, 246, 0.1);
+}
+
+/* Tuner Controls */
+.tuner-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.tuner-controls button {
+    background: rgba(100, 181, 246, 0.2);
+    border: 2px solid #64b5f6;
+    border-radius: 8px;
+    padding: 12px 24px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tuner-controls button:hover {
+    background: rgba(100, 181, 246, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(100, 181, 246, 0.4);
+}
+
+.tuner-controls button.active {
+    background: rgba(255, 107, 107, 0.2);
+    border-color: #ff6b6b;
+}
+
+.tuner-controls button.active:hover {
+    background: rgba(255, 107, 107, 0.3);
+}
+
+.calibration {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.calibration label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.calibration input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: white;
+    font-size: 0.9rem;
+    width: 80px;
+    text-align: center;
+}
+
+.calibration input:focus {
+    outline: none;
+    border-color: #64b5f6;
+    background: rgba(100, 181, 246, 0.1);
+}
+
+/* Responsive Design for Tuner */
+@media (max-width: 768px) {
+    .tab-navigation {
+        margin-bottom: 15px;
+    }
+    
+    .tab-button {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .tuner {
+        padding: 20px;
+        gap: 20px;
+    }
+    
+    .note-display {
+        font-size: 3rem;
+    }
+    
+    .frequency-display {
+        font-size: 1.3rem;
+    }
+    
+    .pitch-scale {
+        height: 30px;
+    }
+    
+    .pitch-needle {
+        height: 40px;
+        top: -5px;
+    }
+    
+    .pitch-marker {
+        height: 40px;
+        top: -5px;
+    }
+    
+    .reference-tone {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Lunar Surface Theme - Make tuner and menu text black */
+body.theme-moon .note-display {
+    color: #000000 !important;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.theme-moon .frequency-display {
+    color: #000000 !important;
+}
+
+body.theme-moon .cents-display {
+    color: #000000 !important;
+}
+
+body.theme-moon .pitch-labels {
+    color: #000000 !important;
+}
+
+body.theme-moon .reference-tone label {
+    color: #000000 !important;
+}
+
+body.theme-moon .calibration label {
+    color: #000000 !important;
+}
+
+body.theme-moon .tuner-controls button {
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+/* Lunar Surface Theme - Dropdown Menus */
+body.theme-moon select {
+    color: #000000 !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #000000 !important;
+}
+
+body.theme-moon select option {
+    color: #000000 !important;
+    background: white !important;
+}
+
+body.theme-moon .tempo-input {
+    color: #000000 !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #000000 !important;
+}
+
+body.theme-moon .reference-tone select {
+    color: #000000 !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #000000 !important;
+}
+
+body.theme-moon .calibration input {
+    color: #000000 !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #000000 !important;
+}
+
+/* Lunar Surface Theme - Tab Navigation */
+body.theme-moon .tab-button {
+    color: #000000 !important;
+}
+
+body.theme-moon .tab-button:hover {
+    color: #000000 !important;
+}
+
+body.theme-moon .tab-button.active {
+    color: #000000 !important;
+}
+
+/* Lunar Surface Theme - Override tuner color changes for accuracy indication */
+body.theme-moon .note-display.tuning-accurate {
+    color: #006400 !important; /* Dark green for accurate tuning */
+    text-shadow: 0 0 20px rgba(0, 100, 0, 0.6) !important;
+}
+
+body.theme-moon .note-display.tuning-close {
+    color: #ff8c00 !important; /* Dark orange for close tuning */
+    text-shadow: 0 0 20px rgba(255, 140, 0, 0.6) !important;
+}
+
+body.theme-moon .note-display.tuning-off {
+    color: #dc143c !important; /* Crimson red for off tuning */
+    text-shadow: 0 0 20px rgba(220, 20, 60, 0.6) !important;
 } 

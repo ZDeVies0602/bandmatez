@@ -66,6 +66,9 @@ class Metronome {
         this.soundOptions = document.getElementById('sound-options');
         this.soundButtons = document.querySelectorAll('.sound-option');
         
+        // Initialize tuner
+        this.tuner = null;
+        
         // Initialize
         this.init();
     }
@@ -152,7 +155,7 @@ class Metronome {
             }
         });
         
-        // Sound option listeners with better debugging
+        // Sound option listeners
         this.soundOptions.addEventListener('click', async (e) => {
             console.log('Sound options clicked:', e.target);
             
@@ -173,6 +176,9 @@ class Metronome {
             }
         });
         
+        // Initialize tab system
+        this.initTabs();
+        
         // Initialize settings
         this.updateTimeSignature();
         this.updateSubdivision();
@@ -182,6 +188,78 @@ class Metronome {
         this.loadSavedSound();
         
         console.log('Metronome initialization complete');
+    }
+    
+    initTabs() {
+        console.log('Initializing tabs...');
+        
+        // Get tab elements
+        this.tabButtons = document.querySelectorAll('.tab-button');
+        this.tabContents = document.querySelectorAll('.tab-content');
+        
+        console.log('Found tab buttons:', this.tabButtons.length);
+        console.log('Found tab contents:', this.tabContents.length);
+        
+        // Add tab click listeners
+        this.tabButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const tabName = e.target.dataset.tab;
+                console.log(`Tab clicked: ${tabName}`);
+                this.switchTab(tabName);
+            });
+        });
+        
+        // Start with metronome tab
+        this.switchTab('metronome');
+    }
+    
+    switchTab(tabName) {
+        console.log(`Switching to ${tabName} tab`);
+        
+        // Update tab buttons
+        this.tabButtons.forEach(button => {
+            button.classList.remove('active');
+            if (button.dataset.tab === tabName) {
+                button.classList.add('active');
+            }
+        });
+        
+        // Update tab contents
+        this.tabContents.forEach(content => {
+            content.classList.remove('active');
+            if (content.id === `${tabName}-tab`) {
+                content.classList.add('active');
+            }
+        });
+        
+        // Handle tab-specific initialization
+        if (tabName === 'tuner') {
+            this.initTuner();
+        } else if (tabName === 'metronome') {
+            this.cleanupTuner();
+        }
+    }
+    
+    initTuner() {
+        if (!this.tuner && window.PitchTuner) {
+            console.log('Creating new tuner instance...');
+            // Wait a bit for the DOM to be ready
+            setTimeout(() => {
+                this.tuner = new window.PitchTuner();
+                console.log('Tuner initialized');
+            }, 200);
+        } else if (!window.PitchTuner) {
+            console.error('PitchTuner class not found!');
+        }
+    }
+    
+    cleanupTuner() {
+        if (this.tuner) {
+            console.log('Cleaning up tuner...');
+            this.tuner.destroy();
+            this.tuner = null;
+            console.log('Tuner cleaned up');
+        }
     }
     
     // Theme Menu Methods
@@ -803,5 +881,6 @@ class Metronome {
 }
 
 window.addEventListener('load', () => {
+    console.log('Page loaded, initializing metronome...');
     new Metronome();
 });
