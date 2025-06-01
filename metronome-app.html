@@ -94,42 +94,43 @@
     <div class="container">
         <h1>METRONOME</h1>
         <div class="metronome">
+            <!-- Top row - Tempo display -->
             <div class="tempo-display">
                 <span id="bpm-number">120</span> BPM
                 <div class="tempo-marking" id="tempo-marking"></div>
             </div>
             
-            <!-- Time Signature Section -->
-            <div class="time-signature-section">
-                <label for="time-signature">Time Signature</label>
-                <select id="time-signature">
-                    <option value="4/4">4/4</option>
-                    <option value="3/4">3/4</option>
-                    <option value="2/4">2/4</option>
-                    <option value="6/8">6/8</option>
-                    <option value="5/4">5/4</option>
-                    <option value="7/8">7/8</option>
-                </select>
+            <!-- Left column - Time signature and subdivision controls -->
+            <div class="left-controls">
+                <div class="time-signature-section">
+                    <label for="time-signature">Time Signature</label>
+                    <select id="time-signature">
+                        <option value="4/4">4/4</option>
+                        <option value="3/4">3/4</option>
+                        <option value="2/4">2/4</option>
+                        <option value="6/8">6/8</option>
+                        <option value="5/4">5/4</option>
+                        <option value="7/8">7/8</option>
+                    </select>
+                </div>
+
+                <div class="subdivision-section">
+                    <label for="subdivision">Subdivision</label>
+                    <select id="subdivision">
+                        <option value="1">Quarter Notes (♩)</option>
+                        <option value="2">Eighth Notes (♫)</option>
+                        <option value="4">Sixteenth Notes (♬)</option>
+                        <option value="3">Triplets (♩♩♩)</option>
+                    </select>
+                </div>
+
+                <div class="beat-counter">
+                    <span id="current-beat">1</span> / <span id="total-beats">4</span>
+                    <div class="subdivision-indicator" id="subdivision-indicator"></div>
+                </div>
             </div>
 
-            <!-- Subdivision Section -->
-            <div class="subdivision-section">
-                <label for="subdivision">Subdivision</label>
-                <select id="subdivision">
-                    <option value="1">Quarter Notes (♩)</option>
-                    <option value="2">Eighth Notes (♫)</option>
-                    <option value="4">Sixteenth Notes (♬)</option>
-                    <option value="3">Triplets (♩♩♩)</option>
-                </select>
-            </div>
-
-            <!-- Beat Counter -->
-            <div class="beat-counter">
-                <span id="current-beat">1</span> / <span id="total-beats">4</span>
-                <div class="subdivision-indicator" id="subdivision-indicator"></div>
-            </div>
-
-            <!-- Physical Metronome Visual -->
+            <!-- Center - Large metronome visual -->
             <div class="metronome-visual">
                 <div class="metronome-base">
                     <div class="metronome-body">
@@ -141,21 +142,23 @@
                 </div>
             </div>
             
-            <div class="tempo-settings">
-                <div class="tempo-input-section">
-                    <label for="tempo-input">Tempo (BPM)</label>
-                    <input type="number" min="30" max="300" value="120" id="tempo-input" class="tempo-input">
+            <!-- Right column - Tempo controls and buttons -->
+            <div class="right-controls">
+                <div class="tempo-settings">
+                    <div class="tempo-input-section">
+                        <label for="tempo-input">Tempo (BPM)</label>
+                        <input type="number" min="30" max="300" value="120" id="tempo-input" class="tempo-input">
+                    </div>
+                    <input type="range" min="30" max="300" value="120" class="slider" id="tempo-slider">
+                    <div class="tempo-text">
+                        <span>30</span>
+                        <span>BPM</span>
+                        <span>300</span>
+                    </div>
                 </div>
-                <input type="range" min="30" max="300" value="120" class="slider" id="tempo-slider">
-                <div class="tempo-text">
-                    <span>30</span>
-                    <span>BPM</span>
-                    <span>300</span>
-                </div>
-            </div>
-            <div class="controls">
-                <button id="start-stop">Start</button>
-                <div class="tap-tempo">
+                
+                <div class="controls">
+                    <button id="start-stop">Start</button>
                     <button id="tap-tempo">Tap Tempo</button>
                 </div>
             </div>

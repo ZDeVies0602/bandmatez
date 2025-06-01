@@ -60,7 +60,8 @@
 }
 
 .theme-options h3 {
-    color: white;
+    color: white !important;
+    text-shadow: none !important;
     margin-bottom: 15px;
     font-weight: 300;
     text-align: center;
@@ -80,7 +81,8 @@
     padding: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: white;
+    color: white !important;
+    text-shadow: none !important;
     font-size: 0.85rem;
     text-align: center;
 }
@@ -160,7 +162,8 @@
 }
 
 .sound-options h3 {
-    color: white;
+    color: white !important;
+    text-shadow: none !important;
     margin-bottom: 15px;
     font-weight: 300;
     text-align: center;
@@ -180,7 +183,8 @@
     padding: 10px 12px;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: white;
+    color: white !important;
+    text-shadow: none !important;
     font-size: 0.9rem;
     display: flex;
     justify-content: space-between;
@@ -330,7 +334,7 @@ body.theme-sunset-beach {
     --bg-secondary: rgba(255, 165, 0, 0.2);
 }
 
-/* North Pole Theme */
+/* North Pole Theme - Dark Blue text with arctic feel */
 body.theme-north-pole {
     background: 
         radial-gradient(circle at 40% 30%, #e6f3ff 0%, transparent 50%),
@@ -382,53 +386,72 @@ body.theme-ocean-depths {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 15px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 h1 {
     text-align: center;
     color: white;
-    font-size: 2rem;
-    margin-bottom: 15px;
+    font-size: 2.2rem;
+    margin: 10px 0 15px 0;
     font-weight: 300;
     letter-spacing: 3px;
+    flex-shrink: 0;
 }
 
 .metronome {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(15px);
     border-radius: 20px;
-    padding: 15px;
+    padding: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 20px;
+    min-height: 0;
 }
 
+/* Top row - tempo display spans all columns */
 .tempo-display {
+    grid-column: 1 / -1;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: white;
-    margin-bottom: 10px;
     font-weight: 500;
 }
 
 .tempo-marking {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.7);
-    margin-top: 3px;
+    margin-top: 5px;
+}
+
+/* Left column - Time signature and subdivision */
+.left-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: flex-start;
 }
 
 .time-signature-section, .subdivision-section {
-    margin-bottom: 8px;
     text-align: center;
 }
 
 .time-signature-section label, .subdivision-section label {
     display: block;
     color: rgba(255, 255, 255, 0.8);
-    font-size: 0.8rem;
-    margin-bottom: 3px;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
     font-weight: 300;
 }
 
@@ -436,181 +459,104 @@ h1 {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
-    padding: 6px 10px;
+    padding: 8px 12px;
     color: white;
-    font-size: 0.9rem;
-    width: 180px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 180px;
     transition: all 0.3s ease;
+}
+
+.time-signature-section select:focus, .subdivision-section select:focus {
+    outline: none;
+    border-color: #64b5f6;
+    background: rgba(100, 181, 246, 0.1);
+    box-shadow: 0 0 15px rgba(100, 181, 246, 0.3);
 }
 
 .beat-counter {
     text-align: center;
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: white;
-    margin: 8px 0;
     font-weight: 500;
+    margin-top: 10px;
 }
 
 .subdivision-indicator {
     display: flex;
     justify-content: center;
-    gap: 6px;
-    margin-top: 6px;
+    gap: 8px;
+    margin-top: 10px;
 }
 
 .subdivision-dot {
-    width: 8px;
-    height: 8px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     transition: all 0.2s ease;
 }
 
 .subdivision-dot.active {
-    background: var(--primary-color);
-    box-shadow: 0 0 15px var(--primary-color);
-    transform: scale(1.2);
+    background: #64b5f6;
+    box-shadow: 0 0 10px rgba(100, 181, 246, 0.6);
 }
 
 .subdivision-dot.accent {
-    background: var(--accent-color);
-    box-shadow: 0 0 20px var(--accent-color);
-    transform: scale(1.4);
+    background: #ff6b6b;
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
 }
 
-.tempo-settings {
-    margin: 15px 0;
-}
-
-.slider {
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.2);
-    outline: none;
-    margin: 8px 0;
-}
-
-.slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #64b5f6;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-}
-
-.tempo-text {
-    display: flex;
-    justify-content: space-between;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.7rem;
-    margin-top: 3px;
-}
-
-.controls {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 15px;
-}
-
-button {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 8px 16px;
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-#start-stop {
-    background: rgba(100, 181, 246, 0.2);
-    border-color: #64b5f6;
-    padding: 10px 20px;
-}
-
-#start-stop:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
-}
-
-#start-stop.playing {
-    background: linear-gradient(145deg, #f44336, #d32f2f);
-    box-shadow: 0 8px 25px rgba(244, 67, 54, 0.3);
-}
-
-#start-stop.playing:hover {
-    box-shadow: 0 12px 35px rgba(244, 67, 54, 0.4);
-}
-
-#tap-tempo {
-    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    box-shadow: 0 8px 25px rgba(100, 181, 246, 0.3);
-}
-
-#tap-tempo:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 35px var(--primary-color);
-}
-
-/* Enhanced Pendulum Animation */
+/* Center column - Large metronome visual */
 .metronome-visual {
-    margin: 20px 0;
+    grid-column: 2;
+    grid-row: 2 / 4;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 200px;
     position: relative;
 }
 
 .metronome-base {
     position: relative;
-    width: 120px;
-    height: 180px;
+    width: 300px; /* Much bigger */
+    height: 400px; /* Much bigger */
     display: flex;
     justify-content: center;
     align-items: flex-end;
 }
 
 .metronome-body {
-    width: 110px;
-    height: 150px;
-    border-radius: 12px 12px 25px 25px;
+    width: 280px; /* Much bigger */
+    height: 350px; /* Much bigger */
+    border-radius: 20px 20px 50px 50px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.5s ease;
+    transition: all 0.5s ease, background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
     /* Default styling if no theme is applied */
     background: linear-gradient(145deg, #1a1a2e, #16213e);
-    border: 2px solid #64b5f6;
+    border: 4px solid #64b5f6;
     box-shadow: 
-        0 6px 20px rgba(0, 0, 0, 0.5),
-        inset 0 1px 6px rgba(100, 181, 246, 0.1);
+        0 15px 40px rgba(0, 0, 0, 0.5),
+        inset 0 3px 15px rgba(100, 181, 246, 0.1);
 }
 
 .metronome-pendulum {
     position: absolute;
-    width: 4px;
-    height: 130px;
-    border-radius: 2px;
+    width: 8px; /* Bigger */
+    height: 320px; /* Much bigger */
+    border-radius: 4px;
     transform-origin: top center;
-    top: 20px;
+    top: 40px;
     left: 50%;
     transform: translateX(-50%) rotate(0deg);
     transition: transform 0.5s ease-in-out, background 0.5s ease, box-shadow 0.5s ease;
     z-index: 2;
     /* Default styling if no theme is applied */
     background: linear-gradient(to bottom, #64b5f6, #ffffff);
-    box-shadow: 0 0 6px rgba(100, 181, 246, 0.5);
+    box-shadow: 0 0 15px rgba(100, 181, 246, 0.5);
 }
 
 .metronome-weight {
@@ -618,40 +564,66 @@ button {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 14px;
-    height: 14px;
+    width: 24px; /* Bigger */
+    height: 24px; /* Bigger */
     border-radius: 50%;
     transition: background 0.5s ease, box-shadow 0.5s ease;
     /* Default styling if no theme is applied */
     background: radial-gradient(circle, #64b5f6, #1976d2);
-    box-shadow: 0 0 10px rgba(100, 181, 246, 0.7);
+    box-shadow: 0 0 20px rgba(100, 181, 246, 0.7);
 }
 
-/* Tempo input section */
+/* Center line for bigger metronome */
+.metronome-center-line {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px; /* Bigger */
+    height: calc(100% - 30px);
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+    z-index: 1;
+}
+
+/* Right column - Tempo controls and buttons */
+.right-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: flex-start;
+}
+
+.tempo-settings {
+    display: flex;
+    flex-direction: column;
+}
+
 .tempo-input-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .tempo-input-section label {
     color: rgba(255, 255, 255, 0.8);
-    font-size: 0.8rem;
-    margin-bottom: 5px;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
     font-weight: 300;
 }
 
 .tempo-input {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    padding: 6px 10px;
+    border-radius: 8px;
+    padding: 10px 15px;
     color: white;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
     text-align: center;
-    width: 80px;
+    width: 100px;
     transition: all 0.3s ease;
 }
 
@@ -662,279 +634,805 @@ button {
     box-shadow: 0 0 15px rgba(100, 181, 246, 0.3);
 }
 
-.tempo-input:hover {
+.slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+    margin: 10px 0;
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #64b5f6;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(100, 181, 246, 0.4);
+}
+
+.tempo-text {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: auto;
+}
+
+button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 12px 20px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+#start-stop {
+    background: rgba(100, 181, 246, 0.2);
+    border-color: #64b5f6;
+    font-size: 1.1rem;
+    padding: 15px 25px;
+}
+
+#start-stop:hover {
+    background: rgba(100, 181, 246, 0.3);
+    box-shadow: 0 6px 20px rgba(100, 181, 246, 0.4);
+}
+
+#start-stop.playing {
+    background: rgba(255, 107, 107, 0.2);
+    border-color: #ff6b6b;
+}
+
+#start-stop.playing:hover {
+    background: rgba(255, 107, 107, 0.3);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+#tap-tempo {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+#tap-tempo:hover {
+    background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.4);
 }
 
-/* Smooth pendulum animations */
-@keyframes pendulum-swing {
-    0% { transform: translateX(-50%) rotate(-20deg); }
-    50% { transform: translateX(-50%) rotate(0deg); }
-    100% { transform: translateX(-50%) rotate(20deg); }
+/* Update theme-specific metronome body sizes */
+body.theme-default .metronome-body,
+body.theme-grand-canyon .metronome-body,
+body.theme-moon .metronome-body,
+body.theme-sunset-beach .metronome-body,
+body.theme-north-pole .metronome-body,
+body.theme-rainforest .metronome-body,
+body.theme-ocean-depths .metronome-body {
+    width: 280px;
+    height: 350px;
+    border: 4px solid;
 }
 
-.metronome-pendulum.swinging {
-    animation: pendulum-swing ease-in-out infinite;
-}
+/* Theme-specific metronome colors */
 
-.metronome-face {
-    position: absolute;
-    top: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #333;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-/* Center line for all themes - STATIC, no animations */
-.metronome-center-line {
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1.5px;
-    height: calc(100% - 16px);
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 1px;
-    box-shadow: 0 0 3px rgba(255, 255, 255, 0.2);
-    z-index: 1;
-    /* Removed transition properties - line is completely static */
-}
-
-/* Default Theme */
-body.theme-default .metronome-center-line {
-    background: rgba(100, 181, 246, 0.4);
-    box-shadow: 0 0 6px rgba(100, 181, 246, 0.3);
-}
-
-/* Grand Canyon Theme */
-body.theme-grand-canyon .metronome-center-line {
-    background: rgba(255, 140, 0, 0.4);
-    box-shadow: 0 0 6px rgba(255, 140, 0, 0.3);
-}
-
-/* Moon Theme */
-body.theme-moon .metronome-center-line {
-    background: rgba(192, 192, 192, 0.4);
-    box-shadow: 0 0 6px rgba(192, 192, 192, 0.3);
-}
-
-/* Sunset Beach Theme */
-body.theme-sunset-beach .metronome-center-line {
-    background: rgba(255, 215, 0, 0.4);
-    box-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
-}
-
-/* North Pole Theme */
-body.theme-north-pole .metronome-center-line {
-    background: rgba(135, 206, 235, 0.4);
-    box-shadow: 0 0 6px rgba(135, 206, 235, 0.3);
-}
-
-/* Rainforest Theme */
-body.theme-rainforest .metronome-center-line {
-    background: rgba(144, 238, 144, 0.4);
-    box-shadow: 0 0 6px rgba(144, 238, 144, 0.3);
-}
-
-/* Ocean Depths Theme */
-body.theme-ocean-depths .metronome-center-line {
-    background: rgba(32, 178, 170, 0.4);
-    box-shadow: 0 0 6px rgba(32, 178, 170, 0.3);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    
-    .metronome {
-        padding: 12px;
-    }
-    
-    .tempo-display {
-        font-size: 1.3rem;
-    }
-    
-    h1 {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
-    }
-    
-    .metronome-visual {
-        height: 160px;
-        margin: 15px 0;
-    }
-    
-    .metronome-base {
-        width: 100px;
-        height: 140px;
-    }
-    
-    .metronome-body {
-        width: 90px !important;
-        height: 120px !important;
-    }
-    
-    .metronome-pendulum {
-        height: 100px;
-    }
-    
-    .metronome-center-line {
-        width: 1px;
-        height: calc(100% - 12px);
-    }
-    
-    .theme-menu {
-        top: 10px;
-        right: 10px;
-    }
-    
-    .sound-menu {
-        top: 10px;
-        left: 10px;
-    }
-    
-    .theme-options, .sound-options {
-        min-width: 250px;
-    }
-    
-    .theme-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Default Theme Metronome */
+/* Default Theme (Midnight Sky) */
 body.theme-default .metronome-body {
     background: linear-gradient(145deg, #1a1a2e, #16213e);
-    border: 2px solid #64b5f6;
+    border: 4px solid #64b5f6;
     box-shadow: 
-        0 6px 20px rgba(0, 0, 0, 0.5),
-        inset 0 1px 6px rgba(100, 181, 246, 0.1);
+        0 15px 40px rgba(0, 0, 0, 0.5),
+        inset 0 3px 15px rgba(100, 181, 246, 0.1);
 }
 
 body.theme-default .metronome-pendulum {
     background: linear-gradient(to bottom, #64b5f6, #ffffff);
-    box-shadow: 0 0 6px rgba(100, 181, 246, 0.5);
+    box-shadow: 0 0 15px rgba(100, 181, 246, 0.5);
 }
 
 body.theme-default .metronome-weight {
     background: radial-gradient(circle, #64b5f6, #1976d2);
-    box-shadow: 0 0 10px rgba(100, 181, 246, 0.7);
+    box-shadow: 0 0 20px rgba(100, 181, 246, 0.7);
 }
 
-/* Grand Canyon Theme Metronome */
+body.theme-default .metronome-center-line {
+    background: rgba(100, 181, 246, 0.4);
+    box-shadow: 0 0 8px rgba(100, 181, 246, 0.3);
+}
+
+/* Grand Canyon Theme */
 body.theme-grand-canyon .metronome-body {
     background: linear-gradient(145deg, #8b4513, #a0522d);
-    border: 2px solid #ff8c00;
+    border: 4px solid #ff8c00;
     box-shadow: 
-        0 6px 20px rgba(139, 69, 19, 0.5),
-        inset 0 1px 6px rgba(255, 140, 0, 0.2);
+        0 15px 40px rgba(139, 69, 19, 0.5),
+        inset 0 3px 15px rgba(255, 140, 0, 0.2);
 }
 
 body.theme-grand-canyon .metronome-pendulum {
     background: linear-gradient(to bottom, #ff8c00, #ffd700);
-    box-shadow: 0 0 6px rgba(255, 140, 0, 0.6);
+    box-shadow: 0 0 15px rgba(255, 140, 0, 0.6);
 }
 
 body.theme-grand-canyon .metronome-weight {
     background: radial-gradient(circle, #ff8c00, #d2691e);
-    box-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.8);
 }
 
-/* Moon Theme Metronome */
+body.theme-grand-canyon .metronome-center-line {
+    background: rgba(255, 140, 0, 0.4);
+    box-shadow: 0 0 8px rgba(255, 140, 0, 0.3);
+}
+
+/* Moon Theme */
 body.theme-moon .metronome-body {
     background: linear-gradient(145deg, #2c2c2c, #404040);
-    border: 2px solid #c0c0c0;
+    border: 4px solid #c0c0c0;
     box-shadow: 
-        0 6px 20px rgba(44, 44, 44, 0.5),
-        inset 0 1px 6px rgba(192, 192, 192, 0.1);
+        0 15px 40px rgba(44, 44, 44, 0.5),
+        inset 0 3px 15px rgba(192, 192, 192, 0.1);
 }
 
 body.theme-moon .metronome-pendulum {
     background: linear-gradient(to bottom, #c0c0c0, #f5f5f5);
-    box-shadow: 0 0 6px rgba(192, 192, 192, 0.5);
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.5);
 }
 
 body.theme-moon .metronome-weight {
     background: radial-gradient(circle, #c0c0c0, #808080);
-    box-shadow: 0 0 10px rgba(192, 192, 192, 0.7);
+    box-shadow: 0 0 20px rgba(192, 192, 192, 0.7);
 }
 
-/* Sunset Beach Theme Metronome */
+body.theme-moon .metronome-center-line {
+    background: rgba(192, 192, 192, 0.4);
+    box-shadow: 0 0 8px rgba(192, 192, 192, 0.3);
+}
+
+/* Sunset Beach Theme */
 body.theme-sunset-beach .metronome-body {
     background: linear-gradient(145deg, #ff6347, #ff4500);
-    border: 2px solid #ffd700;
+    border: 4px solid #ffd700;
     box-shadow: 
-        0 6px 20px rgba(255, 99, 71, 0.5),
-        inset 0 1px 6px rgba(255, 215, 0, 0.2);
+        0 15px 40px rgba(255, 99, 71, 0.5),
+        inset 0 3px 15px rgba(255, 215, 0, 0.2);
 }
 
 body.theme-sunset-beach .metronome-pendulum {
     background: linear-gradient(to bottom, #ffd700, #ffffe0);
-    box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
 }
 
 body.theme-sunset-beach .metronome-weight {
     background: radial-gradient(circle, #ffd700, #ff8c00);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
 }
 
-/* North Pole Theme Metronome */
-body.theme-north-pole .metronome-body {
-    background: linear-gradient(145deg, #4682b4, #5f9ea0);
-    border: 2px solid #87ceeb;
-    box-shadow: 
-        0 6px 20px rgba(70, 130, 180, 0.5),
-        inset 0 1px 6px rgba(135, 206, 235, 0.2);
+body.theme-sunset-beach .metronome-center-line {
+    background: rgba(255, 215, 0, 0.4);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
 }
 
-body.theme-north-pole .metronome-pendulum {
-    background: linear-gradient(to bottom, #87ceeb, #f0f8ff);
-    box-shadow: 0 0 6px rgba(135, 206, 235, 0.6);
+/* North Pole Theme - Dark Blue text with arctic feel */
+body.theme-north-pole h1 {
+    color: #1e3a8a;
+    text-shadow: 0 0 20px rgba(30, 58, 138, 0.4), 0 0 5px rgba(30, 58, 138, 0.3);
 }
 
-body.theme-north-pole .metronome-weight {
-    background: radial-gradient(circle, #87ceeb, #4682b4);
-    box-shadow: 0 0 10px rgba(135, 206, 235, 0.8);
+body.theme-north-pole .tempo-display {
+    color: #1e3a8a;
+    text-shadow: 0 0 15px rgba(30, 58, 138, 0.3);
 }
 
-/* Rainforest Theme Metronome */
+body.theme-north-pole .tempo-marking {
+    color: #1e40af;
+    text-shadow: 0 0 8px rgba(30, 64, 175, 0.3);
+}
+
+body.theme-north-pole .time-signature-section label,
+body.theme-north-pole .subdivision-section label,
+body.theme-north-pole .tempo-input-section label {
+    color: #1e40af;
+    text-shadow: 0 0 6px rgba(30, 64, 175, 0.2);
+}
+
+body.theme-north-pole .beat-counter {
+    color: #1e3a8a;
+    text-shadow: 0 0 12px rgba(30, 58, 138, 0.3);
+}
+
+body.theme-north-pole .tempo-text {
+    color: #2563eb;
+}
+
+body.theme-north-pole button {
+    color: #1e40af;
+    border-color: rgba(30, 58, 138, 0.4);
+    text-shadow: 0 0 4px rgba(30, 64, 175, 0.2);
+}
+
+body.theme-north-pole #start-stop {
+    color: white;
+    background: rgba(30, 58, 138, 0.2);
+    border-color: #1e3a8a;
+    text-shadow: 0 0 8px rgba(30, 58, 138, 0.3);
+}
+
+/* Rainforest Theme */
 body.theme-rainforest .metronome-body {
     background: linear-gradient(145deg, #228b22, #32cd32);
-    border: 2px solid #90ee90;
+    border: 4px solid #90ee90;
     box-shadow: 
-        0 6px 20px rgba(34, 139, 34, 0.5),
-        inset 0 1px 6px rgba(144, 238, 144, 0.2);
+        0 15px 40px rgba(34, 139, 34, 0.5),
+        inset 0 3px 15px rgba(144, 238, 144, 0.2);
 }
 
 body.theme-rainforest .metronome-pendulum {
     background: linear-gradient(to bottom, #90ee90, #f0fff0);
-    box-shadow: 0 0 6px rgba(144, 238, 144, 0.6);
+    box-shadow: 0 0 15px rgba(144, 238, 144, 0.6);
 }
 
 body.theme-rainforest .metronome-weight {
     background: radial-gradient(circle, #90ee90, #228b22);
-    box-shadow: 0 0 10px rgba(144, 238, 144, 0.8);
+    box-shadow: 0 0 20px rgba(144, 238, 144, 0.8);
 }
 
-/* Ocean Depths Theme Metronome */
+body.theme-rainforest .metronome-center-line {
+    background: rgba(144, 238, 144, 0.4);
+    box-shadow: 0 0 8px rgba(144, 238, 144, 0.3);
+}
+
+/* Ocean Depths Theme */
 body.theme-ocean-depths .metronome-body {
     background: linear-gradient(145deg, #191970, #000080);
-    border: 2px solid #20b2aa;
+    border: 4px solid #20b2aa;
     box-shadow: 
-        0 6px 20px rgba(25, 25, 112, 0.5),
-        inset 0 1px 6px rgba(32, 178, 170, 0.2);
+        0 15px 40px rgba(25, 25, 112, 0.5),
+        inset 0 3px 15px rgba(32, 178, 170, 0.2);
 }
 
 body.theme-ocean-depths .metronome-pendulum {
     background: linear-gradient(to bottom, #20b2aa, #afeeee);
-    box-shadow: 0 0 6px rgba(32, 178, 170, 0.6);
+    box-shadow: 0 0 15px rgba(32, 178, 170, 0.6);
 }
 
 body.theme-ocean-depths .metronome-weight {
     background: radial-gradient(circle, #20b2aa, #008b8b);
-    box-shadow: 0 0 10px rgba(32, 178, 170, 0.8);
+    box-shadow: 0 0 20px rgba(32, 178, 170, 0.8);
+}
+
+body.theme-ocean-depths .metronome-center-line {
+    background: rgba(32, 178, 170, 0.4);
+    box-shadow: 0 0 8px rgba(32, 178, 170, 0.3);
+}
+
+/* Enhanced transitions for theme changes */
+.metronome-body {
+    transition: all 0.5s ease, background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.metronome-pendulum {
+    transition: transform 0.5s ease-in-out, background 0.5s ease, box-shadow 0.5s ease;
+}
+
+.metronome-weight {
+    transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+
+.metronome-center-line {
+    transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .metronome {
+        grid-template-columns: 1fr 1.5fr 1fr;
+    }
+    
+    .metronome-base {
+        width: 250px;
+        height: 320px;
+    }
+    
+    /* Update all theme-specific bodies for medium screens */
+    body.theme-default .metronome-body,
+    body.theme-grand-canyon .metronome-body,
+    body.theme-moon .metronome-body,
+    body.theme-sunset-beach .metronome-body,
+    body.theme-north-pole .metronome-body,
+    body.theme-rainforest .metronome-body,
+    body.theme-ocean-depths .metronome-body {
+        width: 230px;
+        height: 280px;
+        border: 3px solid; /* Border color stays theme-specific */
+    }
+    
+    .metronome-pendulum {
+        height: 250px;
+        width: 6px;
+    }
+    
+    .metronome-weight {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .metronome-center-line {
+        width: 2px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+        height: 100vh;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+        margin: 5px 0 10px 0;
+    }
+    
+    .metronome {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto 1fr auto;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .tempo-display {
+        grid-column: 1;
+        font-size: 1.5rem;
+    }
+    
+    .left-controls {
+        grid-column: 1;
+        grid-row: 2;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+    
+    .metronome-visual {
+        grid-column: 1;
+        grid-row: 4;
+    }
+    
+    .right-controls {
+        grid-column: 1;
+        grid-row: 5;
+    }
+    
+    .metronome-base {
+        width: 200px;
+        height: 260px;
+    }
+    
+    /* Update all theme-specific bodies for mobile */
+    body.theme-default .metronome-body,
+    body.theme-grand-canyon .metronome-body,
+    body.theme-moon .metronome-body,
+    body.theme-sunset-beach .metronome-body,
+    body.theme-north-pole .metronome-body,
+    body.theme-rainforest .metronome-body,
+    body.theme-ocean-depths .metronome-body {
+        width: 180px;
+        height: 220px;
+        border: 2px solid; /* Border color stays theme-specific */
+    }
+    
+    .metronome-pendulum {
+        height: 190px;
+        width: 5px;
+    }
+    
+    .metronome-weight {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .metronome-center-line {
+        width: 1.5px;
+    }
+    
+    .controls {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+}
+
+/* Theme-specific text colors with enhanced contrast */
+
+/* Default Theme (Midnight Sky) - Bright Blue with strong glow */
+body.theme-default h1 {
+    color: #87ceeb;
+    text-shadow: 0 0 30px rgba(135, 206, 235, 0.8), 0 0 10px rgba(135, 206, 235, 0.6);
+}
+
+body.theme-default .tempo-display {
+    color: #87ceeb;
+    text-shadow: 0 0 20px rgba(135, 206, 235, 0.6);
+}
+
+body.theme-default .tempo-marking {
+    color: #b3d9ff;
+    text-shadow: 0 0 10px rgba(179, 217, 255, 0.5);
+}
+
+body.theme-default .time-signature-section label,
+body.theme-default .subdivision-section label,
+body.theme-default .tempo-input-section label {
+    color: #b3d9ff;
+    text-shadow: 0 0 8px rgba(179, 217, 255, 0.4);
+}
+
+body.theme-default .beat-counter {
+    color: #87ceeb;
+    text-shadow: 0 0 15px rgba(135, 206, 235, 0.6);
+}
+
+body.theme-default .tempo-text {
+    color: #b3d9ff;
+}
+
+body.theme-default button {
+    color: #b3d9ff;
+    border-color: rgba(135, 206, 235, 0.5);
+    text-shadow: 0 0 5px rgba(179, 217, 255, 0.3);
+}
+
+body.theme-default #start-stop {
+    color: white;
+    background: rgba(135, 206, 235, 0.3);
+    border-color: #87ceeb;
+    text-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
+}
+
+/* Grand Canyon Theme - Bright Orange/Yellow with warm glow */
+body.theme-grand-canyon h1 {
+    color: #ffb347;
+    text-shadow: 0 0 30px rgba(255, 179, 71, 0.8), 0 0 10px rgba(255, 140, 0, 0.6);
+}
+
+body.theme-grand-canyon .tempo-display {
+    color: #ffb347;
+    text-shadow: 0 0 20px rgba(255, 179, 71, 0.6);
+}
+
+body.theme-grand-canyon .tempo-marking {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+body.theme-grand-canyon .time-signature-section label,
+body.theme-grand-canyon .subdivision-section label,
+body.theme-grand-canyon .tempo-input-section label {
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+body.theme-grand-canyon .beat-counter {
+    color: #ffb347;
+    text-shadow: 0 0 15px rgba(255, 179, 71, 0.6);
+}
+
+body.theme-grand-canyon .tempo-text {
+    color: #ffd700;
+}
+
+body.theme-grand-canyon button {
+    color: #ffd700;
+    border-color: rgba(255, 179, 71, 0.5);
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+}
+
+body.theme-grand-canyon #start-stop {
+    color: white;
+    background: rgba(255, 179, 71, 0.3);
+    border-color: #ffb347;
+    text-shadow: 0 0 10px rgba(255, 179, 71, 0.5);
+}
+
+/* Moon Theme - Black text with subtle shadows */
+body.theme-moon h1 {
+    color: #000000;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3), 0 0 5px rgba(192, 192, 192, 0.2);
+}
+
+body.theme-moon .tempo-display {
+    color: #000000;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+body.theme-moon .tempo-marking {
+    color: #2c2c2c;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+body.theme-moon .time-signature-section label,
+body.theme-moon .subdivision-section label,
+body.theme-moon .tempo-input-section label {
+    color: #2c2c2c;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
+}
+
+body.theme-moon .beat-counter {
+    color: #000000;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+body.theme-moon .tempo-text {
+    color: #404040;
+}
+
+body.theme-moon button {
+    color: #2c2c2c;
+    border-color: rgba(0, 0, 0, 0.4);
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.15);
+}
+
+body.theme-moon #start-stop {
+    color: #000000;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #000000;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+/* Sunset Beach Theme - Bright Gold/Yellow with warm glow */
+body.theme-sunset-beach h1 {
+    color: #ffef94;
+    text-shadow: 0 0 30px rgba(255, 239, 148, 0.8), 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+body.theme-sunset-beach .tempo-display {
+    color: #ffef94;
+    text-shadow: 0 0 20px rgba(255, 239, 148, 0.6);
+}
+
+body.theme-sunset-beach .tempo-marking {
+    color: #fff8dc;
+    text-shadow: 0 0 10px rgba(255, 248, 220, 0.5);
+}
+
+body.theme-sunset-beach .time-signature-section label,
+body.theme-sunset-beach .subdivision-section label,
+body.theme-sunset-beach .tempo-input-section label {
+    color: #fff8dc;
+    text-shadow: 0 0 8px rgba(255, 248, 220, 0.4);
+}
+
+body.theme-sunset-beach .beat-counter {
+    color: #ffef94;
+    text-shadow: 0 0 15px rgba(255, 239, 148, 0.6);
+}
+
+body.theme-sunset-beach .tempo-text {
+    color: #fff8dc;
+}
+
+body.theme-sunset-beach button {
+    color: #fff8dc;
+    border-color: rgba(255, 239, 148, 0.5);
+    text-shadow: 0 0 5px rgba(255, 248, 220, 0.3);
+}
+
+body.theme-sunset-beach #start-stop {
+    color: #8b4513;
+    background: rgba(255, 239, 148, 0.3);
+    border-color: #ffef94;
+    text-shadow: 0 0 10px rgba(255, 239, 148, 0.5);
+}
+
+/* Rainforest Theme - Bright Light Green with natural glow */
+body.theme-rainforest h1 {
+    color: #98fb98;
+    text-shadow: 0 0 30px rgba(152, 251, 152, 0.8), 0 0 10px rgba(144, 238, 144, 0.6);
+}
+
+body.theme-rainforest .tempo-display {
+    color: #98fb98;
+    text-shadow: 0 0 20px rgba(152, 251, 152, 0.6);
+}
+
+body.theme-rainforest .tempo-marking {
+    color: #f0fff0;
+    text-shadow: 0 0 10px rgba(240, 255, 240, 0.5);
+}
+
+body.theme-rainforest .time-signature-section label,
+body.theme-rainforest .subdivision-section label,
+body.theme-rainforest .tempo-input-section label {
+    color: #f0fff0;
+    text-shadow: 0 0 8px rgba(240, 255, 240, 0.4);
+}
+
+body.theme-rainforest .beat-counter {
+    color: #98fb98;
+    text-shadow: 0 0 15px rgba(152, 251, 152, 0.6);
+}
+
+body.theme-rainforest .tempo-text {
+    color: #f0fff0;
+}
+
+body.theme-rainforest button {
+    color: #f0fff0;
+    border-color: rgba(152, 251, 152, 0.5);
+    text-shadow: 0 0 5px rgba(240, 255, 240, 0.3);
+}
+
+body.theme-rainforest #start-stop {
+    color: #2d5016;
+    background: rgba(152, 251, 152, 0.3);
+    border-color: #98fb98;
+    text-shadow: 0 0 10px rgba(152, 251, 152, 0.5);
+}
+
+/* Ocean Depths Theme - Dark Blue text with deep ocean feel */
+body.theme-ocean-depths h1 {
+    color: #1e3a8a;
+    text-shadow: 0 0 20px rgba(30, 58, 138, 0.4), 0 0 5px rgba(30, 58, 138, 0.3);
+}
+
+body.theme-ocean-depths .tempo-display {
+    color: #1e3a8a;
+    text-shadow: 0 0 15px rgba(30, 58, 138, 0.3);
+}
+
+body.theme-ocean-depths .tempo-marking {
+    color: #1e40af;
+    text-shadow: 0 0 8px rgba(30, 64, 175, 0.3);
+}
+
+body.theme-ocean-depths .time-signature-section label,
+body.theme-ocean-depths .subdivision-section label,
+body.theme-ocean-depths .tempo-input-section label {
+    color: #1e40af;
+    text-shadow: 0 0 6px rgba(30, 64, 175, 0.2);
+}
+
+body.theme-ocean-depths .beat-counter {
+    color: #1e3a8a;
+    text-shadow: 0 0 12px rgba(30, 58, 138, 0.3);
+}
+
+body.theme-ocean-depths .tempo-text {
+    color: #2563eb;
+}
+
+body.theme-ocean-depths button {
+    color: #1e40af;
+    border-color: rgba(30, 58, 138, 0.4);
+    text-shadow: 0 0 4px rgba(30, 64, 175, 0.2);
+}
+
+body.theme-ocean-depths #start-stop {
+    color: white;
+    background: rgba(30, 58, 138, 0.2);
+    border-color: #1e3a8a;
+    text-shadow: 0 0 8px rgba(30, 58, 138, 0.3);
+}
+
+/* Enhanced transitions for smooth color changes */
+h1 {
+    transition: color 0.5s ease, text-shadow 0.5s ease;
+}
+
+.tempo-display {
+    transition: color 0.5s ease;
+}
+
+.tempo-marking {
+    transition: color 0.5s ease;
+}
+
+.time-signature-section label,
+.subdivision-section label,
+.tempo-input-section label {
+    transition: color 0.5s ease;
+}
+
+.beat-counter {
+    transition: color 0.5s ease;
+}
+
+.tempo-text {
+    transition: color 0.5s ease;
+}
+
+button {
+    transition: all 0.3s ease, color 0.5s ease, border-color 0.5s ease, background 0.5s ease;
+}
+
+#start-stop {
+    transition: all 0.3s ease, color 0.5s ease, border-color 0.5s ease, background 0.5s ease;
+}
+
+/* Base text colors (fallback when no theme is applied) */
+h1 {
+    color: white;
+}
+
+.tempo-display {
+    color: white;
+}
+
+.tempo-marking {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.time-signature-section label,
+.subdivision-section label,
+.tempo-input-section label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.beat-counter {
+    color: white;
+}
+
+/* Force menu text to always be white regardless of theme */
+.theme-options h3,
+.sound-options h3 {
+    color: white !important;
+    text-shadow: none !important;
+}
+
+.theme-option,
+.theme-option span {
+    color: white !important;
+    text-shadow: none !important;
+}
+
+.sound-option,
+.sound-option .sound-name,
+.sound-option .sound-preview {
+    color: white !important;
+    text-shadow: none !important;
+}
+
+/* Ensure menu text stays white even when hovered */
+.theme-option:hover,
+.theme-option:hover span {
+    color: white !important;
+}
+
+.sound-option:hover,
+.sound-option:hover .sound-name,
+.sound-option:hover .sound-preview {
+    color: white !important;
+}
+
+/* Ensure active menu items also have white text */
+.theme-option.active,
+.theme-option.active span {
+    color: white !important;
+}
+
+.sound-option.active,
+.sound-option.active .sound-name,
+.sound-option.active .sound-preview {
+    color: white !important;
 } 
