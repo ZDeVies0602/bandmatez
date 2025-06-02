@@ -2170,23 +2170,23 @@ body.theme-moon .note-display.tuning-off {
 
 /* Position black keys between white keys within each octave */
 .octave .black-key[data-note="C#"] {
-    left: calc(100% / 7 * 0.75); /* Between C and D - more precise positioning */
+    left: calc(100% / 7 * 0.5); /* Exactly halfway between C and D */
 }
 
 .octave .black-key[data-note="D#"] {
-    left: calc(100% / 7 * 1.75); /* Between D and E */
+    left: calc(100% / 7 * 1.5); /* Exactly halfway between D and E */
 }
 
 .octave .black-key[data-note="F#"] {
-    left: calc(100% / 7 * 3.75); /* Between F and G */
+    left: calc(100% / 7 * 3.5); /* Exactly halfway between F and G */
 }
 
 .octave .black-key[data-note="G#"] {
-    left: calc(100% / 7 * 4.75); /* Between G and A */
+    left: calc(100% / 7 * 4.5); /* Exactly halfway between G and A */
 }
 
 .octave .black-key[data-note="A#"] {
-    left: calc(100% / 7 * 5.75); /* Between A and B */
+    left: calc(100% / 7 * 5.5); /* Exactly halfway between A and B */
 }
 
 /* Custom accent checkboxes styling */
