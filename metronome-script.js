@@ -383,11 +383,6 @@ class Metronome {
         const isAccent = currentSubdivision === 1 && this.isAccentedBeat(currentBeat);
         const noteTime = time * 1000; // Convert to milliseconds for setTimeout
         
-        // Calculate timing for pendulum animation
-        const beatDuration = (60 / this.tempo) * 1000; // Full beat duration in ms
-        const pendulumStartTime = noteTime - (beatDuration / 2); // Start swing half-beat early
-        const centerCrossingTime = noteTime; // When pendulum crosses center = when main beat should play
-        
         // Add to schedule queue for visual updates
         this.scheduleQueue.push({
             time: noteTime,
@@ -396,41 +391,36 @@ class Metronome {
             isAccent: isAccent
         });
         
-        // Schedule pendulum animation only on main beats (subdivision 1) - this keeps the smooth swing
-        if (currentSubdivision === 1) {
-            setTimeout(() => {
-                this.animatePendulumVisualOnly(currentBeat, currentSubdivision, isAccent);
-                
-                // Schedule main beat sound to play when pendulum crosses center (50% through swing)
-                setTimeout(() => {
-                    console.log(`Main beat sound: Beat ${currentBeat}, Accent: ${isAccent} - Pendulum crossing center`);
-                    if (this.sounds) {
-                        const soundType = this.sounds.getCurrentSoundType();
-                        const volume = isAccent ? 0.8 : 0.7;
-                        this.sounds.createSound(soundType, isAccent, volume);
-                    } else {
-                        this.createBasicSound(isAccent);
-                    }
-                }, beatDuration / 2); // Play at center crossing
-                
-            }, Math.max(0, pendulumStartTime - performance.now()));
-        } else {
-            // For subdivisions, play sound at the scheduled time (no pendulum animation)
-            setTimeout(() => {
-                console.log(`Subdivision sound: Beat ${currentBeat}, Sub ${currentSubdivision}`);
-                if (this.sounds) {
-                    const soundType = this.sounds.getCurrentSoundType();
-                    this.sounds.createSound(soundType, false, 0.5);
-                } else {
-                    this.createBasicSound(false);
-                }
-            }, Math.max(0, noteTime - performance.now()));
-        }
+        // Calculate timing
+        const currentTime = performance.now();
+        const delay = Math.max(0, noteTime - currentTime);
         
-        // Schedule visual updates (beat counter, subdivision dots) at beat time
+        // Schedule the sound (both main beats and subdivisions)
+        setTimeout(() => {
+            console.log(`Sound: Beat ${currentBeat}, Sub ${currentSubdivision}, Accent: ${isAccent}`);
+            
+            if (this.sounds) {
+                const soundType = this.sounds.getCurrentSoundType();
+                const volume = isAccent ? 0.8 : (currentSubdivision === 1 ? 0.7 : 0.5);
+                this.sounds.createSound(soundType, isAccent, volume);
+            } else {
+                this.createBasicSound(isAccent);
+            }
+        }, delay);
+        
+        // Schedule visual updates (beat counter, subdivision dots) at the same time
         setTimeout(() => {
             this.updateBeatVisuals(currentBeat, currentSubdivision, isAccent);
-        }, Math.max(0, noteTime - performance.now()));
+        }, delay);
+        
+        // Schedule pendulum animation only on main beats (subdivision 1)
+        if (currentSubdivision === 1) {
+            const beatDuration = (60 / this.tempo) * 1000; // Full beat duration in ms
+            
+            setTimeout(() => {
+                this.animatePendulumVisualOnly(currentBeat, currentSubdivision, isAccent);
+            }, Math.max(0, delay - (beatDuration / 4))); // Start pendulum slightly before beat
+        }
     }
 
     async createBasicSound(isAccent) {
