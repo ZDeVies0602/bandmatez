@@ -35,20 +35,24 @@ class FrequencyUtils {
      * @returns {number} Frequency in Hz
      */
     noteToFrequency(note, octave) {
-        // Note names starting from A (to match A4 = 440Hz reference)
-        const noteNamesFromA = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
+        // Standard note names starting from C (octave changes at C)
+        const noteNamesFromC = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         
-        const noteIndex = noteNamesFromA.indexOf(note);
+        const noteIndex = noteNamesFromC.indexOf(note);
         if (noteIndex === -1) {
             console.error('Invalid note name:', note);
             return this.A4_FREQUENCY; // Return A4 as fallback
         }
         
-        // Calculate semitones from A4
-        const semitones = (octave - 4) * 12 + noteIndex;
+        // Calculate semitones from A4 (A4 is index 9 in C-based array, octave 4)
+        // A4 position: octave 4, index 9 = (4 * 12) + 9 = 57 semitones from C0
+        // Target note position: (octave * 12) + noteIndex
+        const targetSemitones = (octave * 12) + noteIndex;
+        const a4Semitones = (4 * 12) + 9; // A4 position
+        const semitonesFromA4 = targetSemitones - a4Semitones;
         
         // Calculate frequency using equal temperament formula
-        return this.A4_FREQUENCY * Math.pow(2, semitones / 12);
+        return this.A4_FREQUENCY * Math.pow(2, semitonesFromA4 / 12);
     }
 
     /**
@@ -58,31 +62,32 @@ class FrequencyUtils {
      */
     frequencyToNote(frequency) {
         // Calculate semitones from A4
-        const semitones = 12 * Math.log2(frequency / this.A4_FREQUENCY);
+        const semitonesFromA4 = 12 * Math.log2(frequency / this.A4_FREQUENCY);
         
         // Find the nearest note
-        const nearestSemitone = Math.round(semitones);
+        const nearestSemitone = Math.round(semitonesFromA4);
         
-        // Note names starting from A
-        const noteNamesFromA = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
+        // Standard note names starting from C (octave changes at C)
+        const noteNamesFromC = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         
-        // Get the note index (handle negative values properly)
-        let noteIndex = nearestSemitone % 12;
-        if (noteIndex < 0) noteIndex += 12;
+        // A4 is at position 57 semitones from C0 (octave 4, index 9)
+        const a4Position = (4 * 12) + 9; // 57
+        const targetPosition = a4Position + nearestSemitone;
         
-        // Calculate octave - A4 is octave 4
-        let octave = 4 + Math.floor(nearestSemitone / 12);
+        // Calculate octave and note index
+        const octave = Math.floor(targetPosition / 12);
+        let noteIndex = targetPosition % 12;
         
-        // Special handling for notes below A4 that wrapped around
-        if (noteIndex >= 2 && nearestSemitone < 0) { // B, C notes
-            octave -= 1;
+        // Handle negative case
+        if (noteIndex < 0) {
+            noteIndex += 12;
         }
         
         // Calculate cents deviation from perfect pitch
-        const cents = Math.round((semitones - nearestSemitone) * 100);
+        const cents = Math.round((semitonesFromA4 - nearestSemitone) * 100);
         
         return {
-            note: noteNamesFromA[noteIndex] + octave,
+            note: noteNamesFromC[noteIndex] + octave,
             cents: cents,
             frequency: frequency
         };

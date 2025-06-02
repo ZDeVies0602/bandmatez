@@ -20,6 +20,10 @@ class Metronome {
         this.currentBeat = 1;
         this.currentSubdivision = 1;
         
+        // Accent pattern settings
+        this.accentPattern = [1]; // Default: accent only on beat 1
+        this.customAccentPattern = [1]; // For custom patterns
+        
         // Pendulum state for continuous swing
         this.pendulumDirection = 1; // 1 for right, -1 for left
         
@@ -65,6 +69,11 @@ class Metronome {
         this.totalBeatsSpan = document.getElementById('total-beats');
         this.subdivisionIndicator = document.getElementById('subdivision-indicator');
         this.pendulum = document.getElementById('pendulum');
+        
+        // Accent pattern elements
+        this.accentPatternSelect = document.getElementById('accent-pattern');
+        this.customAccentsDiv = document.getElementById('custom-accents');
+        this.accentCheckboxesDiv = document.getElementById('accent-checkboxes');
         
         console.log('Pendulum element found during init:', !!this.pendulum, this.pendulum);
         
@@ -123,6 +132,11 @@ class Metronome {
             this.setSubdivision(parseInt(e.target.value));
         });
 
+        // Accent pattern selector
+        this.accentPatternSelect.addEventListener('change', (e) => {
+            this.setAccentPattern(e.target.value);
+        });
+
         // Initialize audio context on first user interaction
         document.addEventListener('click', async () => {
             if (this.audioManager) {
@@ -165,12 +179,97 @@ class Metronome {
         this.totalBeatsSpan.textContent = beats;
         this.updateDisplay();
         this.updateSubdivisionIndicator();
+        
+        // Update custom accent checkboxes if custom pattern is selected
+        if (this.accentPatternSelect.value === 'custom') {
+            this.updateCustomAccentCheckboxes();
+        }
+        
+        // Reset accent pattern to default if current pattern is invalid for new time signature
+        const maxBeat = Math.max(...this.accentPattern);
+        if (maxBeat > beats) {
+            this.accentPattern = [1]; // Reset to beat 1 only
+            this.accentPatternSelect.value = '1';
+            this.customAccentsDiv.style.display = 'none';
+        }
     }
 
     setSubdivision(subdivision) {
         this.subdivision = subdivision;
         this.currentSubdivision = 1;
         this.updateSubdivisionIndicator();
+    }
+
+    setAccentPattern(pattern) {
+        console.log('Setting accent pattern:', pattern);
+        
+        if (pattern === 'custom') {
+            // Show custom accent checkboxes
+            this.customAccentsDiv.style.display = 'block';
+            this.updateCustomAccentCheckboxes();
+            this.accentPattern = [...this.customAccentPattern];
+        } else {
+            // Hide custom accent checkboxes
+            this.customAccentsDiv.style.display = 'none';
+            
+            // Parse the pattern string (e.g., "1,3" -> [1, 3])
+            this.accentPattern = pattern.split(',').map(num => parseInt(num.trim()));
+        }
+        
+        console.log('Accent pattern set to:', this.accentPattern);
+    }
+
+    updateCustomAccentCheckboxes() {
+        this.accentCheckboxesDiv.innerHTML = '';
+        
+        for (let beat = 1; beat <= this.timeSignature.beats; beat++) {
+            const checkboxDiv = document.createElement('div');
+            checkboxDiv.className = 'accent-checkbox';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `accent-beat-${beat}`;
+            checkbox.checked = this.customAccentPattern.includes(beat);
+            
+            const label = document.createElement('label');
+            label.htmlFor = `accent-beat-${beat}`;
+            label.textContent = `Beat ${beat}`;
+            
+            checkbox.addEventListener('change', () => {
+                this.updateCustomAccentPattern();
+            });
+            
+            checkboxDiv.appendChild(checkbox);
+            checkboxDiv.appendChild(label);
+            this.accentCheckboxesDiv.appendChild(checkboxDiv);
+        }
+    }
+
+    updateCustomAccentPattern() {
+        this.customAccentPattern = [];
+        
+        for (let beat = 1; beat <= this.timeSignature.beats; beat++) {
+            const checkbox = document.getElementById(`accent-beat-${beat}`);
+            if (checkbox && checkbox.checked) {
+                this.customAccentPattern.push(beat);
+            }
+        }
+        
+        // Ensure beat 1 is always included
+        if (!this.customAccentPattern.includes(1)) {
+            this.customAccentPattern.unshift(1);
+            const beat1Checkbox = document.getElementById('accent-beat-1');
+            if (beat1Checkbox) {
+                beat1Checkbox.checked = true;
+            }
+        }
+        
+        this.accentPattern = [...this.customAccentPattern];
+        console.log('Custom accent pattern updated:', this.accentPattern);
+    }
+
+    isAccentedBeat(beat) {
+        return this.accentPattern.includes(beat);
     }
 
     updateSubdivisionIndicator() {
@@ -272,13 +371,16 @@ class Metronome {
         }
         
         while (this.nextNoteTime < currentTime + this.scheduleAheadTime) {
-            this.scheduleNote(this.nextNoteTime);
+            // Capture the current beat values BEFORE they get incremented
+            const currentBeat = this.currentBeat;
+            const currentSubdivision = this.currentSubdivision;
+            this.scheduleNote(this.nextNoteTime, currentBeat, currentSubdivision);
             this.nextNote();
         }
     }
 
-    async scheduleNote(time) {
-        const isAccent = this.currentSubdivision === 1 && this.currentBeat === 1;
+    async scheduleNote(time, currentBeat, currentSubdivision) {
+        const isAccent = currentSubdivision === 1 && this.isAccentedBeat(currentBeat);
         const noteTime = time * 1000; // Convert to milliseconds for setTimeout
         
         // Calculate timing for pendulum animation
@@ -289,19 +391,19 @@ class Metronome {
         // Add to schedule queue for visual updates
         this.scheduleQueue.push({
             time: noteTime,
-            beat: this.currentBeat,
-            subdivision: this.currentSubdivision,
+            beat: currentBeat,
+            subdivision: currentSubdivision,
             isAccent: isAccent
         });
         
         // Schedule pendulum animation only on main beats (subdivision 1) - this keeps the smooth swing
-        if (this.currentSubdivision === 1) {
+        if (currentSubdivision === 1) {
             setTimeout(() => {
-                this.animatePendulumVisualOnly(this.currentBeat, this.currentSubdivision, isAccent);
+                this.animatePendulumVisualOnly(currentBeat, currentSubdivision, isAccent);
                 
                 // Schedule main beat sound to play when pendulum crosses center (50% through swing)
                 setTimeout(() => {
-                    console.log(`Main beat sound: Beat ${this.currentBeat}, Accent: ${isAccent} - Pendulum crossing center`);
+                    console.log(`Main beat sound: Beat ${currentBeat}, Accent: ${isAccent} - Pendulum crossing center`);
                     if (this.sounds) {
                         const soundType = this.sounds.getCurrentSoundType();
                         const volume = isAccent ? 0.8 : 0.7;
@@ -315,7 +417,7 @@ class Metronome {
         } else {
             // For subdivisions, play sound at the scheduled time (no pendulum animation)
             setTimeout(() => {
-                console.log(`Subdivision sound: Beat ${this.currentBeat}, Sub ${this.currentSubdivision}`);
+                console.log(`Subdivision sound: Beat ${currentBeat}, Sub ${currentSubdivision}`);
                 if (this.sounds) {
                     const soundType = this.sounds.getCurrentSoundType();
                     this.sounds.createSound(soundType, false, 0.5);
@@ -327,7 +429,7 @@ class Metronome {
         
         // Schedule visual updates (beat counter, subdivision dots) at beat time
         setTimeout(() => {
-            this.updateBeatVisuals(this.currentBeat, this.currentSubdivision, isAccent);
+            this.updateBeatVisuals(currentBeat, currentSubdivision, isAccent);
         }, Math.max(0, noteTime - performance.now()));
     }
 

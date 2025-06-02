@@ -478,11 +478,11 @@ h1 {
     justify-content: flex-start;
 }
 
-.time-signature-section, .subdivision-section {
+.time-signature-section, .subdivision-section, .accent-pattern-section {
     text-align: center;
 }
 
-.time-signature-section label, .subdivision-section label {
+.time-signature-section label, .subdivision-section label, .accent-pattern-section label {
     display: block;
     color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
@@ -490,7 +490,7 @@ h1 {
     font-weight: 300;
 }
 
-.time-signature-section select, .subdivision-section select {
+.time-signature-section select, .subdivision-section select, .accent-pattern-section select {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
@@ -502,7 +502,7 @@ h1 {
     transition: all 0.3s ease;
 }
 
-.time-signature-section select:focus, .subdivision-section select:focus {
+.time-signature-section select:focus, .subdivision-section select:focus, .accent-pattern-section select:focus {
     outline: none;
     border-color: #64b5f6;
     background: rgba(100, 181, 246, 0.1);
@@ -2054,13 +2054,14 @@ body.theme-moon .note-display.tuning-off {
 .black-key {
     background: linear-gradient(to bottom, #2c3e50 0%, #1a252f 100%);
     color: white;
-    height: 65%;
-    width: 60%;
+    height: 60%;
+    width: 36px; /* Fixed width instead of percentage for better control */
     position: absolute;
     top: 0;
     z-index: 10;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 6px 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transform: translateX(-50%); /* Center the key on its position */
 }
 
 .black-key:hover {
@@ -2069,7 +2070,7 @@ body.theme-moon .note-display.tuning-off {
 
 .black-key.active {
     background: linear-gradient(to bottom, #007bff 0%, #0056b3 100%);
-    transform: translateY(2px);
+    transform: translateX(-50%) translateY(2px);
 }
 
 .piano-display {
@@ -2152,6 +2153,11 @@ body.theme-moon .note-display.tuning-off {
         font-size: 0.7rem;
     }
     
+    .black-key {
+        width: 24px; /* Smaller on mobile */
+        height: 60%;
+    }
+    
     .current-note {
         font-size: 2rem;
     }
@@ -2164,21 +2170,51 @@ body.theme-moon .note-display.tuning-off {
 
 /* Position black keys between white keys within each octave */
 .octave .black-key[data-note="C#"] {
-    left: calc(100% / 7 * 0.7); /* Between C and D */
+    left: calc(100% / 7 * 0.75); /* Between C and D - more precise positioning */
 }
 
 .octave .black-key[data-note="D#"] {
-    left: calc(100% / 7 * 1.7); /* Between D and E */
+    left: calc(100% / 7 * 1.75); /* Between D and E */
 }
 
 .octave .black-key[data-note="F#"] {
-    left: calc(100% / 7 * 3.7); /* Between F and G */
+    left: calc(100% / 7 * 3.75); /* Between F and G */
 }
 
 .octave .black-key[data-note="G#"] {
-    left: calc(100% / 7 * 4.7); /* Between G and A */
+    left: calc(100% / 7 * 4.75); /* Between G and A */
 }
 
 .octave .black-key[data-note="A#"] {
-    left: calc(100% / 7 * 5.7); /* Between A and B */
+    left: calc(100% / 7 * 5.75); /* Between A and B */
+}
+
+/* Custom accent checkboxes styling */
+.custom-accents {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.accent-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.accent-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.accent-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #64b5f6;
 }
