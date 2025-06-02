@@ -281,6 +281,11 @@ body {
     --text-secondary: #b0b0b0;
     --bg-primary: #2a2a3e;
     --bg-secondary: #1e1e2f;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --input-bg: rgba(255, 255, 255, 0.1);
+    --text-color: #ffffff;
+    --border-color: rgba(255, 255, 255, 0.2);
+    --accent-hover: #5a9bd4;
 }
 
 /* Grand Canyon Theme */
@@ -298,6 +303,11 @@ body.theme-grand-canyon {
     --text-secondary: #deb887;
     --bg-primary: rgba(139, 69, 19, 0.8);
     --bg-secondary: rgba(160, 82, 45, 0.6);
+    --card-bg: rgba(139, 69, 19, 0.3);
+    --input-bg: rgba(160, 82, 45, 0.4);
+    --text-color: #fff8dc;
+    --border-color: rgba(255, 107, 53, 0.4);
+    --accent-hover: #e55a00;
 }
 
 /* Moon Theme */
@@ -315,6 +325,11 @@ body.theme-moon {
     --text-secondary: #d3d3d3;
     --bg-primary: rgba(44, 44, 44, 0.8);
     --bg-secondary: rgba(80, 80, 80, 0.6);
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --input-bg: rgba(255, 255, 255, 0.2);
+    --text-color: #000000;
+    --border-color: rgba(0, 0, 0, 0.3);
+    --accent-hover: #e8e8e8;
 }
 
 /* Sunset Beach Theme */
@@ -332,6 +347,11 @@ body.theme-sunset-beach {
     --text-secondary: #ffe4e6;
     --bg-primary: rgba(255, 105, 180, 0.3);
     --bg-secondary: rgba(255, 165, 0, 0.2);
+    --card-bg: rgba(255, 105, 180, 0.2);
+    --input-bg: rgba(255, 165, 0, 0.3);
+    --text-color: #ffffff;
+    --border-color: rgba(255, 105, 180, 0.4);
+    --accent-hover: #e91280;
 }
 
 /* North Pole Theme - Dark Blue text with arctic feel */
@@ -349,6 +369,11 @@ body.theme-north-pole {
     --text-secondary: #4682b4;
     --bg-primary: rgba(240, 248, 255, 0.8);
     --bg-secondary: rgba(173, 216, 230, 0.6);
+    --card-bg: rgba(240, 248, 255, 0.5);
+    --input-bg: rgba(255, 255, 255, 0.7);
+    --text-color: #1a365d;
+    --border-color: rgba(25, 25, 112, 0.3);
+    --accent-hover: #0099cc;
 }
 
 /* Rainforest Theme */
@@ -366,6 +391,11 @@ body.theme-rainforest {
     --text-secondary: #98fb98;
     --bg-primary: rgba(34, 139, 34, 0.8);
     --bg-secondary: rgba(0, 100, 0, 0.6);
+    --card-bg: rgba(34, 139, 34, 0.3);
+    --input-bg: rgba(46, 139, 87, 0.4);
+    --text-color: #f0fff0;
+    --border-color: rgba(50, 205, 50, 0.4);
+    --accent-hover: #9aff2f;
 }
 
 /* Ocean Depths Theme */
@@ -383,6 +413,11 @@ body.theme-ocean-depths {
     --text-secondary: #b0e0e6;
     --bg-primary: rgba(0, 51, 102, 0.8);
     --bg-secondary: rgba(0, 34, 68, 0.6);
+    --card-bg: rgba(0, 51, 102, 0.3);
+    --input-bg: rgba(30, 144, 255, 0.2);
+    --text-color: #e0ffff;
+    --border-color: rgba(0, 191, 255, 0.4);
+    --accent-hover: #00a6e6;
 }
 
 .container {
@@ -552,7 +587,7 @@ h1 {
     top: 40px;
     left: 50%;
     transform: translateX(-50%) rotate(0deg);
-    transition: transform 0.5s ease-in-out, background 0.5s ease, box-shadow 0.5s ease;
+    transition: background 0.5s ease, box-shadow 0.5s ease; /* Removed transform transition */
     z-index: 2;
     /* Default styling if no theme is applied */
     background: linear-gradient(to bottom, #64b5f6, #ffffff);
@@ -1019,7 +1054,7 @@ body.theme-ocean-depths .metronome-center-line {
 }
 
 .metronome-pendulum {
-    transition: transform 0.5s ease-in-out, background 0.5s ease, box-shadow 0.5s ease;
+    transition: background 0.5s ease, box-shadow 0.5s ease;
 }
 
 .metronome-weight {
@@ -1888,4 +1923,262 @@ body.theme-moon .note-display.tuning-close {
 body.theme-moon .note-display.tuning-off {
     color: #dc143c !important; /* Crimson red for off tuning */
     text-shadow: 0 0 20px rgba(220, 20, 60, 0.6) !important;
+}
+
+/* Virtual Piano Styles */
+.piano {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.piano-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-group label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.control-group select,
+.control-group input[type="range"] {
+    background: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 0.9rem;
+}
+
+.volume-slider,
+.sustain-slider {
+    width: 100px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border-color);
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb,
+.sustain-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+}
+
+#volume-display,
+#sustain-display {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    min-width: 40px;
+    text-align: center;
+}
+
+.piano-keyboard {
+    position: relative;
+    height: 200px;
+    background: #f8f9fa;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    width: 100%;
+}
+
+.octave {
+    position: relative;
+    height: 100%;
+    flex: 1;
+    display: flex;
+}
+
+.piano-key {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.1s ease;
+    border: 1px solid #ddd;
+}
+
+.white-key {
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    color: #333;
+    height: 100%;
+    flex: 1;
+    border-right: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+}
+
+.white-key:hover {
+    background: linear-gradient(to bottom, #f0f0f0 0%, #e8e9ea 100%);
+}
+
+.white-key.active {
+    background: linear-gradient(to bottom, #007bff 0%, #0056b3 100%);
+    color: white;
+    transform: translateY(2px);
+}
+
+.black-key {
+    background: linear-gradient(to bottom, #2c3e50 0%, #1a252f 100%);
+    color: white;
+    height: 65%;
+    width: 60%;
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.black-key:hover {
+    background: linear-gradient(to bottom, #34495e 0%, #2c3e50 100%);
+}
+
+.black-key.active {
+    background: linear-gradient(to bottom, #007bff 0%, #0056b3 100%);
+    transform: translateY(2px);
+}
+
+.piano-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.current-note {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.current-frequency {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+.chord-helper {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.chord-helper .control-group {
+    flex-direction: row;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.chord-helper select {
+    min-width: 150px;
+}
+
+.chord-helper button {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.chord-helper button:hover {
+    background: var(--accent-hover);
+}
+
+.chord-helper button:active {
+    transform: translateY(1px);
+}
+
+/* Responsive Design for Piano */
+@media (max-width: 768px) {
+    .piano-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .control-group {
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    .piano-keyboard {
+        height: 150px;
+    }
+    
+    .piano-key {
+        font-size: 0.7rem;
+    }
+    
+    .current-note {
+        font-size: 2rem;
+    }
+    
+    .chord-helper .control-group {
+        flex-direction: column;
+        gap: 10px;
+    }
 } 
+
+/* Position black keys between white keys within each octave */
+.octave .black-key[data-note="C#"] {
+    left: calc(100% / 7 * 0.7); /* Between C and D */
+}
+
+.octave .black-key[data-note="D#"] {
+    left: calc(100% / 7 * 1.7); /* Between D and E */
+}
+
+.octave .black-key[data-note="F#"] {
+    left: calc(100% / 7 * 3.7); /* Between F and G */
+}
+
+.octave .black-key[data-note="G#"] {
+    left: calc(100% / 7 * 4.7); /* Between G and A */
+}
+
+.octave .black-key[data-note="A#"] {
+    left: calc(100% / 7 * 5.7); /* Between A and B */
+}

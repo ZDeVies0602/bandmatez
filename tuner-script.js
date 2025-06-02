@@ -1,7 +1,8 @@
 class PitchTuner {
     constructor() {
         console.log('PitchTuner constructor called');
-        this.audioContext = null;
+        // Remove direct audio context management - use AudioManager instead
+        this.audioManager = window.AudioManager;
         this.microphone = null;
         this.analyser = null;
         this.dataArray = null;
@@ -19,8 +20,13 @@ class PitchTuner {
         this.referenceOscillator = null;
         this.referenceGain = null;
         
-        // Wait a bit for DOM to be ready, then initialize
-        setTimeout(() => this.init(), 100);
+        // Reference tone override
+        this.isPlayingReference = false;
+        this.referenceNote = null;
+        this.referenceOctave = null;
+        
+        // Wait a bit for DOM to be ready, then initialize - now handled by metronome
+        // setTimeout(() => this.init(), 100);
     }
     
     init() {
@@ -59,6 +65,16 @@ class PitchTuner {
         
         console.log('All DOM elements found successfully');
         
+        // Load saved A4 frequency
+        const savedA4 = localStorage.getItem('music-tools-a4-frequency');
+        if (savedA4) {
+            this.a4Frequency = parseFloat(savedA4);
+            this.a4FrequencyInput.value = this.a4Frequency;
+            if (window.FrequencyUtils) {
+                window.FrequencyUtils.setA4Frequency(this.a4Frequency);
+            }
+        }
+        
         // Add event listeners
         this.startTunerButton.addEventListener('click', () => {
             console.log('Start tuner button clicked');
@@ -90,15 +106,24 @@ class PitchTuner {
         try {
             console.log('Starting tuner...');
             
-            // Initialize audio context
-            if (!this.audioContext) {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                console.log('Created audio context');
+            // Initialize shared audio context
+            if (!this.audioManager) {
+                console.error('AudioManager not available');
+                alert('Audio system not available. Please refresh the page.');
+                return;
             }
             
-            if (this.audioContext.state === 'suspended') {
-                await this.audioContext.resume();
-                console.log('Resumed audio context');
+            const audioReady = await this.audioManager.initialize();
+            if (!audioReady) {
+                console.error('Failed to initialize audio context');
+                alert('Could not initialize audio. Please check your browser permissions.');
+                return;
+            }
+            
+            const audioContext = await this.audioManager.getContext();
+            if (!audioContext) {
+                console.error('Could not get audio context');
+                return;
             }
             
             // Get microphone access
@@ -114,10 +139,10 @@ class PitchTuner {
             
             console.log('Microphone access granted');
             
-            this.microphone = this.audioContext.createMediaStreamSource(stream);
+            this.microphone = this.audioManager.createMediaStreamSource(stream);
             
             // Create analyser
-            this.analyser = this.audioContext.createAnalyser();
+            this.analyser = this.audioManager.createAnalyser();
             this.analyser.fftSize = 4096;
             this.analyser.smoothingTimeConstant = 0.8;
             
@@ -168,19 +193,30 @@ class PitchTuner {
             this.analyser = null;
         }
         
-        // Reset display
-        this.noteDisplay.textContent = '-';
-        this.frequencyDisplay.textContent = '0.0 Hz';
-        this.centsDisplay.textContent = '0 cents';
-        this.pitchNeedle.style.left = '50%';
+        // Reset display - check if elements exist first
+        if (this.noteDisplay) {
+            this.noteDisplay.textContent = '-';
+            this.noteDisplay.style.color = 'white';
+            this.noteDisplay.style.textShadow = '0 0 20px rgba(255, 255, 255, 0.3)';
+        }
         
-        // Reset colors
-        this.noteDisplay.style.color = 'white';
-        this.noteDisplay.style.textShadow = '0 0 20px rgba(255, 255, 255, 0.3)';
-        this.centsDisplay.style.color = 'rgba(255, 255, 255, 0.7)';
+        if (this.frequencyDisplay) {
+            this.frequencyDisplay.textContent = '0.0 Hz';
+        }
         
-        this.startTunerButton.textContent = 'Start Tuner';
-        this.startTunerButton.classList.remove('active');
+        if (this.centsDisplay) {
+            this.centsDisplay.textContent = '0 cents';
+            this.centsDisplay.style.color = 'rgba(255, 255, 255, 0.7)';
+        }
+        
+        if (this.pitchNeedle) {
+            this.pitchNeedle.style.left = '50%';
+        }
+        
+        if (this.startTunerButton) {
+            this.startTunerButton.textContent = 'Start Tuner';
+            this.startTunerButton.classList.remove('active');
+        }
         
         console.log('Tuner stopped');
     }
@@ -209,7 +245,7 @@ class PitchTuner {
         this.analyser.getFloatTimeDomainData(timeData);
         
         // Find the fundamental frequency using autocorrelation
-        const sampleRate = this.audioContext.sampleRate;
+        const sampleRate = this.audioManager.getContext().sampleRate;
         const minFreq = 80;  // Lowest frequency we care about (E2)
         const maxFreq = 1200; // Highest frequency we care about
         
@@ -242,24 +278,55 @@ class PitchTuner {
     }
     
     updateDisplay(frequency) {
-        // Calculate note and cents
+        // Check if display elements exist
+        if (!this.noteDisplay || !this.frequencyDisplay || !this.centsDisplay) {
+            console.warn('Display elements not available for tuner');
+            return;
+        }
+        
+        // If playing reference tone, override display to show perfect tuning
+        if (this.isPlayingReference && this.referenceNote && this.referenceOctave) {
+            const perfectNote = `${this.referenceNote}${this.referenceOctave}`;
+            const perfectFrequency = this.noteToFrequency(this.referenceNote, this.referenceOctave);
+            
+            this.noteDisplay.textContent = perfectNote;
+            this.frequencyDisplay.textContent = perfectFrequency.toFixed(1) + ' Hz';
+            this.centsDisplay.textContent = '0 cents';
+            
+            // Set needle to center (perfect tune)
+            if (this.pitchNeedle) {
+                this.pitchNeedle.style.left = '50%';
+            }
+            
+            // Show as perfectly tuned (green)
+            this.updateTuningColors(0);
+            return;
+        }
+        
+        // Normal tuning display
         const noteInfo = this.frequencyToNote(frequency);
         
-        // Update displays
         this.noteDisplay.textContent = noteInfo.note;
-        this.frequencyDisplay.textContent = `${frequency.toFixed(1)} Hz`;
-        this.centsDisplay.textContent = `${noteInfo.cents >= 0 ? '+' : ''}${noteInfo.cents} cents`;
+        this.frequencyDisplay.textContent = frequency.toFixed(1) + ' Hz';
+        this.centsDisplay.textContent = noteInfo.cents + ' cents';
         
-        // Update needle position (cents range: -50 to +50)
-        const clampedCents = Math.max(-50, Math.min(50, noteInfo.cents));
-        const needlePosition = 50 + clampedCents;
-        this.pitchNeedle.style.left = `${needlePosition}%`;
+        // Update needle position (-50 to +50 cents maps to 0% to 100%)
+        const needlePosition = Math.max(0, Math.min(100, 50 + noteInfo.cents));
+        if (this.pitchNeedle) {
+            this.pitchNeedle.style.left = `${needlePosition}%`;
+        }
         
         // Update colors based on tuning accuracy
         this.updateTuningColors(noteInfo.cents);
     }
     
     frequencyToNote(frequency) {
+        // Use shared FrequencyUtils if available for consistent calculations
+        if (window.FrequencyUtils) {
+            return window.FrequencyUtils.frequencyToNote(frequency);
+        }
+        
+        // Fallback to original calculation
         // Calculate how many semitones above/below A4 (440 Hz)
         const a4 = this.a4Frequency;
         const semitones = 12 * Math.log2(frequency / a4);
@@ -296,9 +363,22 @@ class PitchTuner {
     updateTuningColors(cents) {
         const absCents = Math.abs(cents);
         
-        // Check current theme
-        const isArcticTheme = document.body.classList.contains('theme-north-pole');
-        const isLunarTheme = document.body.classList.contains('theme-moon');
+        // Check current theme using ThemeManager if available
+        let isSpecialTheme = false;
+        if (window.ThemeManager) {
+            const currentTheme = window.ThemeManager.getCurrentTheme();
+            isSpecialTheme = window.ThemeManager.hasSpecialTextHandling();
+        } else {
+            // Fallback to checking body classes
+            isSpecialTheme = document.body.classList.contains('theme-north-pole') || 
+                            document.body.classList.contains('theme-moon');
+        }
+        
+        // Check if elements exist before manipulating them
+        if (!this.noteDisplay || !this.centsDisplay) {
+            console.warn('Tuning display elements not available');
+            return;
+        }
         
         // Remove any existing tuning classes
         this.noteDisplay.classList.remove('tuning-accurate', 'tuning-close', 'tuning-off');
@@ -306,7 +386,7 @@ class PitchTuner {
         
         // Update note display color
         if (absCents <= 5) {
-            if (isArcticTheme || isLunarTheme) {
+            if (isSpecialTheme) {
                 this.noteDisplay.classList.add('tuning-accurate');
                 this.centsDisplay.classList.add('tuning-accurate');
             } else {
@@ -314,7 +394,7 @@ class PitchTuner {
                 this.noteDisplay.style.textShadow = '0 0 20px rgba(68, 255, 68, 0.6)';
             }
         } else if (absCents <= 15) {
-            if (isArcticTheme || isLunarTheme) {
+            if (isSpecialTheme) {
                 this.noteDisplay.classList.add('tuning-close');
                 this.centsDisplay.classList.add('tuning-close');
             } else {
@@ -322,7 +402,7 @@ class PitchTuner {
                 this.noteDisplay.style.textShadow = '0 0 20px rgba(255, 170, 68, 0.6)';
             }
         } else {
-            if (isArcticTheme || isLunarTheme) {
+            if (isSpecialTheme) {
                 this.noteDisplay.classList.add('tuning-off');
                 this.centsDisplay.classList.add('tuning-off');
             } else {
@@ -332,21 +412,37 @@ class PitchTuner {
         }
         
         // Update cents display color to match note display (for non-themed cases)
-        if (!isArcticTheme && !isLunarTheme) {
+        if (!isSpecialTheme) {
             this.centsDisplay.style.color = this.noteDisplay.style.color;
         }
     }
     
     async playReferenceTone() {
         try {
-            // Initialize audio context if needed
-            if (!this.audioContext) {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            console.log('Tuner playReferenceTone called');
+            
+            // Initialize shared audio context if needed
+            if (!this.audioManager) {
+                console.error('AudioManager not available');
+                alert('Audio system not available. Please refresh the page.');
+                return;
             }
             
-            if (this.audioContext.state === 'suspended') {
-                await this.audioContext.resume();
+            console.log('AudioManager available, initializing...');
+            const audioReady = await this.audioManager.initialize();
+            if (!audioReady) {
+                console.error('Failed to initialize audio context');
+                alert('Could not initialize audio. Please check your browser permissions.');
+                return;
             }
+            
+            const audioContext = await this.audioManager.getContext();
+            if (!audioContext) {
+                console.error('Could not get audio context');
+                return;
+            }
+            
+            console.log('Audio context ready, creating reference tone...');
             
             // Stop any existing reference tone
             this.stopReferenceTone();
@@ -355,29 +451,36 @@ class PitchTuner {
             const note = this.referenceNoteSelect.value;
             const octave = parseInt(this.referenceOctaveSelect.value);
             
+            // Set reference override flags
+            this.isPlayingReference = true;
+            this.referenceNote = note;
+            this.referenceOctave = octave;
+            
             // Calculate frequency
             const frequency = this.noteToFrequency(note, octave);
             
             console.log(`Playing reference tone: ${note}${octave} (${frequency.toFixed(1)} Hz)`);
             
             // Create oscillator and gain
-            this.referenceOscillator = this.audioContext.createOscillator();
-            this.referenceGain = this.audioContext.createGain();
+            this.referenceOscillator = audioContext.createOscillator();
+            this.referenceGain = audioContext.createGain();
             
             this.referenceOscillator.connect(this.referenceGain);
-            this.referenceGain.connect(this.audioContext.destination);
+            this.referenceGain.connect(audioContext.destination);
             
             // Configure oscillator
             this.referenceOscillator.frequency.value = frequency;
             this.referenceOscillator.type = 'sine';
             
             // Configure gain (fade in and out)
-            const currentTime = this.audioContext.currentTime;
+            const currentTime = audioContext.currentTime;
             this.referenceGain.gain.value = 0;
             this.referenceGain.gain.setValueAtTime(0, currentTime);
             this.referenceGain.gain.linearRampToValueAtTime(0.1, currentTime + 0.1);
             this.referenceGain.gain.linearRampToValueAtTime(0.1, currentTime + 1.9);
             this.referenceGain.gain.linearRampToValueAtTime(0, currentTime + 2);
+            
+            console.log('Starting reference tone oscillator...');
             
             // Start and stop oscillator
             this.referenceOscillator.start(currentTime);
@@ -391,6 +494,13 @@ class PitchTuner {
                 }
                 this.referenceOscillator = null;
                 this.referenceGain = null;
+                
+                // Clear reference override flags
+                this.isPlayingReference = false;
+                this.referenceNote = null;
+                this.referenceOctave = null;
+                
+                console.log('Reference tone finished');
             }, 2000);
             
         } catch (error) {
@@ -410,31 +520,44 @@ class PitchTuner {
         if (this.referenceGain) {
             this.referenceGain = null;
         }
+        
+        // Clear reference override flags
+        this.isPlayingReference = false;
+        this.referenceNote = null;
+        this.referenceOctave = null;
+        
+        // Reset button text if needed
+        if (this.playReferenceButton) {
+            this.playReferenceButton.textContent = 'Play Reference';
+        }
     }
     
     noteToFrequency(note, octave) {
-        // Note names starting from A (to match our frequencyToNote method)
-        const noteNamesFromA = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
-        
-        // Find the note index
-        const noteIndex = noteNamesFromA.indexOf(note);
-        if (noteIndex === -1) {
-            console.error('Invalid note name:', note);
-            return this.a4Frequency; // Return A4 as fallback
+        // Use shared FrequencyUtils if available for consistent tuning
+        if (window.FrequencyUtils) {
+            return window.FrequencyUtils.noteToFrequency(note, octave);
         }
         
-        // Calculate semitones from A4
-        const semitones = (octave - 4) * 12 + noteIndex;
+        // Fallback to original calculation
+        const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        const noteIndex = noteNames.indexOf(note);
+        const a4 = this.a4Frequency;
         
-        // Calculate frequency using the formula: f = f0 * 2^(n/12)
-        return this.a4Frequency * Math.pow(2, semitones / 12);
+        // Calculate semitones from A4
+        const semitonesFromA4 = (octave - 4) * 12 + (noteIndex - 9);
+        
+        return a4 * Math.pow(2, semitonesFromA4 / 12);
     }
     
     updateA4Frequency(value) {
         const freq = parseFloat(value);
         if (freq >= 420 && freq <= 460) {
             this.a4Frequency = freq;
+            localStorage.setItem('music-tools-a4-frequency', freq.toString());
             console.log(`A4 frequency updated to ${freq} Hz`);
+            if (window.FrequencyUtils) {
+                window.FrequencyUtils.setA4Frequency(this.a4Frequency);
+            }
         }
     }
     
@@ -444,9 +567,9 @@ class PitchTuner {
         this.stopTuner();
         this.stopReferenceTone();
         
-        if (this.audioContext && this.audioContext.state !== 'closed') {
-            this.audioContext.close();
-        }
+        // Don't close the shared audio context - it's managed by AudioManager
+        // The AudioManager singleton will handle its own cleanup
+        console.log('Tuner destroyed');
     }
 }
 
