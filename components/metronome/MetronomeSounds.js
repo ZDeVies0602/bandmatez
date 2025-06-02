@@ -5,6 +5,7 @@
 class MetronomeSounds {
     constructor() {
         this.currentSoundType = 'digital';
+        this.currentPianoWaveType = 'sine';
         this.availableSounds = [
             'digital',
             'wood',
@@ -15,6 +16,7 @@ class MetronomeSounds {
             'triangle',
             'tick'
         ];
+        this.availablePianoWaves = ['sine', 'triangle', 'sawtooth', 'square'];
         this.soundMenu = null;
         this.soundToggle = null;
         this.soundOptions = null;
@@ -38,6 +40,7 @@ class MetronomeSounds {
 
         this.setupEventListeners();
         this.loadSavedSound();
+        this.loadSavedPianoWaveType();
         this.initialized = true;
         console.log('MetronomeSounds initialized');
     }
@@ -57,7 +60,13 @@ class MetronomeSounds {
             if (e.target.classList.contains('sound-option') || e.target.closest('.sound-option')) {
                 const soundButton = e.target.closest('.sound-option');
                 const soundType = soundButton.dataset.sound;
-                this.setSoundType(soundType);
+                const category = soundButton.dataset.category;
+                
+                if (category === 'metronome') {
+                    this.setSoundType(soundType);
+                } else if (category === 'piano') {
+                    this.setPianoWaveType(soundType);
+                }
             }
 
             // Handle preview button clicks
@@ -65,7 +74,13 @@ class MetronomeSounds {
                 e.stopPropagation();
                 const soundButton = e.target.closest('.sound-option');
                 const soundType = soundButton.dataset.sound;
-                await this.previewSound(soundType);
+                const category = soundButton.dataset.category;
+                
+                if (category === 'metronome') {
+                    await this.previewSound(soundType);
+                } else if (category === 'piano') {
+                    await this.previewPianoWave(soundType);
+                }
             }
         });
 
@@ -123,10 +138,10 @@ class MetronomeSounds {
      * @param {string} soundType - Active sound type
      */
     updateActiveButton(soundType) {
-        const soundButtons = document.querySelectorAll('.sound-option');
-        soundButtons.forEach(btn => btn.classList.remove('active'));
+        const metronomeButtons = document.querySelectorAll('.sound-option[data-category="metronome"]');
+        metronomeButtons.forEach(btn => btn.classList.remove('active'));
         
-        const activeButton = document.querySelector(`[data-sound="${soundType}"]`);
+        const activeButton = document.querySelector(`[data-sound="${soundType}"][data-category="metronome"]`);
         if (activeButton) {
             activeButton.classList.add('active');
         }
@@ -297,7 +312,7 @@ class MetronomeSounds {
     }
 
     /**
-     * Save current sound type to localStorage
+     * Save current sound to localStorage
      */
     saveSound() {
         try {
@@ -308,20 +323,30 @@ class MetronomeSounds {
     }
 
     /**
-     * Load saved sound type from localStorage
+     * Load saved sound from localStorage
      */
     loadSavedSound() {
         try {
             const savedSound = localStorage.getItem('music-tools-sound');
             if (savedSound && this.availableSounds.includes(savedSound)) {
                 this.setSoundType(savedSound);
-            } else {
-                // Set default sound active button
-                this.updateActiveButton('digital');
             }
         } catch (error) {
             console.warn('Could not load sound from localStorage:', error);
-            this.updateActiveButton('digital');
+        }
+    }
+
+    /**
+     * Load saved piano wave type from localStorage
+     */
+    loadSavedPianoWaveType() {
+        try {
+            const savedWave = localStorage.getItem('music-tools-pianoWave');
+            if (savedWave && this.availablePianoWaves.includes(savedWave)) {
+                this.setPianoWaveType(savedWave);
+            }
+        } catch (error) {
+            console.warn('Could not load piano wave from localStorage:', error);
         }
     }
 
@@ -331,6 +356,110 @@ class MetronomeSounds {
      */
     getAvailableSounds() {
         return [...this.availableSounds];
+    }
+
+    /**
+     * Set piano wave type
+     * @param {string} waveType - Wave type name
+     */
+    setPianoWaveType(waveType) {
+        if (!this.availablePianoWaves.includes(waveType)) {
+            console.warn('Invalid piano wave type:', waveType);
+            return;
+        }
+
+        this.currentPianoWaveType = waveType;
+        this.updateActivePianoButton(waveType);
+        this.savePianoWaveType();
+        this.closeMenu();
+        
+        // Dispatch custom event for piano to listen to
+        window.dispatchEvent(new CustomEvent('pianoWaveTypeChanged', {
+            detail: { waveType: waveType }
+        }));
+        
+        console.log('Piano wave type changed to:', waveType);
+    }
+
+    /**
+     * Update active piano wave button
+     * @param {string} waveType - Active wave type
+     */
+    updateActivePianoButton(waveType) {
+        const pianoButtons = document.querySelectorAll('.sound-option[data-category="piano"]');
+        pianoButtons.forEach(btn => btn.classList.remove('active'));
+        
+        const activeButton = document.querySelector(`[data-sound="${waveType}"][data-category="piano"]`);
+        if (activeButton) {
+            activeButton.classList.add('active');
+        }
+    }
+
+    /**
+     * Get current piano wave type
+     * @returns {string} Current piano wave type
+     */
+    getCurrentPianoWaveType() {
+        return this.currentPianoWaveType;
+    }
+
+    /**
+     * Preview a piano wave type
+     * @param {string} waveType - Wave type to preview
+     */
+    async previewPianoWave(waveType) {
+        console.log('Previewing piano wave:', waveType);
+        
+        const audioManager = window.AudioManager;
+        if (!audioManager) {
+            console.warn('AudioManager not available');
+            return;
+        }
+
+        const audioReady = await audioManager.initialize();
+        if (!audioReady) {
+            console.warn('Audio context not available for preview');
+            return;
+        }
+
+        try {
+            // Play a middle C (C4) with the selected wave type
+            const frequency = window.FrequencyUtils ? window.FrequencyUtils.noteToFrequency('C', 4) : 261.63;
+            
+            const oscillator = audioManager.createOscillator();
+            const gainNode = audioManager.createGain();
+
+            if (!oscillator || !gainNode) {
+                console.warn('Could not create audio nodes');
+                return;
+            }
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioManager.getMasterGain());
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = waveType;
+            
+            const currentTime = audioManager.getCurrentTime();
+            gainNode.gain.value = 0.3;
+            gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.8);
+            
+            oscillator.start(currentTime);
+            oscillator.stop(currentTime + 0.8);
+        } catch (error) {
+            console.error('Error creating piano wave preview:', error);
+        }
+    }
+
+    /**
+     * Save current piano wave type to localStorage
+     */
+    savePianoWaveType() {
+        try {
+            localStorage.setItem('music-tools-pianoWave', this.currentPianoWaveType);
+        } catch (error) {
+            console.warn('Could not save piano wave to localStorage:', error);
+        }
     }
 }
 

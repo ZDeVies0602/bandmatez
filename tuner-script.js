@@ -227,11 +227,21 @@ class PitchTuner {
         // Get frequency data
         this.analyser.getFloatFrequencyData(this.dataArray);
         
+        // Add debug logging to see if we're getting audio data
+        const maxAmplitude = Math.max(...this.dataArray);
+        const hasSignal = maxAmplitude > -60; // Above noise floor
+        
+        console.log('Audio level:', maxAmplitude.toFixed(1), 'dB, Has signal:', hasSignal);
+        
         // Find the fundamental frequency using autocorrelation
         const frequency = this.findFundamentalFrequency();
         
+        console.log('Detected frequency:', frequency.toFixed(1), 'Hz');
+        
         if (frequency > 50 && frequency < 2000) { // Only process reasonable frequencies
             this.updateDisplay(frequency);
+        } else {
+            console.log('Frequency out of range:', frequency);
         }
         
         // Continue detection loop
@@ -245,15 +255,23 @@ class PitchTuner {
         this.analyser.getFloatTimeDomainData(timeData);
         
         // Find the fundamental frequency using autocorrelation
-        const sampleRate = this.audioManager.getContext().sampleRate;
+        const sampleRate = this.audioManager.getSampleRate();
+        console.log('Sample rate:', sampleRate, 'Buffer length:', bufferLength);
+        
         const minFreq = 80;  // Lowest frequency we care about (E2)
         const maxFreq = 1200; // Highest frequency we care about
         
         const minPeriod = Math.floor(sampleRate / maxFreq);
         const maxPeriod = Math.floor(sampleRate / minFreq);
         
+        console.log('Period range:', minPeriod, 'to', maxPeriod);
+        
         let bestCorrelation = 0;
         let bestPeriod = 0;
+        
+        // Check if we have actual audio data
+        const rms = Math.sqrt(timeData.reduce((sum, val) => sum + val * val, 0) / timeData.length);
+        console.log('RMS level:', rms.toFixed(4));
         
         // Autocorrelation
         for (let period = minPeriod; period < maxPeriod; period++) {
@@ -268,6 +286,8 @@ class PitchTuner {
                 bestPeriod = period;
             }
         }
+        
+        console.log('Best correlation:', bestCorrelation.toFixed(4), 'Best period:', bestPeriod);
         
         // Check if we found a strong enough correlation
         if (bestCorrelation > 0.01 && bestPeriod > 0) {

@@ -74,7 +74,6 @@ class VirtualPiano {
         this.currentNote = document.getElementById('current-note');
         this.currentFrequency = document.getElementById('current-frequency');
         this.octaveRangeSelect = document.getElementById('octave-range');
-        this.waveTypeSelect = document.getElementById('wave-type');
         this.volumeControl = document.getElementById('volume-control');
         this.volumeDisplay = document.getElementById('volume-display');
         this.sustainControl = document.getElementById('sustain-control');
@@ -89,7 +88,6 @@ class VirtualPiano {
             'current-note': this.currentNote,
             'current-frequency': this.currentFrequency,
             'octave-range': this.octaveRangeSelect,
-            'wave-type': this.waveTypeSelect,
             'volume-control': this.volumeControl,
             'volume-display': this.volumeDisplay,
             'sustain-control': this.sustainControl,
@@ -121,7 +119,23 @@ class VirtualPiano {
         // Add event listeners
         this.addEventListeners();
         
+        // Listen for wave type changes from sound menu
+        window.addEventListener('pianoWaveTypeChanged', (e) => {
+            this.waveType = e.detail.waveType;
+            console.log('Piano wave type updated from sound menu:', this.waveType);
+        });
+        
+        // Get initial wave type from sound menu
+        if (window.MetronomeSounds && window.MetronomeSounds.getCurrentPianoWaveType) {
+            this.waveType = window.MetronomeSounds.getCurrentPianoWaveType();
+            console.log('Piano wave type loaded from MetronomeSounds:', this.waveType);
+        } else {
+            console.log('MetronomeSounds not available yet, using default wave type:', this.waveType);
+        }
+        
         console.log('Virtual piano initialized successfully');
+        console.log('Piano keyboard element contains', this.pianoKeyboard.children.length, 'child elements');
+        console.log('Generated keys for octave range:', this.octaveRange, 'to', this.octaveRange + 2);
     }
     
     generateKeys() {
@@ -203,10 +217,6 @@ class VirtualPiano {
         this.octaveRangeSelect.addEventListener('change', (e) => {
             this.octaveRange = parseInt(e.target.value);
             this.generateKeys();
-        });
-        
-        this.waveTypeSelect.addEventListener('change', (e) => {
-            this.waveType = e.target.value;
         });
         
         this.volumeControl.addEventListener('input', (e) => {

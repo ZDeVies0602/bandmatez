@@ -2218,3 +2218,30 @@ body.theme-moon .note-display.tuning-off {
     height: 16px;
     accent-color: #64b5f6;
 }
+
+/* Sound Section Styling */
+.sound-section {
+    margin-bottom: 20px;
+}
+
+.sound-section:last-child {
+    margin-bottom: 0;
+}
+
+.sound-section h4 {
+    color: #b0b0b0 !important;
+    font-size: 0.85rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-shadow: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 5px;
+}
+
+/* Piano wave type specific styling */
+.sound-section[data-category="piano"] .sound-option.active {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.2);
+}
