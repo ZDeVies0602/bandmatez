@@ -33,7 +33,47 @@
 }
 
 .palette-icon {
-    font-size: 1.5rem;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.palette-icon::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 0deg,
+        #64b5f6 0deg 60deg,
+        #ff6b6b 60deg 120deg,
+        #4ecdc4 120deg 180deg,
+        #45b7d1 180deg 240deg,
+        #96ceb4 240deg 300deg,
+        #feca57 300deg 360deg
+    );
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.palette-icon::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.theme-menu-toggle:hover .palette-icon::before {
+    transform: rotate(180deg);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
 }
 
 .theme-options {
@@ -135,7 +175,60 @@
 }
 
 .sound-icon {
-    font-size: 1.5rem;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sound-icon::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 12px;
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(255, 255, 255, 0.7) 100%
+    );
+    clip-path: polygon(0% 30%, 100% 0%, 100% 100%, 0% 70%);
+    border-radius: 1px;
+    left: 2px;
+    transition: all 0.3s ease;
+}
+
+.sound-icon::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-left: none;
+    border-radius: 0 50% 50% 0;
+    left: 10px;
+    background: transparent;
+    box-shadow: 
+        3px 0 0 -1px rgba(255, 255, 255, 0.6),
+        6px 0 0 -2px rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+}
+
+.sound-menu-toggle:hover .sound-icon::before {
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 1) 0%, 
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    transform: scaleX(1.1);
+}
+
+.sound-menu-toggle:hover .sound-icon::after {
+    border-color: rgba(255, 255, 255, 1);
+    box-shadow: 
+        3px 0 0 -1px rgba(255, 255, 255, 0.8),
+        6px 0 0 -2px rgba(255, 255, 255, 0.6),
+        9px 0 0 -3px rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
 }
 
 .sound-options {
@@ -1998,23 +2091,40 @@ body.theme-moon .note-display.tuning-off {
     text-align: center;
 }
 
-.piano-keyboard {
-    position: relative;
-    height: 200px;
-    background: #f8f9fa;
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    width: 100%;
-}
+/* Piano keyboard is now handled by piano-keyboard-container and the new piano-keyboard styles */
 
 .octave {
     position: relative;
     height: 100%;
-    flex: 1;
     display: flex;
+    flex-shrink: 0; /* Prevent octaves from shrinking */
+    min-width: 0; /* Allow internal flexbox to work */
+    /* Make each octave fill available space properly */
+    width: calc(100% / 3); /* Each visible octave takes 1/3 of container width */
+}
+
+.piano-keyboard {
+    position: relative;
+    height: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
+    display: block; /* Changed from flex to block to contain the flex container */
+    width: 100%;
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+}
+
+/* Updated container styles */
+#keyboard-container {
+    display: flex;
+    height: 100%;
+    position: relative;
+    transition: transform 0.3s ease;
+    /* Ensure the container can be wider than its parent for scrolling */
+    min-width: 100%;
 }
 
 .piano-key {
@@ -2024,21 +2134,24 @@ body.theme-moon .note-display.tuning-off {
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    padding-bottom: 10px;
-    font-size: 0.8rem;
+    padding-bottom: 12px; /* Slightly increased */
+    font-size: 0.9rem; /* Slightly larger font */
     font-weight: 500;
     transition: all 0.1s ease;
     border: 1px solid #ddd;
+    box-sizing: border-box;
+    /* Remove minimum width constraint to let flexbox handle sizing */
 }
 
 .white-key {
     background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
     color: #333;
     height: 100%;
-    flex: 1;
+    flex: 1; /* Let flexbox distribute space evenly */
     border-right: 1px solid #ccc;
     position: relative;
     z-index: 1;
+    /* Remove min-width to allow proper flexbox sizing */
 }
 
 .white-key:hover {
@@ -2055,13 +2168,14 @@ body.theme-moon .note-display.tuning-off {
     background: linear-gradient(to bottom, #2c3e50 0%, #1a252f 100%);
     color: white;
     height: 60%;
-    width: 36px; /* Fixed width instead of percentage for better control */
+    width: 30px; /* Slightly wider for better usability */
     position: absolute;
     top: 0;
     z-index: 10;
     border-radius: 0 0 6px 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     transform: translateX(-50%); /* Center the key on its position */
+    font-size: 0.75rem; /* Slightly larger font */
 }
 
 .black-key:hover {
@@ -2244,4 +2358,143 @@ body.theme-moon .note-display.tuning-off {
 .sound-section[data-category="piano"] .sound-option.active {
     border-color: #ff6b6b;
     background: rgba(255, 107, 107, 0.2);
+}
+
+/* Piano Navigation */
+.piano-navigation {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.piano-scroll-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.piano-scroll-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.piano-scroll-btn:active {
+    transform: translateY(0);
+}
+
+.piano-scroll-btn:disabled {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.piano-keyboard-container {
+    flex: 1;
+    overflow: hidden;
+    border-radius: 10px;
+    position: relative;
+    height: 200px; /* Reverted from 300px back to 200px */
+    background: #f8f9fa;
+    border: 2px solid var(--border-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.piano-keyboard {
+    position: relative;
+    height: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
+    display: flex;
+    width: 100%;
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+}
+
+.piano-range-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: var(--card-bg);
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+#current-range {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.range-hint {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    font-style: italic;
+}
+
+/* Arrow key animation */
+.arrow-left, .arrow-right {
+    transition: transform 0.2s ease;
+}
+
+.piano-scroll-btn:hover .arrow-left {
+    transform: translateX(-2px);
+}
+
+.piano-scroll-btn:hover .arrow-right {
+    transform: translateX(2px);
+}
+
+/* Responsive Design for Piano Navigation */
+@media (max-width: 768px) {
+    .piano-navigation {
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .piano-scroll-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .piano-keyboard-container {
+        height: 150px;
+    }
+    
+    .piano-range-display {
+        padding: 12px 15px;
+    }
+    
+    #current-range {
+        font-size: 1rem;
+    }
+    
+    .range-hint {
+        font-size: 0.75rem;
+    }
 }

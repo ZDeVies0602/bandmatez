@@ -9,7 +9,13 @@ class VirtualPiano {
         this.volume = 0.5;
         this.sustain = 0.5;
         this.waveType = 'sine';
-        this.octaveRange = 3; // Starting octave
+        
+        // Scrollable piano settings
+        this.currentStartOctave = 3; // Starting octave for the visible range
+        this.visibleOctaves = 3; // How many octaves to show at once
+        this.minOctave = 1; // Minimum octave (C1)
+        this.maxOctave = 8; // Maximum octave (C8)
+        this.totalOctaves = 7; // Total octaves to generate (C1 to C8)
         
         // Note names and their relationships
         this.noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -34,32 +40,32 @@ class VirtualPiano {
             'B-minor': ['B', 'D', 'F#']
         };
         
-        // Keyboard mapping
+        // Keyboard mapping - map to current visible octaves
         this.keyboardMap = {
-            'KeyZ': 'C',    // C
-            'KeyS': 'C#',   // C#
-            'KeyX': 'D',    // D
-            'KeyD': 'D#',   // D#
-            'KeyC': 'E',    // E
-            'KeyV': 'F',    // F
-            'KeyG': 'F#',   // F#
-            'KeyB': 'G',    // G
-            'KeyH': 'G#',   // G#
-            'KeyN': 'A',    // A
-            'KeyJ': 'A#',   // A#
-            'KeyM': 'B',    // B
-            'KeyQ': 'C',    // C (next octave)
-            'Digit2': 'C#', // C# (next octave)
-            'KeyW': 'D',    // D (next octave)
-            'Digit3': 'D#', // D# (next octave)
-            'KeyE': 'E',    // E (next octave)
-            'KeyR': 'F',    // F (next octave)
-            'Digit5': 'F#', // F# (next octave)
-            'KeyT': 'G',    // G (next octave)
-            'Digit6': 'G#', // G# (next octave)
-            'KeyY': 'A',    // A (next octave)
-            'Digit7': 'A#', // A# (next octave)
-            'KeyU': 'B'     // B (next octave)
+            'KeyZ': { note: 'C', octaveOffset: 0 },    // C
+            'KeyS': { note: 'C#', octaveOffset: 0 },   // C#
+            'KeyX': { note: 'D', octaveOffset: 0 },    // D
+            'KeyD': { note: 'D#', octaveOffset: 0 },   // D#
+            'KeyC': { note: 'E', octaveOffset: 0 },    // E
+            'KeyV': { note: 'F', octaveOffset: 0 },    // F
+            'KeyG': { note: 'F#', octaveOffset: 0 },   // F#
+            'KeyB': { note: 'G', octaveOffset: 0 },    // G
+            'KeyH': { note: 'G#', octaveOffset: 0 },   // G#
+            'KeyN': { note: 'A', octaveOffset: 0 },    // A
+            'KeyJ': { note: 'A#', octaveOffset: 0 },   // A#
+            'KeyM': { note: 'B', octaveOffset: 0 },    // B
+            'KeyQ': { note: 'C', octaveOffset: 1 },    // C (next octave)
+            'Digit2': { note: 'C#', octaveOffset: 1 }, // C# (next octave)
+            'KeyW': { note: 'D', octaveOffset: 1 },    // D (next octave)
+            'Digit3': { note: 'D#', octaveOffset: 1 }, // D# (next octave)
+            'KeyE': { note: 'E', octaveOffset: 1 },    // E (next octave)
+            'KeyR': { note: 'F', octaveOffset: 1 },    // F (next octave)
+            'Digit5': { note: 'F#', octaveOffset: 1 }, // F# (next octave)
+            'KeyT': { note: 'G', octaveOffset: 1 },    // G (next octave)
+            'Digit6': { note: 'G#', octaveOffset: 1 }, // G# (next octave)
+            'KeyY': { note: 'A', octaveOffset: 1 },    // A (next octave)
+            'Digit7': { note: 'A#', octaveOffset: 1 }, // A# (next octave)
+            'KeyU': { note: 'B', octaveOffset: 1 }     // B (next octave)
         };
         
         // Initialize after DOM loads - will be called manually now
@@ -68,12 +74,16 @@ class VirtualPiano {
     
     init() {
         console.log('Initializing virtual piano...');
+        console.log('Current DOM state:');
+        console.log('- Document ready state:', document.readyState);
+        console.log('- Piano tab exists:', !!document.getElementById('piano-tab'));
+        console.log('- Piano tab active:', document.getElementById('piano-tab')?.classList.contains('active'));
+        console.log('- Piano keyboard element exists:', !!document.getElementById('piano-keyboard'));
         
         // Get DOM elements
         this.pianoKeyboard = document.getElementById('piano-keyboard');
         this.currentNote = document.getElementById('current-note');
         this.currentFrequency = document.getElementById('current-frequency');
-        this.octaveRangeSelect = document.getElementById('octave-range');
         this.volumeControl = document.getElementById('volume-control');
         this.volumeDisplay = document.getElementById('volume-display');
         this.sustainControl = document.getElementById('sustain-control');
@@ -82,19 +92,26 @@ class VirtualPiano {
         this.playChordButton = document.getElementById('play-chord');
         this.clearChordButton = document.getElementById('clear-chord');
         
+        // New navigation elements
+        this.scrollLeftBtn = document.getElementById('scroll-left');
+        this.scrollRightBtn = document.getElementById('scroll-right');
+        this.currentRangeDisplay = document.getElementById('current-range');
+        
         // Check if required elements exist with detailed logging
         const requiredElements = {
             'piano-keyboard': this.pianoKeyboard,
             'current-note': this.currentNote,
             'current-frequency': this.currentFrequency,
-            'octave-range': this.octaveRangeSelect,
             'volume-control': this.volumeControl,
             'volume-display': this.volumeDisplay,
             'sustain-control': this.sustainControl,
             'sustain-display': this.sustainDisplay,
             'chord-select': this.chordSelect,
             'play-chord': this.playChordButton,
-            'clear-chord': this.clearChordButton
+            'clear-chord': this.clearChordButton,
+            'scroll-left': this.scrollLeftBtn,
+            'scroll-right': this.scrollRightBtn,
+            'current-range': this.currentRangeDisplay
         };
         
         const missingElements = Object.entries(requiredElements).filter(([id, element]) => !element);
@@ -107,6 +124,14 @@ class VirtualPiano {
         }
         
         console.log('All piano DOM elements found successfully');
+        console.log('Piano keyboard element details:');
+        console.log('- tagName:', this.pianoKeyboard.tagName);
+        console.log('- className:', this.pianoKeyboard.className);
+        console.log('- computed style display:', window.getComputedStyle(this.pianoKeyboard).display);
+        console.log('- computed style visibility:', window.getComputedStyle(this.pianoKeyboard).visibility);
+        console.log('- offsetParent:', this.pianoKeyboard.offsetParent);
+        console.log('- clientHeight:', this.pianoKeyboard.clientHeight);
+        console.log('- clientWidth:', this.pianoKeyboard.clientWidth);
         
         // Check if AudioManager is available
         if (!this.audioManager) {
@@ -114,7 +139,12 @@ class VirtualPiano {
         }
         
         // Generate piano keys
+        console.log('About to generate piano keys...');
         this.generateKeys();
+        console.log('Keys generation completed');
+        
+        this.updateRangeDisplay();
+        this.updateScrollButtons();
         
         // Add event listeners
         this.addEventListeners();
@@ -135,49 +165,101 @@ class VirtualPiano {
         
         console.log('Virtual piano initialized successfully');
         console.log('Piano keyboard element contains', this.pianoKeyboard.children.length, 'child elements');
-        console.log('Generated keys for octave range:', this.octaveRange, 'to', this.octaveRange + 2);
+        console.log('Generated keys for octave range:', this.currentStartOctave, 'to', this.currentStartOctave + this.visibleOctaves - 1);
+        
+        // Final check of what was created
+        setTimeout(() => {
+            console.log('POST-INIT CHECK:');
+            console.log('- Piano keyboard children count:', this.pianoKeyboard.children.length);
+            console.log('- Keyboard container exists:', !!document.getElementById('keyboard-container'));
+            console.log('- White keys found:', document.querySelectorAll('.white-key').length);
+            console.log('- Black keys found:', document.querySelectorAll('.black-key').length);
+            console.log('- First few children:', Array.from(this.pianoKeyboard.children).slice(0, 3).map(el => el.tagName + '.' + el.className));
+            
+            if (this.pianoKeyboard.children.length === 0) {
+                console.error('CRITICAL: No children generated in piano keyboard!');
+                console.log('Attempting to regenerate keys...');
+                this.generateKeys();
+            }
+        }, 100);
     }
     
     generateKeys() {
-        this.pianoKeyboard.innerHTML = '';
-        const startOctave = this.octaveRange;
-        const endOctave = startOctave + 2; // 3 octaves
+        console.log('generateKeys() called');
+        console.log('Current piano keyboard element:', this.pianoKeyboard);
+        console.log('Piano keyboard innerHTML before clear:', this.pianoKeyboard.innerHTML.length, 'characters');
         
-        // Create a container for all octaves
+        this.pianoKeyboard.innerHTML = '';
+        console.log('Piano keyboard cleared');
+        
+        // Create a container for all octaves (wider than visible area)
         const keyboardContainer = document.createElement('div');
         keyboardContainer.style.display = 'flex';
         keyboardContainer.style.height = '100%';
         keyboardContainer.style.position = 'relative';
-        keyboardContainer.style.width = '100%';
+        // Fix: With the new CSS, each visible octave takes 1/3 of container width
+        // Total width should accommodate all octaves for scrolling
+        const totalWidthPercent = (this.totalOctaves / this.visibleOctaves) * 100; // This gives us the right scroll range
+        keyboardContainer.style.width = `${totalWidthPercent}%`;
+        keyboardContainer.id = 'keyboard-container';
         
-        // Generate all octaves
-        for (let octave = startOctave; octave <= endOctave; octave++) {
+        console.log('Created keyboard container with width:', keyboardContainer.style.width);
+        console.log('Total octaves to generate:', this.totalOctaves);
+        console.log('Visible octaves:', this.visibleOctaves);
+        console.log('Octave range:', this.minOctave, 'to', this.maxOctave);
+        
+        // Generate all octaves from minOctave to maxOctave
+        for (let octave = this.minOctave; octave <= this.maxOctave; octave++) {
+            console.log(`Generating octave ${octave}...`);
+            
             const octaveContainer = document.createElement('div');
             octaveContainer.className = 'octave';
             octaveContainer.style.position = 'relative';
             octaveContainer.style.display = 'flex';
-            octaveContainer.style.flex = '1';
+            octaveContainer.style.flex = '0 0 auto'; /* Don't grow/shrink, use CSS width */
             octaveContainer.style.height = '100%';
+            // CSS now handles the width with calc(100% / 3) for visible octaves
+            // Each octave will be exactly 1/3 of the visible area
+            octaveContainer.style.flexShrink = '0'; // Prevent shrinking
+            
+            console.log(`Octave container ${octave} created with width:`, octaveContainer.style.width);
             
             // Create white keys first (7 per octave: C, D, E, F, G, A, B)
             this.whiteKeys.forEach(note => {
                 const key = this.createKey(note, octave, false);
                 octaveContainer.appendChild(key);
+                console.log(`Created white key: ${note}${octave}`);
             });
             
             // Create black keys and position them absolutely
             this.blackKeys.forEach(note => {
                 const key = this.createKey(note, octave, true);
                 octaveContainer.appendChild(key);
+                console.log(`Created black key: ${note}${octave}`);
             });
             
+            console.log(`Octave ${octave} completed with ${octaveContainer.children.length} keys`);
             keyboardContainer.appendChild(octaveContainer);
         }
         
+        console.log('All octaves generated, appending to piano keyboard...');
+        console.log('Keyboard container has', keyboardContainer.children.length, 'octave containers');
+        console.log('About to append to:', this.pianoKeyboard);
+        
         this.pianoKeyboard.appendChild(keyboardContainer);
+        
+        console.log('Keyboard container appended to piano keyboard');
+        console.log('Piano keyboard now has', this.pianoKeyboard.children.length, 'children');
+        console.log('Total keys in all octaves:', keyboardContainer.querySelectorAll('.piano-key').length);
+        
+        this.updateScrollPosition();
+        
+        console.log('generateKeys() completed');
     }
     
     createKey(note, octave, isBlack) {
+        console.log(`createKey called: ${note}${octave}, isBlack: ${isBlack}`);
+        
         const key = document.createElement('div');
         const noteId = `${note}${octave}`;
         
@@ -187,9 +269,12 @@ class VirtualPiano {
         key.dataset.noteId = noteId;
         key.textContent = noteId;
         
+        console.log(`Key created with className: ${key.className}, noteId: ${noteId}`);
+        
         // Set black key positions using data attribute for CSS targeting
         if (isBlack) {
             key.setAttribute('data-note', note);
+            console.log(`Black key ${noteId} data-note attribute set to: ${note}`);
         }
         
         // Add event listeners
@@ -209,16 +294,13 @@ class VirtualPiano {
             key.classList.remove('active');
         });
         
+        console.log(`Event listeners added to ${noteId}`);
+        
         return key;
     }
     
     addEventListeners() {
         // Control events
-        this.octaveRangeSelect.addEventListener('change', (e) => {
-            this.octaveRange = parseInt(e.target.value);
-            this.generateKeys();
-        });
-        
         this.volumeControl.addEventListener('input', (e) => {
             this.volume = e.target.value / 100;
             this.volumeDisplay.textContent = `${e.target.value}%`;
@@ -229,48 +311,74 @@ class VirtualPiano {
             this.sustainDisplay.textContent = `${e.target.value}s`;
         });
         
-        this.playChordButton.addEventListener('click', () => {
-            this.playChord();
-        });
+        this.playChordButton.addEventListener('click', () => this.playChord());
+        this.clearChordButton.addEventListener('click', () => this.clearHighlights());
         
-        this.clearChordButton.addEventListener('click', () => {
-            this.clearHighlights();
-        });
+        // Piano scroll navigation
+        this.scrollLeftBtn.addEventListener('click', () => this.scrollLeft());
+        this.scrollRightBtn.addEventListener('click', () => this.scrollRight());
         
         // Keyboard events
         document.addEventListener('keydown', (e) => {
-            if (e.repeat) return; // Ignore repeated keydown events
-            this.handleKeyDown(e);
+            if (document.querySelector('#piano-tab.active')) {
+                // Handle piano key presses
+                if (this.keyboardMap[e.code] && !e.repeat) {
+                    e.preventDefault();
+                    this.handleKeyDown(e);
+                }
+                // Handle arrow key navigation
+                else if (e.code === 'ArrowLeft') {
+                    e.preventDefault();
+                    this.scrollLeft();
+                }
+                else if (e.code === 'ArrowRight') {
+                    e.preventDefault();
+                    this.scrollRight();
+                }
+            }
         });
         
         document.addEventListener('keyup', (e) => {
-            this.handleKeyUp(e);
+            if (document.querySelector('#piano-tab.active') && this.keyboardMap[e.code]) {
+                e.preventDefault();
+                this.handleKeyUp(e);
+            }
+        });
+        
+        // Mouse events for key release
+        document.addEventListener('mouseup', () => {
+            document.querySelectorAll('.piano-key.active').forEach(key => {
+                key.classList.remove('active');
+            });
         });
     }
     
     handleKeyDown(e) {
-        const note = this.keyboardMap[e.code];
-        if (!note) return;
+        const keyMapping = this.keyboardMap[e.code];
+        if (!keyMapping) return;
         
-        e.preventDefault();
+        // Calculate octave based on current start octave and offset
+        const octave = this.currentStartOctave + keyMapping.octaveOffset;
         
-        // Determine octave based on key position
-        const isUpperRow = ['KeyQ', 'Digit2', 'KeyW', 'Digit3', 'KeyE', 'KeyR', 'Digit5', 'KeyT', 'Digit6', 'KeyY', 'Digit7', 'KeyU'].includes(e.code);
-        const octave = this.octaveRange + (isUpperRow ? 1 : 0);
-        
-        this.playNote(note, octave); // No await needed here, fire and forget
-        this.highlightKey(note, octave);
+        // Make sure the octave is within the valid range
+        if (octave >= this.minOctave && octave <= this.maxOctave) {
+            this.playNote(keyMapping.note, octave);
+            this.highlightKey(keyMapping.note, octave);
+        }
     }
     
     handleKeyUp(e) {
-        const note = this.keyboardMap[e.code];
-        if (!note) return;
+        const keyMapping = this.keyboardMap[e.code];
+        if (!keyMapping) return;
         
-        const isUpperRow = ['KeyQ', 'Digit2', 'KeyW', 'Digit3', 'KeyE', 'KeyR', 'Digit5', 'KeyT', 'Digit6', 'KeyY', 'Digit7', 'KeyU'].includes(e.code);
-        const octave = this.octaveRange + (isUpperRow ? 1 : 0);
+        // Calculate octave based on current start octave and offset
+        const octave = this.currentStartOctave + keyMapping.octaveOffset;
         
-        this.stopNote(note, octave);
-        this.unhighlightKey(note, octave);
+        // Make sure the octave is within the valid range
+        if (octave >= this.minOctave && octave <= this.maxOctave) {
+            this.stopNote(keyMapping.note, octave);
+            this.unhighlightKey(keyMapping.note, octave);
+        }
     }
     
     async playNote(note, octave) {
@@ -383,7 +491,7 @@ class VirtualPiano {
         this.clearHighlights();
         
         const chordNotes = this.chords[selectedChord];
-        const baseOctave = this.octaveRange + 1; // Use middle octave
+        const baseOctave = this.currentStartOctave + 1; // Use middle octave
         
         // Play all chord notes
         for (const [index, note] of chordNotes.entries()) {
@@ -440,6 +548,53 @@ class VirtualPiano {
             }
         });
         this.activeOscillators.clear();
+    }
+    
+    scrollLeft() {
+        if (this.currentStartOctave > this.minOctave) {
+            this.currentStartOctave--;
+            this.updateScrollPosition();
+            this.updateRangeDisplay();
+            this.updateScrollButtons();
+            console.log('Scrolled left to octave:', this.currentStartOctave);
+        }
+    }
+    
+    scrollRight() {
+        const maxStartOctave = this.maxOctave - this.visibleOctaves + 1;
+        if (this.currentStartOctave < maxStartOctave) {
+            this.currentStartOctave++;
+            this.updateScrollPosition();
+            this.updateRangeDisplay();
+            this.updateScrollButtons();
+            console.log('Scrolled right to octave:', this.currentStartOctave);
+        }
+    }
+    
+    updateScrollPosition() {
+        const keyboardContainer = document.getElementById('keyboard-container');
+        if (keyboardContainer) {
+            // Calculate the scroll percentage based on current octave
+            const scrollPercent = ((this.currentStartOctave - this.minOctave) / this.totalOctaves) * 100;
+            keyboardContainer.style.transform = `translateX(-${scrollPercent}%)`;
+        }
+    }
+    
+    updateRangeDisplay() {
+        if (this.currentRangeDisplay) {
+            const endOctave = this.currentStartOctave + this.visibleOctaves - 1;
+            this.currentRangeDisplay.textContent = `C${this.currentStartOctave} - B${endOctave}`;
+        }
+    }
+    
+    updateScrollButtons() {
+        if (this.scrollLeftBtn) {
+            this.scrollLeftBtn.disabled = this.currentStartOctave <= this.minOctave;
+        }
+        if (this.scrollRightBtn) {
+            const maxStartOctave = this.maxOctave - this.visibleOctaves + 1;
+            this.scrollRightBtn.disabled = this.currentStartOctave >= maxStartOctave;
+        }
     }
 }
 
