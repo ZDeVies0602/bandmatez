@@ -2099,13 +2099,23 @@ body.theme-moon .note-display.tuning-off {
     display: flex;
     flex-shrink: 0; /* Prevent octaves from shrinking */
     min-width: 0; /* Allow internal flexbox to work */
-    /* Make each octave fill available space properly */
-    width: calc(100% / 3); /* Each visible octave takes 1/3 of container width */
+    /* Each octave has 7 white keys at 40px each + 6 gaps of 2px = 292px total */
+    width: 292px;
+}
+
+/* Special handling for octave 0 which only has 2 white keys (A0, B0) */
+.octave[data-octave="0"] {
+    width: 82px; /* 2 keys * 40px + 1 gap * 2px = 82px */
+}
+
+/* Special handling for octave 8 which only has 1 key (C8) */
+.octave[data-octave="8"] {
+    width: 40px; /* 1 key * 40px = 40px */
 }
 
 .piano-keyboard {
     position: relative;
-    height: 100%;
+    height: 250px; /* Set specific height for taller keys */
     background: transparent;
     border: none;
     border-radius: 0;
@@ -2147,11 +2157,16 @@ body.theme-moon .note-display.tuning-off {
     background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
     color: #333;
     height: 100%;
-    flex: 1; /* Let flexbox distribute space evenly */
+    width: 40px; /* A little thicker than black keys (30px) */
     border-right: 1px solid #ccc;
     position: relative;
     z-index: 1;
-    /* Remove min-width to allow proper flexbox sizing */
+    margin-right: 2px; /* Small gap between white keys */
+    box-sizing: border-box;
+}
+
+.white-key:last-child {
+    margin-right: 0; /* Remove margin from last white key in octave */
 }
 
 .white-key:hover {
@@ -2260,7 +2275,7 @@ body.theme-moon .note-display.tuning-off {
     }
     
     .piano-keyboard {
-        height: 150px;
+        height: 200px; /* Increased from 150px for better mobile experience */
     }
     
     .piano-key {
@@ -2284,217 +2299,26 @@ body.theme-moon .note-display.tuning-off {
 
 /* Position black keys between white keys within each octave */
 .octave .black-key[data-note="C#"] {
-    left: calc(100% / 7 * 1); /* At the border between C and D */
+    left: 42px; /* After C key (40px + 2px margin) */
 }
 
 .octave .black-key[data-note="D#"] {
-    left: calc(100% / 7 * 2); /* At the border between D and E */
+    left: 84px; /* After D key (40px + 2px) * 2 */
 }
 
 .octave .black-key[data-note="F#"] {
-    left: calc(100% / 7 * 4); /* At the border between F and G */
+    left: 168px; /* After F key (40px + 2px) * 4 */
 }
 
 .octave .black-key[data-note="G#"] {
-    left: calc(100% / 7 * 5); /* At the border between G and A */
+    left: 210px; /* After G key (40px + 2px) * 5 */
 }
 
 .octave .black-key[data-note="A#"] {
-    left: calc(100% / 7 * 6); /* At the border between A and B */
+    left: 252px; /* After A key (40px + 2px) * 6 */
 }
 
-/* Custom accent checkboxes styling */
-.custom-accents {
-    margin-top: 10px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.accent-checkboxes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-}
-
-.accent-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-}
-
-.accent-checkbox input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: #64b5f6;
-}
-
-/* Sound Section Styling */
-.sound-section {
-    margin-bottom: 20px;
-}
-
-.sound-section:last-child {
-    margin-bottom: 0;
-}
-
-.sound-section h4 {
-    color: #b0b0b0 !important;
-    font-size: 0.85rem;
-    font-weight: 400;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    text-shadow: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 5px;
-}
-
-/* Piano wave type specific styling */
-.sound-section[data-category="piano"] .sound-option.active {
-    border-color: #ff6b6b;
-    background: rgba(255, 107, 107, 0.2);
-}
-
-/* Piano Navigation */
-.piano-navigation {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid var(--border-color);
-}
-
-.piano-scroll-btn {
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.5rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-}
-
-.piano-scroll-btn:hover {
-    background: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-}
-
-.piano-scroll-btn:active {
-    transform: translateY(0);
-}
-
-.piano-scroll-btn:disabled {
-    background: rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.5);
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.piano-keyboard-container {
-    flex: 1;
-    overflow: hidden;
-    border-radius: 10px;
-    position: relative;
-    height: 200px; /* Reverted from 300px back to 200px */
-    background: #f8f9fa;
-    border: 2px solid var(--border-color);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.piano-keyboard {
-    position: relative;
-    height: 100%;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    overflow: visible;
-    box-shadow: none;
-    display: flex;
-    width: 100%;
-    transition: transform 0.3s ease;
-    transform: translateX(0);
-}
-
-.piano-range-display {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    background: var(--card-bg);
-    padding: 15px 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-}
-
-#current-range {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--accent-color);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.range-hint {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    opacity: 0.8;
-    font-style: italic;
-}
-
-/* Arrow key animation */
-.arrow-left, .arrow-right {
-    transition: transform 0.2s ease;
-}
-
-.piano-scroll-btn:hover .arrow-left {
-    transform: translateX(-2px);
-}
-
-.piano-scroll-btn:hover .arrow-right {
-    transform: translateX(2px);
-}
-
-/* Responsive Design for Piano Navigation */
-@media (max-width: 768px) {
-    .piano-navigation {
-        padding: 15px;
-        gap: 10px;
-    }
-    
-    .piano-scroll-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-    }
-    
-    .piano-keyboard-container {
-        height: 150px;
-    }
-    
-    .piano-range-display {
-        padding: 12px 15px;
-    }
-    
-    #current-range {
-        font-size: 1rem;
-    }
-    
-    .range-hint {
-        font-size: 0.75rem;
-    }
+/* Special positioning for A#0 in octave 0 (between A0 and B0) */
+.octave[data-octave="0"] .black-key[data-note="A#"] {
+    left: 42px; /* After A0 key (40px + 2px margin) */
 }
