@@ -2091,27 +2091,81 @@ body.theme-moon .note-display.tuning-off {
     text-align: center;
 }
 
-/* Piano keyboard is now handled by piano-keyboard-container and the new piano-keyboard styles */
-
-.octave {
-    position: relative;
-    height: 100%;
+/* Piano Navigation Styles */
+.piano-navigation {
     display: flex;
-    flex-shrink: 0; /* Prevent octaves from shrinking */
-    min-width: 0; /* Allow internal flexbox to work */
-    /* Each octave has 7 white keys at 40px each + 6 gaps of 2px = 292px total */
-    width: 292px;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
 }
 
-/* Special handling for octave 0 which only has 2 white keys (A0, B0) */
-.octave[data-octave="0"] {
-    width: 82px; /* 2 keys * 40px + 1 gap * 2px = 82px */
+.piano-keyboard-container {
+    flex: 1;
+    position: relative;
+    height: 250px;
+    border-radius: 10px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: hidden; /* Hide vertical scrolling */
+    background: #f8f9fa;
+    border: 2px solid var(--border-color);
+    width: 100%; /* Fixed width to create scrollable viewport */
+    max-width: 100%; /* Prevent growing larger than parent */
+    min-width: 300px; /* Ensure minimum usable width */
 }
 
-/* Special handling for octave 8 which only has 1 key (C8) */
-.octave[data-octave="8"] {
-    width: 40px; /* 1 key * 40px = 40px */
+.piano-scroll-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
+.piano-scroll-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.piano-scroll-btn:disabled {
+    background: var(--text-secondary);
+    cursor: not-allowed;
+    transform: none;
+    opacity: 0.5;
+}
+
+.piano-range-display {
+    text-align: center;
+    margin: 10px 0;
+    color: var(--text-color);
+}
+
+.piano-range-display #current-range {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.range-hint {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+/* Piano keyboard is now handled by piano-keyboard-container and the linear piano-keyboard styles */
 
 .piano-keyboard {
     position: relative;
@@ -2119,22 +2173,21 @@ body.theme-moon .note-display.tuning-off {
     background: transparent;
     border: none;
     border-radius: 0;
-    overflow: visible;
+    overflow: visible; /* Allow content to overflow for scrolling */
     box-shadow: none;
     display: block; /* Changed from flex to block to contain the flex container */
-    width: 100%;
-    transition: transform 0.3s ease;
-    transform: translateX(0);
+    width: auto; /* Let the content determine the width */
+    min-width: 100%; /* Ensure it fills the container */
 }
 
-/* Updated container styles */
+/* Updated container styles for linear layout */
 #keyboard-container {
     display: flex;
     height: 100%;
     position: relative;
     transition: transform 0.3s ease;
-    /* Ensure the container can be wider than its parent for scrolling */
-    min-width: 100%;
+    /* Container is 200% wide (88 keys total, 44 visible) */
+    min-width: 200%;
 }
 
 .piano-key {
@@ -2150,23 +2203,17 @@ body.theme-moon .note-display.tuning-off {
     transition: all 0.1s ease;
     border: 1px solid #ddd;
     box-sizing: border-box;
-    /* Remove minimum width constraint to let flexbox handle sizing */
+    /* Width is now set in JavaScript: 1/88th of container */
 }
 
 .white-key {
     background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
     color: #333;
     height: 100%;
-    width: 40px; /* A little thicker than black keys (30px) */
     border-right: 1px solid #ccc;
     position: relative;
     z-index: 1;
-    margin-right: 2px; /* Small gap between white keys */
-    box-sizing: border-box;
-}
-
-.white-key:last-child {
-    margin-right: 0; /* Remove margin from last white key in octave */
+    /* Remove octave-specific sizing - now handled by JavaScript */
 }
 
 .white-key:hover {
@@ -2182,14 +2229,9 @@ body.theme-moon .note-display.tuning-off {
 .black-key {
     background: linear-gradient(to bottom, #2c3e50 0%, #1a252f 100%);
     color: white;
-    height: 60%;
-    width: 30px; /* Slightly wider for better usability */
-    position: absolute;
-    top: 0;
-    z-index: 10;
+    /* Height and positioning now handled by JavaScript */
     border-radius: 0 0 6px 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    transform: translateX(-50%); /* Center the key on its position */
     font-size: 0.75rem; /* Slightly larger font */
 }
 
@@ -2199,7 +2241,7 @@ body.theme-moon .note-display.tuning-off {
 
 .black-key.active {
     background: linear-gradient(to bottom, #007bff 0%, #0056b3 100%);
-    transform: translateX(-50%) translateY(2px);
+    transform: translateY(2px);
 }
 
 .piano-display {
@@ -2233,10 +2275,8 @@ body.theme-moon .note-display.tuning-off {
 }
 
 .chord-helper .control-group {
-    flex-direction: row;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .chord-helper select {
@@ -2274,17 +2314,28 @@ body.theme-moon .note-display.tuning-off {
         gap: 10px;
     }
     
+    .piano-navigation {
+        gap: 10px;
+        padding: 10px;
+        margin: 15px 0;
+    }
+    
+    .piano-keyboard-container {
+        height: 200px;
+    }
+    
+    .piano-scroll-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
     .piano-keyboard {
         height: 200px; /* Increased from 150px for better mobile experience */
     }
     
     .piano-key {
         font-size: 0.7rem;
-    }
-    
-    .black-key {
-        width: 24px; /* Smaller on mobile */
-        height: 60%;
     }
     
     .current-note {
@@ -2296,29 +2347,3 @@ body.theme-moon .note-display.tuning-off {
         gap: 10px;
     }
 } 
-
-/* Position black keys between white keys within each octave */
-.octave .black-key[data-note="C#"] {
-    left: 42px; /* After C key (40px + 2px margin) */
-}
-
-.octave .black-key[data-note="D#"] {
-    left: 84px; /* After D key (40px + 2px) * 2 */
-}
-
-.octave .black-key[data-note="F#"] {
-    left: 168px; /* After F key (40px + 2px) * 4 */
-}
-
-.octave .black-key[data-note="G#"] {
-    left: 210px; /* After G key (40px + 2px) * 5 */
-}
-
-.octave .black-key[data-note="A#"] {
-    left: 252px; /* After A key (40px + 2px) * 6 */
-}
-
-/* Special positioning for A#0 in octave 0 (between A0 and B0) */
-.octave[data-octave="0"] .black-key[data-note="A#"] {
-    left: 42px; /* After A0 key (40px + 2px margin) */
-}
