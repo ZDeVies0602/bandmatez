@@ -2347,3 +2347,81 @@ body.theme-moon .note-display.tuning-off {
         gap: 10px;
     }
 } 
+
+/* Position black keys between white keys within each octave */
+.octave .black-key[data-note="C#"] {
+    left: calc(100% / 7 * 0.5); /* Exactly halfway between C and D */
+}
+
+.octave .black-key[data-note="D#"] {
+    left: calc(100% / 7 * 1.5); /* Exactly halfway between D and E */
+}
+
+.octave .black-key[data-note="F#"] {
+    left: calc(100% / 7 * 3.5); /* Exactly halfway between F and G */
+}
+
+.octave .black-key[data-note="G#"] {
+    left: calc(100% / 7 * 4.5); /* Exactly halfway between G and A */
+}
+
+.octave .black-key[data-note="A#"] {
+    left: calc(100% / 7 * 5.5); /* Exactly halfway between A and B */
+}
+
+/* Custom accent checkboxes styling */
+.custom-accents {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.accent-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.accent-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.accent-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #64b5f6;
+}
+
+/* Sound Section Styling */
+.sound-section {
+    margin-bottom: 20px;
+}
+
+.sound-section:last-child {
+    margin-bottom: 0;
+}
+
+.sound-section h4 {
+    color: #b0b0b0 !important;
+    font-size: 0.85rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-shadow: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 5px;
+}
+
+/* Piano wave type specific styling */
+.sound-section[data-category="piano"] .sound-option.active {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.2);
+}
