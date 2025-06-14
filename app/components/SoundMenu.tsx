@@ -29,7 +29,7 @@ export default function SoundMenu() {
   ];
 
   const handleSoundPreview = async (sound: MetronomeSound) => {
-    await playSound(sound, false, 0.5);
+    await playSound(sound);
   };
 
   return (

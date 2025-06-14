@@ -6,7 +6,7 @@ import { ThemeType } from '../types';
 import styles from '../styles/components.module.css';
 
 export default function ThemeMenu() {
-  const { currentTheme, changeTheme } = useTheme();
+  const { theme: currentTheme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
   const themes: { value: ThemeType; name: string }[] = [
@@ -37,7 +37,7 @@ export default function ThemeMenu() {
                 key={theme.value}
                 className={`${styles.themeOption} ${currentTheme === theme.value ? styles.active : ''}`}
                 onClick={() => {
-                  changeTheme(theme.value);
+                  setTheme(theme.value);
                   setIsOpen(false);
                 }}
               >

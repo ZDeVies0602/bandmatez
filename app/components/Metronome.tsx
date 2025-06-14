@@ -62,7 +62,7 @@ export default function Metronome() {
       const isAccent = accentPattern.includes(currentBeat);
       
       // Play sound
-      await playSound(isAccent ? 'accent' : 'normal');
+      await playSound(currentSound, isAccent);
       
       // Update beat counter
       const nextSubdivision = currentSubdivision + 1;
@@ -81,7 +81,7 @@ export default function Metronome() {
       const noteInterval = quarterNoteTimeRef.current / subdivision;
       nextNoteTimeRef.current += noteInterval;
     }
-  }, [currentBeat, currentSubdivision, subdivision, timeSignature.beats, accentPattern, playSound]);
+  }, [currentBeat, currentSubdivision, subdivision, timeSignature.beats, accentPattern, playSound, currentSound]);
 
   // Main metronome loop
   useEffect(() => {

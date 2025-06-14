@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import { MetronomeSound } from '../types';
 
 export const useMetronomeSounds = () => {
-  const [currentSound, setCurrentSound] = useState('click');
+  const [currentSound, setCurrentSound] = useState<MetronomeSound>('digital');
   const audioContextRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
 
@@ -20,7 +21,7 @@ export const useMetronomeSounds = () => {
     }
   }, []);
 
-  const createSound = useCallback(async (type: 'normal' | 'accent') => {
+  const createSound = useCallback(async (soundType: MetronomeSound, isAccent: boolean = false) => {
     await initializeAudio();
     
     if (!audioContextRef.current || !masterGainRef.current) return;
@@ -31,12 +32,48 @@ export const useMetronomeSounds = () => {
     oscillator.connect(gainNode);
     gainNode.connect(masterGainRef.current);
     
-    // Different frequencies for normal vs accent
-    oscillator.frequency.value = type === 'accent' ? 1000 : 800;
-    oscillator.type = 'square';
+    const now = audioContextRef.current.currentTime;
+    
+    // Configure sound based on type
+    switch (soundType) {
+      case 'digital':
+        oscillator.frequency.value = isAccent ? 1200 : 1000;
+        oscillator.type = 'square';
+        break;
+      case 'wood':
+        oscillator.frequency.value = isAccent ? 300 : 250;
+        oscillator.type = 'sine';
+        break;
+      case 'mechanical':
+        oscillator.frequency.value = isAccent ? 800 : 600;
+        oscillator.type = 'square';
+        break;
+      case 'cowbell':
+        oscillator.frequency.value = isAccent ? 800 : 600;
+        oscillator.type = 'triangle';
+        break;
+      case 'rimshot':
+        oscillator.frequency.value = isAccent ? 1000 : 800;
+        oscillator.type = 'sawtooth';
+        break;
+      case 'sine':
+        oscillator.frequency.value = isAccent ? 800 : 600;
+        oscillator.type = 'sine';
+        break;
+      case 'triangle':
+        oscillator.frequency.value = isAccent ? 600 : 500;
+        oscillator.type = 'triangle';
+        break;
+      case 'tick':
+        oscillator.frequency.value = isAccent ? 1000 : 800;
+        oscillator.type = 'square';
+        break;
+      default:
+        oscillator.frequency.value = isAccent ? 1000 : 800;
+        oscillator.type = 'square';
+    }
     
     // Volume envelope
-    const now = audioContextRef.current.currentTime;
     gainNode.gain.setValueAtTime(0, now);
     gainNode.gain.linearRampToValueAtTime(0.3, now + 0.01);
     gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
@@ -45,13 +82,13 @@ export const useMetronomeSounds = () => {
     oscillator.stop(now + 0.1);
   }, [initializeAudio]);
 
-  const playSound = useCallback(async (type: 'normal' | 'accent' = 'normal') => {
+  const playSound = useCallback(async (soundType: MetronomeSound = currentSound, isAccent: boolean = false) => {
     try {
-      await createSound(type);
+      await createSound(soundType, isAccent);
     } catch (error) {
       console.warn('Audio playback failed:', error);
     }
-  }, [createSound]);
+  }, [createSound, currentSound]);
 
   return {
     currentSound,
