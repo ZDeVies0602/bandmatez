@@ -33,7 +33,47 @@
 }
 
 .palette-icon {
-    font-size: 1.5rem;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.palette-icon::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 0deg,
+        #64b5f6 0deg 60deg,
+        #ff6b6b 60deg 120deg,
+        #4ecdc4 120deg 180deg,
+        #45b7d1 180deg 240deg,
+        #96ceb4 240deg 300deg,
+        #feca57 300deg 360deg
+    );
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.palette-icon::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.theme-menu-toggle:hover .palette-icon::before {
+    transform: rotate(180deg);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
 }
 
 .theme-options {
@@ -135,7 +175,60 @@
 }
 
 .sound-icon {
-    font-size: 1.5rem;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sound-icon::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 12px;
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(255, 255, 255, 0.7) 100%
+    );
+    clip-path: polygon(0% 30%, 100% 0%, 100% 100%, 0% 70%);
+    border-radius: 1px;
+    left: 2px;
+    transition: all 0.3s ease;
+}
+
+.sound-icon::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-left: none;
+    border-radius: 0 50% 50% 0;
+    left: 10px;
+    background: transparent;
+    box-shadow: 
+        3px 0 0 -1px rgba(255, 255, 255, 0.6),
+        6px 0 0 -2px rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+}
+
+.sound-menu-toggle:hover .sound-icon::before {
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 1) 0%, 
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    transform: scaleX(1.1);
+}
+
+.sound-menu-toggle:hover .sound-icon::after {
+    border-color: rgba(255, 255, 255, 1);
+    box-shadow: 
+        3px 0 0 -1px rgba(255, 255, 255, 0.8),
+        6px 0 0 -2px rgba(255, 255, 255, 0.6),
+        9px 0 0 -3px rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
 }
 
 .sound-options {
@@ -1998,23 +2091,103 @@ body.theme-moon .note-display.tuning-off {
     text-align: center;
 }
 
-.piano-keyboard {
-    position: relative;
-    height: 200px;
-    background: #f8f9fa;
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Piano Navigation Styles */
+.piano-navigation {
     display: flex;
-    width: 100%;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
 }
 
-.octave {
-    position: relative;
-    height: 100%;
+.piano-keyboard-container {
     flex: 1;
+    position: relative;
+    height: 250px;
+    border-radius: 10px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: hidden; /* Hide vertical scrolling */
+    background: #f8f9fa;
+    border: 2px solid var(--border-color);
+    width: 100%; /* Fixed width to create scrollable viewport */
+    max-width: 100%; /* Prevent growing larger than parent */
+    min-width: 300px; /* Ensure minimum usable width */
+}
+
+.piano-scroll-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.piano-scroll-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.piano-scroll-btn:disabled {
+    background: var(--text-secondary);
+    cursor: not-allowed;
+    transform: none;
+    opacity: 0.5;
+}
+
+.piano-range-display {
+    text-align: center;
+    margin: 10px 0;
+    color: var(--text-color);
+}
+
+.piano-range-display #current-range {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.range-hint {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+/* Piano keyboard is now handled by piano-keyboard-container and the linear piano-keyboard styles */
+
+.piano-keyboard {
+    position: relative;
+    height: 250px; /* Set specific height for taller keys */
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible; /* Allow content to overflow for scrolling */
+    box-shadow: none;
+    display: block; /* Changed from flex to block to contain the flex container */
+    width: auto; /* Let the content determine the width */
+    min-width: 100%; /* Ensure it fills the container */
+}
+
+/* Updated container styles for linear layout */
+#keyboard-container {
+    display: flex;
+    height: 100%;
+    position: relative;
+    transition: transform 0.3s ease;
+    /* Container is 200% wide (88 keys total, 44 visible) */
+    min-width: 200%;
 }
 
 .piano-key {
@@ -2024,21 +2197,23 @@ body.theme-moon .note-display.tuning-off {
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    padding-bottom: 10px;
-    font-size: 0.8rem;
+    padding-bottom: 12px; /* Slightly increased */
+    font-size: 0.9rem; /* Slightly larger font */
     font-weight: 500;
     transition: all 0.1s ease;
     border: 1px solid #ddd;
+    box-sizing: border-box;
+    /* Width is now set in JavaScript: 1/88th of container */
 }
 
 .white-key {
     background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
     color: #333;
     height: 100%;
-    flex: 1;
     border-right: 1px solid #ccc;
     position: relative;
     z-index: 1;
+    /* Remove octave-specific sizing - now handled by JavaScript */
 }
 
 .white-key:hover {
@@ -2054,14 +2229,10 @@ body.theme-moon .note-display.tuning-off {
 .black-key {
     background: linear-gradient(to bottom, #2c3e50 0%, #1a252f 100%);
     color: white;
-    height: 60%;
-    width: 36px; /* Fixed width instead of percentage for better control */
-    position: absolute;
-    top: 0;
-    z-index: 10;
+    /* Height and positioning now handled by JavaScript */
     border-radius: 0 0 6px 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    transform: translateX(-50%); /* Center the key on its position */
+    font-size: 0.75rem; /* Slightly larger font */
 }
 
 .black-key:hover {
@@ -2070,7 +2241,7 @@ body.theme-moon .note-display.tuning-off {
 
 .black-key.active {
     background: linear-gradient(to bottom, #007bff 0%, #0056b3 100%);
-    transform: translateX(-50%) translateY(2px);
+    transform: translateY(2px);
 }
 
 .piano-display {
@@ -2104,10 +2275,8 @@ body.theme-moon .note-display.tuning-off {
 }
 
 .chord-helper .control-group {
-    flex-direction: row;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .chord-helper select {
@@ -2145,17 +2314,28 @@ body.theme-moon .note-display.tuning-off {
         gap: 10px;
     }
     
+    .piano-navigation {
+        gap: 10px;
+        padding: 10px;
+        margin: 15px 0;
+    }
+    
+    .piano-keyboard-container {
+        height: 200px;
+    }
+    
+    .piano-scroll-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
     .piano-keyboard {
-        height: 150px;
+        height: 200px; /* Increased from 150px for better mobile experience */
     }
     
     .piano-key {
         font-size: 0.7rem;
-    }
-    
-    .black-key {
-        width: 24px; /* Smaller on mobile */
-        height: 60%;
     }
     
     .current-note {

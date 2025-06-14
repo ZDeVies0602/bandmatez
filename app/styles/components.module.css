@@ -1,0 +1,1016 @@
+/* Tab Navigation */
+.tabNavigation {
+  border-bottom: 2px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tabContainer {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tabButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 24px;
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.tabButton:hover {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.tabButton.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  background: var(--background);
+}
+
+.tabIcon {
+  font-size: 20px;
+}
+
+.tabLabel {
+  white-space: nowrap;
+}
+
+/* Metronome Styles - Original Design */
+.metronome {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+  min-height: 500px;
+  align-items: start;
+}
+
+.tempoDisplay {
+  grid-column: 1 / -1;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 20px;
+}
+
+.bpmNumber {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: white;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.tempoMarking {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  margin-top: 0.5rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.leftControls {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  align-self: start;
+}
+
+.timeSignatureSection,
+.subdivisionSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.timeSignatureSection label,
+.subdivisionSection label {
+  color: white;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font-size: 1rem;
+}
+
+.timeSignatureSection select,
+.subdivisionSection select {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  padding: 10px 15px;
+  font-size: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.timeSignatureSection select:focus,
+.subdivisionSection select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.beatCounter {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.subdivisionIndicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.subdivisionDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+.subdivisionDot.active {
+  background: #64b5f6;
+  transform: scale(1.3);
+  box-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+}
+
+/* Center - Large metronome visual */
+.metronomeVisual {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 600px;
+  position: relative;
+  padding-top: 0px;
+}
+
+.metronomeBase {
+  position: relative;
+  width: 400px;
+  height: 550px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 0px;
+}
+
+.metronomeBody {
+  position: absolute;
+  top: 0;
+  width: 320px;
+  height: 400px;
+  background: linear-gradient(135deg, 
+    rgba(139, 69, 19, 0.9) 0%, 
+    rgba(160, 82, 45, 0.9) 50%, 
+    rgba(139, 69, 19, 0.9) 100%
+  );
+  border: 5px solid rgba(101, 67, 33, 0.8);
+  border-radius: 25px 25px 10px 10px;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Theme-specific metronome colors */
+.theme-default .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(139, 69, 19, 0.9) 0%, 
+    rgba(160, 82, 45, 0.9) 50%, 
+    rgba(139, 69, 19, 0.9) 100%
+  );
+  border-color: rgba(101, 67, 33, 0.8);
+}
+
+.theme-grand-canyon .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(205, 92, 92, 0.9) 0%, 
+    rgba(255, 140, 0, 0.9) 50%, 
+    rgba(178, 34, 34, 0.9) 100%
+  );
+  border-color: rgba(139, 69, 19, 0.8);
+}
+
+.theme-moon .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(105, 105, 105, 0.9) 0%, 
+    rgba(169, 169, 169, 0.9) 50%, 
+    rgba(105, 105, 105, 0.9) 100%
+  );
+  border-color: rgba(75, 75, 75, 0.8);
+}
+
+.theme-sunset-beach .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(255, 165, 0, 0.9) 0%, 
+    rgba(255, 218, 185, 0.9) 50%, 
+    rgba(255, 140, 0, 0.9) 100%
+  );
+  border-color: rgba(218, 165, 32, 0.8);
+}
+
+.theme-north-pole .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(176, 224, 230, 0.9) 0%, 
+    rgba(240, 248, 255, 0.9) 50%, 
+    rgba(173, 216, 230, 0.9) 100%
+  );
+  border-color: rgba(135, 206, 235, 0.8);
+}
+
+.theme-rainforest .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(34, 139, 34, 0.9) 0%, 
+    rgba(107, 142, 35, 0.9) 50%, 
+    rgba(85, 107, 47, 0.9) 100%
+  );
+  border-color: rgba(34, 139, 34, 0.8);
+}
+
+.theme-ocean-depths .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(25, 25, 112, 0.9) 0%, 
+    rgba(70, 130, 180, 0.9) 50%, 
+    rgba(0, 0, 139, 0.9) 100%
+  );
+  border-color: rgba(0, 0, 139, 0.8);
+}
+
+.metronomeCenterLine {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 320px;
+  background: linear-gradient(to bottom, 
+    rgba(255, 255, 255, 0.8) 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.metronomePendulum {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform-origin: top center;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 330px;
+  background: linear-gradient(to bottom, 
+    rgba(192, 192, 192, 0.95) 0%, 
+    rgba(169, 169, 169, 0.95) 100%
+  );
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.metronomeWeight {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255, 215, 0, 0.95) 0%, 
+    rgba(255, 165, 0, 0.95) 70%, 
+    rgba(218, 165, 32, 0.95) 100%
+  );
+  border-radius: 50%;
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Theme-specific weight colors */
+.theme-default .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255, 215, 0, 0.95) 0%, 
+    rgba(255, 165, 0, 0.95) 70%, 
+    rgba(218, 165, 32, 0.95) 100%
+  );
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+.theme-grand-canyon .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255, 140, 0, 0.95) 0%, 
+    rgba(255, 69, 0, 0.95) 70%, 
+    rgba(255, 99, 71, 0.95) 100%
+  );
+  box-shadow: 
+    0 0 20px rgba(255, 140, 0, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+.theme-moon .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(220, 220, 220, 0.95) 0%, 
+    rgba(192, 192, 192, 0.95) 70%, 
+    rgba(169, 169, 169, 0.95) 100%
+  );
+  box-shadow: 
+    0 0 20px rgba(220, 220, 220, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+.theme-sunset-beach .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255, 215, 0, 0.95) 0%, 
+    rgba(255, 165, 0, 0.95) 70%, 
+    rgba(255, 140, 0, 0.95) 100%
+  );
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+.theme-north-pole .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(173, 216, 230, 0.95) 0%, 
+    rgba(135, 206, 235, 0.95) 70%, 
+    rgba(100, 149, 237, 0.95) 100%
+  );
+  box-shadow: 
+    0 0 20px rgba(173, 216, 230, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+.theme-rainforest .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(144, 238, 144, 0.95) 0%, 
+    rgba(60, 179, 113, 0.95) 70%, 
+    rgba(46, 139, 87, 0.95) 100%
+  );
+  box-shadow: 
+    0 0 20px rgba(144, 238, 144, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+.theme-ocean-depths .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(100, 149, 237, 0.95) 0%, 
+    rgba(70, 130, 180, 0.95) 70%, 
+    rgba(30, 144, 255, 0.95) 100%
+  );
+  box-shadow: 
+    0 0 20px rgba(100, 149, 237, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Global theme-specific metronome colors */
+:global(body.theme-default) .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(139, 69, 19, 0.9) 0%, 
+    rgba(160, 82, 45, 0.9) 50%, 
+    rgba(139, 69, 19, 0.9) 100%
+  ) !important;
+  border-color: rgba(101, 67, 33, 0.8) !important;
+}
+
+:global(body.theme-grand-canyon) .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(205, 92, 92, 0.9) 0%, 
+    rgba(255, 140, 0, 0.9) 50%, 
+    rgba(178, 34, 34, 0.9) 100%
+  ) !important;
+  border-color: rgba(139, 69, 19, 0.8) !important;
+}
+
+:global(body.theme-moon) .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(105, 105, 105, 0.9) 0%, 
+    rgba(169, 169, 169, 0.9) 50%, 
+    rgba(105, 105, 105, 0.9) 100%
+  ) !important;
+  border-color: rgba(75, 75, 75, 0.8) !important;
+}
+
+:global(body.theme-sunset-beach) .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(255, 165, 0, 0.9) 0%, 
+    rgba(255, 218, 185, 0.9) 50%, 
+    rgba(255, 140, 0, 0.9) 100%
+  ) !important;
+  border-color: rgba(218, 165, 32, 0.8) !important;
+}
+
+:global(body.theme-north-pole) .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(176, 224, 230, 0.9) 0%, 
+    rgba(240, 248, 255, 0.9) 50%, 
+    rgba(173, 216, 230, 0.9) 100%
+  ) !important;
+  border-color: rgba(135, 206, 235, 0.8) !important;
+}
+
+:global(body.theme-rainforest) .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(34, 139, 34, 0.9) 0%, 
+    rgba(107, 142, 35, 0.9) 50%, 
+    rgba(85, 107, 47, 0.9) 100%
+  ) !important;
+  border-color: rgba(34, 139, 34, 0.8) !important;
+}
+
+:global(body.theme-ocean-depths) .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(25, 25, 112, 0.9) 0%, 
+    rgba(70, 130, 180, 0.9) 50%, 
+    rgba(0, 0, 139, 0.9) 100%
+  ) !important;
+  border-color: rgba(0, 0, 139, 0.8) !important;
+}
+
+/* Global theme-specific weight colors */
+:global(body.theme-default) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255, 215, 0, 0.95) 0%, 
+    rgba(255, 165, 0, 0.95) 70%, 
+    rgba(218, 165, 32, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-grand-canyon) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255, 140, 0, 0.95) 0%, 
+    rgba(255, 69, 0, 0.95) 70%, 
+    rgba(255, 99, 71, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(255, 140, 0, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-moon) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(220, 220, 220, 0.95) 0%, 
+    rgba(192, 192, 192, 0.95) 70%, 
+    rgba(169, 169, 169, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(220, 220, 220, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-sunset-beach) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255, 215, 0, 0.95) 0%, 
+    rgba(255, 165, 0, 0.95) 70%, 
+    rgba(255, 140, 0, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-north-pole) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(173, 216, 230, 0.95) 0%, 
+    rgba(135, 206, 235, 0.95) 70%, 
+    rgba(100, 149, 237, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(173, 216, 230, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-rainforest) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(144, 238, 144, 0.95) 0%, 
+    rgba(60, 179, 113, 0.95) 70%, 
+    rgba(46, 139, 87, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(144, 238, 144, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-ocean-depths) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(100, 149, 237, 0.95) 0%, 
+    rgba(70, 130, 180, 0.95) 70%, 
+    rgba(30, 144, 255, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(100, 149, 237, 0.4),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+.rightControls {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  align-self: start;
+}
+
+.tempoSettings {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.tempoInputSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tempoInputSection label {
+  color: white;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font-size: 1rem;
+}
+
+.tempoInput {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  padding: 10px 15px;
+  font-size: 1.1rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.tempoInput:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.tempoText {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.startStop {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  color: white;
+  padding: 15px 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.startStop:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.startStop.playing {
+  background: rgba(76, 175, 80, 0.8);
+  border-color: rgba(76, 175, 80, 0.9);
+}
+
+.startStop.playing:hover {
+  background: rgba(76, 175, 80, 0.9);
+}
+
+.tapTempo {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  color: white;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.tapTempo:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .metronome {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 20px;
+  }
+  
+  .metronomeVisual {
+    padding-top: 0px;
+    min-height: 450px;
+  }
+  
+  .metronomeBase {
+    width: 300px;
+    height: 400px;
+    margin-top: -15px;
+  }
+  
+  .metronomeBody {
+    width: 240px;
+    height: 280px;
+  }
+  
+  .metronomePendulum {
+    height: 240px;
+    top: 120px;
+    width: 6px;
+  }
+  
+  .metronomeWeight {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .metronomeCenterLine {
+    height: 240px;
+    top: 30px;
+    width: 3px;
+  }
+}
+
+@media (max-width: 768px) {
+  .metronome {
+    padding: 20px;
+    gap: 15px;
+  }
+  
+  .tempoDisplay {
+    padding: 15px;
+  }
+  
+  .bpmNumber {
+    font-size: 2.5rem;
+  }
+  
+  .leftControls,
+  .rightControls {
+    padding: 20px;
+  }
+  
+  .metronomeVisual {
+    min-height: 350px;
+    padding-top: 0px;
+  }
+  
+  .metronomeBase {
+    width: 220px;
+    height: 300px;
+    margin-top: -10px;
+  }
+  
+  .metronomeBody {
+    width: 180px;
+    height: 200px;
+  }
+  
+  .metronomePendulum {
+    height: 180px;
+    top: 100px;
+    width: 5px;
+  }
+  
+  .metronomeWeight {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .metronomeCenterLine {
+    height: 160px;
+    top: 20px;
+    width: 2.5px;
+  }
+  
+  .controls {
+    gap: 10px;
+  }
+}
+
+/* Tuner Styles */
+.tunerContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.tunerDisplay {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 2px solid var(--border);
+}
+
+.noteDisplay {
+  font-size: 4rem;
+  font-weight: bold;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  min-height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frequencyDisplay {
+  font-size: 1.5rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+  min-height: 1.5rem;
+}
+
+.centsMeter {
+  position: relative;
+  height: 60px;
+  margin-bottom: 1rem;
+  background: var(--muted);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.centsScale {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  padding: 0 20px;
+}
+
+.centsMarkLine {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.centsMarkLine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 20px;
+  background: var(--foreground);
+}
+
+.centsMark {
+  margin-top: 25px;
+  font-size: 0.8rem;
+  color: var(--foreground);
+}
+
+.centsIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 40px;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: all 0.1s ease;
+}
+
+.centsIndicator.flat {
+  background: var(--destructive);
+}
+
+.centsIndicator.sharp {
+  background: var(--accent);
+}
+
+.centsIndicator.inTune {
+  background: var(--success);
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.centsDisplay {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.centsDisplay.flat {
+  color: var(--destructive);
+}
+
+.centsDisplay.sharp {
+  color: var(--accent);
+}
+
+.centsDisplay.inTune {
+  color: var(--success);
+}
+
+.tunerControls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.tunerButton {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tunerButton:hover {
+  background: var(--secondary);
+  transform: translateY(-2px);
+}
+
+.tunerButton.listening {
+  background: var(--destructive);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.volumeMeter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.volumeMeter label {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.volumeBar {
+  height: 8px;
+  background: var(--muted);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.volumeLevel {
+  height: 100%;
+  background: linear-gradient(to right, var(--success), var(--accent), var(--destructive));
+  transition: width 0.1s ease;
+}
+
+.tunerInstructions {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  border: 1px solid var(--border);
+}
+
+.tunerInstructions p {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.tunerInstructions p:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tabContainer {
+    overflow-x: auto;
+  }
+  
+  .tabButton {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .metronomeContainer,
+  .tunerContainer {
+    padding: 1rem;
+  }
+  
+  .bpmNumber {
+    font-size: 3rem;
+  }
+  
+  .noteDisplay {
+    font-size: 3rem;
+  }
+  
+  .mainControls {
+    flex-direction: column;
+  }
+  
+  .metronomeControls {
+    gap: 1rem;
+  }
+} 

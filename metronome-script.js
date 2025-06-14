@@ -416,8 +416,7 @@ class Metronome {
         const targetSoundTime = performance.now() + delayMs;
         
         console.log(`Scheduling: Beat ${currentBeat}, Sub ${currentSubdivision}, AudioTime: ${time.toFixed(3)}s, Current: ${currentAudioTime.toFixed(3)}s, Delay: ${delayMs.toFixed(1)}ms, Target: ${targetSoundTime.toFixed(1)}ms`);
-        
-        // Add to schedule queue for visual updates
+o schedule queue for visual updates
         this.scheduleQueue.push({
             time: time,
             beat: currentBeat,
@@ -425,9 +424,15 @@ class Metronome {
             isAccent: isAccent
         });
         
-        // Schedule sound to play at exact target time
+    // Calculate timing
+        const currentTime = performance.now();
+        const delay = Math.max(0, noteTime - currentTime);
+        
+        // Schedule the sound (both main beats and subdivisions)
         setTimeout(() => {
-            console.log(`🔊 Sound: Beat ${currentBeat}, Sub ${currentSubdivision}, Accent: ${isAccent} - PLAYING NOW at ${performance.now().toFixed(1)}ms`);
+            console.log(`Sound: Beat ${currentBeat}, Sub ${currentSubdivision}, Accent: ${isAccent}`);
+            
+
             if (this.sounds) {
                 const soundType = this.sounds.getCurrentSoundType();
                 const volume = isAccent ? 0.8 : (currentSubdivision === 1 ? 0.7 : 0.5);
@@ -435,43 +440,22 @@ class Metronome {
             } else {
                 this.createBasicSound(isAccent);
             }
-        }, delayMs);
+        }, delay);
         
-        // Handle pendulum animation for main beats only - sync perfectly with sound
-        if (currentSubdivision === 1) {
-            const beatDurationMs = beatDuration * 1000;
-            
-            // The pendulum should cross center when the sound plays
-            // Since the pendulum starts at an extreme position, we need to calculate
-            // when to start the swing so it crosses center at the target time
-            
-            // For the first beat, the pendulum is already at an extreme and needs to swing to center
-            // For subsequent beats, it alternates between extremes
-            
-            // Calculate when to start pendulum so it crosses center at target time
-            // The pendulum crosses center at halfway through its animation duration
-            const pendulumStartTime = targetSoundTime - (beatDurationMs / 2);
-            const pendulumStartDelay = Math.max(0, pendulumStartTime - performance.now());
-            
-            // Alternate direction for continuous swing
-            this.pendulumDirection *= -1;
-            const maxAngle = 35;
-            const targetAngle = (isAccent ? maxAngle : maxAngle * 0.9) * this.pendulumDirection;
-            
-            console.log(`Pendulum: Beat duration: ${beatDurationMs}ms, Start delay: ${pendulumStartDelay.toFixed(1)}ms, will cross center at: ${targetSoundTime.toFixed(1)}ms`);
-            console.log(`Pendulum: Current angle: ${this.getCurrentPendulumAngle()}°, Target angle: ${targetAngle}°`);
-            
-            // Schedule the pendulum animation to start at the calculated time
-            setTimeout(() => {
-                // Pass the exact target time for center crossing synchronization
-                this.startPendulumAnimation(beatDurationMs, targetAngle, isAccent, targetSoundTime);
-            }, pendulumStartDelay);
-        }
-        
-        // Schedule visual updates at the exact scheduled time
+        // Schedule visual updates (beat counter, subdivision dots) at the same time
         setTimeout(() => {
             this.updateBeatVisuals(currentBeat, currentSubdivision, isAccent);
-        }, delayMs);
+        }, delay);
+        
+        // Schedule pendulum animation only on main beats (subdivision 1)
+        if (currentSubdivision === 1) {
+            const beatDuration = (60 / this.tempo) * 1000; // Full beat duration in ms
+            
+            setTimeout(() => {
+                this.animatePendulumVisualOnly(currentBeat, currentSubdivision, isAccent);
+            }, Math.max(0, delay - (beatDuration / 4))); // Start pendulum slightly before beat
+        }
+
     }
 
     async createBasicSound(isAccent) {
