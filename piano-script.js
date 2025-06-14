@@ -19,7 +19,7 @@ class VirtualPiano {
         this.totalKeys = 88; // Total keys from A0 to C8
         this.visibleKeys = 44; // Show 44 keys at once
         this.scrollIncrement = 22; // Scroll by 22 keys at a time
-        this.currentStartKeyIndex = 22; // Start at middle range (keys 22-65)
+        this.currentStartKeyIndex = Math.floor((this.totalKeys - this.visibleKeys) / 2); // This gives us 22
         this.minKeyIndex = 0; // Minimum key index (A0)
         this.maxKeyIndex = 87; // Maximum key index (C8)
         
@@ -160,8 +160,27 @@ class VirtualPiano {
         // Generate piano keys
         console.log('About to generate piano keys...');
         try {
-            this.generateKeys();
+        this.generateKeys();
             console.log('Keys generation completed successfully');
+            
+            // Cache edge key elements for immediate visibility updates
+            this.f2SharpKey = document.querySelector('[data-key-index="21"]'); // F#2
+            this.d6SharpKey = document.querySelector('[data-key-index="66"]'); // D#6
+            console.log('Edge keys cached:', {
+                'F#2': !!this.f2SharpKey,
+                'D#6': !!this.d6SharpKey
+            });
+            
+            // Pre-calculate the exact middle scroll position for fastest comparison
+            const keyboardContainer = document.getElementById('keyboard-container');
+            const pianoKeyboardContainer = document.querySelector('.piano-keyboard-container');
+            if (keyboardContainer && pianoKeyboardContainer) {
+                const keyboardTotalWidth = keyboardContainer.offsetWidth;
+                const middleKeyIndex = Math.floor((this.totalKeys - this.visibleKeys) / 2); // 22
+                this.middleScrollPosition = Math.round((middleKeyIndex / this.totalKeys) * keyboardTotalWidth);
+                this.scrollTolerance = 5; // Very small tolerance for exact middle detection
+                console.log('Pre-calculated middle scroll position:', this.middleScrollPosition);
+            }
         } catch (error) {
             console.error('Error during key generation:', error);
             return;
@@ -172,7 +191,7 @@ class VirtualPiano {
         
         // Add event listeners
         try {
-            this.addEventListeners();
+        this.addEventListeners();
             console.log('Event listeners added successfully');
         } catch (error) {
             console.error('Error adding event listeners:', error);
@@ -314,12 +333,15 @@ class VirtualPiano {
             console.log('POST-RENDER: Scrollable area?', actualWidth > parentActualWidth);
             
             // Force middle position and scroll
-            this.currentStartKeyIndex = Math.floor((this.totalKeys - this.visibleKeys) / 2);
-            console.log('Setting currentStartKeyIndex to middle position:', this.currentStartKeyIndex);
+            this.currentStartKeyIndex = Math.floor((this.totalKeys - this.visibleKeys) / 2); // This gives us 22
+            console.log('Setting currentStartKeyIndex to middle position (adjusted):', this.currentStartKeyIndex);
             
             this.updateScrollPosition();
             this.updateRangeDisplay();
             this.updateScrollButtons();
+            
+            // Also update edge key visibility for initial load (immediate, no delay)
+            this.updateEdgeKeyVisibility();
             
             console.log('generateKeys() completed - should now be showing keys', this.currentStartKeyIndex, 'to', this.currentStartKeyIndex + this.visibleKeys - 1);
         }, 50);
@@ -408,13 +430,48 @@ class VirtualPiano {
         this.scrollLeftBtn.addEventListener('click', () => this.scrollLeft());
         this.scrollRightBtn.addEventListener('click', () => this.scrollRight());
         
+        // Add scroll event listener for touchpad scrolling
+        const pianoKeyboardContainer = document.querySelector('.piano-keyboard-container');
+        if (pianoKeyboardContainer) {
+            // Use requestAnimationFrame polling for immediate response
+            let isScrolling = false;
+            let scrollAnimationId;
+            
+            const pollScrollPosition = () => {
+                this.handleImmediateScrollVisibility();
+                if (isScrolling) {
+                    scrollAnimationId = requestAnimationFrame(pollScrollPosition);
+                }
+            };
+            
+            let scrollTimeout;
+            pianoKeyboardContainer.addEventListener('scroll', () => {
+                // Start polling if not already polling
+                if (!isScrolling) {
+                    isScrolling = true;
+                    pollScrollPosition();
+                }
+                
+                // Throttled UI updates to avoid overwhelming the system
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    this.updateScrollTracking();
+                    // Stop polling after scroll ends
+                    isScrolling = false;
+                    if (scrollAnimationId) {
+                        cancelAnimationFrame(scrollAnimationId);
+                    }
+                }, 100); // Slightly longer delay to ensure scroll has stopped
+            });
+        }
+        
         // Keyboard events
         document.addEventListener('keydown', (e) => {
             if (document.querySelector('#piano-tab.active')) {
                 // Handle piano key presses
                 if (this.keyboardMap[e.code] && !e.repeat) {
                     e.preventDefault();
-                    this.handleKeyDown(e);
+            this.handleKeyDown(e);
                 }
                 // Handle arrow key navigation
                 else if (e.code === 'ArrowLeft') {
@@ -431,7 +488,7 @@ class VirtualPiano {
         document.addEventListener('keyup', (e) => {
             if (document.querySelector('#piano-tab.active') && this.keyboardMap[e.code]) {
                 e.preventDefault();
-                this.handleKeyUp(e);
+            this.handleKeyUp(e);
             }
         });
         
@@ -655,6 +712,7 @@ class VirtualPiano {
             this.updateScrollPosition();
             this.updateRangeDisplay();
             this.updateScrollButtons();
+            this.updateEdgeKeyVisibility(); // Immediate update for manual scrolling
             console.log('Scrolled left to key:', this.currentStartKeyIndex, 'showing keys', this.currentStartKeyIndex, 'to', this.currentStartKeyIndex + this.visibleKeys - 1);
         }
     }
@@ -667,7 +725,31 @@ class VirtualPiano {
             this.updateScrollPosition();
             this.updateRangeDisplay();
             this.updateScrollButtons();
+            this.updateEdgeKeyVisibility(); // Immediate update for manual scrolling
             console.log('Scrolled right to key:', this.currentStartKeyIndex, 'showing keys', this.currentStartKeyIndex, 'to', this.currentStartKeyIndex + this.visibleKeys - 1);
+        }
+    }
+    
+    // Separate method for updating internal tracking from scroll events
+    updateScrollTracking() {
+        const pianoKeyboardContainer = document.querySelector('.piano-keyboard-container');
+        const keyboardContainer = document.getElementById('keyboard-container');
+        
+        if (pianoKeyboardContainer && keyboardContainer) {
+            // Calculate current start key index from scroll position
+            const scrollLeft = pianoKeyboardContainer.scrollLeft;
+            const keyboardTotalWidth = keyboardContainer.offsetWidth;
+            
+            // Calculate what the current start key index should be based on scroll position
+            const scrollRatio = scrollLeft / keyboardTotalWidth;
+            const calculatedStartIndex = Math.round(scrollRatio * this.totalKeys);
+            
+            // Update our internal tracking
+            this.currentStartKeyIndex = Math.max(0, Math.min(calculatedStartIndex, this.totalKeys - this.visibleKeys));
+            
+            // Update range display and buttons for consistency
+            this.updateRangeDisplay();
+            this.updateScrollButtons();
         }
     }
     
@@ -711,23 +793,37 @@ class VirtualPiano {
             console.log('- container scrollWidth:', pianoKeyboardContainer.scrollWidth);
             console.log('- container clientWidth:', pianoKeyboardContainer.clientWidth);
             
-            // Double-check by applying again with a small delay
-            setTimeout(() => {
-                console.log('Re-applying scrollLeft after 100ms delay');
-                pianoKeyboardContainer.scrollLeft = clampedScrollPosition;
-                console.log('- delayed scrollLeft applied:', pianoKeyboardContainer.scrollLeft);
-                
-                // Check actual DOM state
-                const firstVisibleKey = document.querySelector('.piano-key');
-                if (firstVisibleKey) {
-                    console.log('- First key in DOM:', firstVisibleKey.textContent, firstVisibleKey.dataset.keyIndex);
-                }
-            }, 100);
+            // Update edge key visibility immediately
+            this.updateEdgeKeyVisibility();
         } else {
             console.error('Required containers not found for scroll position update!');
             console.error('- keyboardContainer:', !!keyboardContainer);
             console.error('- pianoKeyboardContainer:', !!pianoKeyboardContainer);
         }
+    }
+    
+    updateEdgeKeyVisibility() {
+        const pianoKeyboardContainer = document.querySelector('.piano-keyboard-container');
+        
+        if (pianoKeyboardContainer && this.f2SharpKey && this.d6SharpKey && this.middleScrollPosition !== undefined) {
+            // Ultra-fast comparison using pre-calculated position
+            const currentScrollLeft = pianoKeyboardContainer.scrollLeft;
+            const isAtMiddle = Math.abs(currentScrollLeft - this.middleScrollPosition) <= this.scrollTolerance;
+            
+            // Immediate visibility update - fastest possible
+            if (isAtMiddle) {
+                this.f2SharpKey.style.visibility = 'hidden';
+                this.d6SharpKey.style.visibility = 'hidden';
+            } else {
+                this.f2SharpKey.style.visibility = 'visible';
+                this.d6SharpKey.style.visibility = 'visible';
+            }
+        }
+    }
+    
+    handleImmediateScrollVisibility() {
+        // Use the same ultra-fast logic as updateEdgeKeyVisibility
+        this.updateEdgeKeyVisibility();
     }
     
     updateRangeDisplay() {
@@ -784,4 +880,4 @@ class VirtualPiano {
 
 // Make VirtualPiano available globally
 window.VirtualPiano = VirtualPiano;
-console.log('Virtual piano script loaded');
+console.log('Virtual piano script loaded'); 
