@@ -16,7 +16,13 @@ export default function Metronome() {
   const [currentBeat, setCurrentBeat] = useState(1);
   const [currentSubdivision, setCurrentSubdivision] = useState(1);
   const [accentPattern, setAccentPattern] = useState([1]);
-  const [pendulumDirection, setPendulumDirection] = useState(1);
+  const [pendulumAngle, setPendulumAngle] = useState(0);
+  const [animationCycle, setAnimationCycle] = useState(0);
+  const animationRef = useRef<number | null>(null);
+  const animationStartTime = useRef<number>(0);
+  const animationDuration = useRef<number>(0);
+  const startAngle = useRef<number>(0);
+  const endAngle = useRef<number>(0);
   
   // Tap tempo
   const [tapTimes, setTapTimes] = useState<number[]>([]);
@@ -54,6 +60,39 @@ export default function Metronome() {
     quarterNoteTimeRef.current = 60.0 / tempo;
   }, [tempo]);
 
+  // Easing function for smooth animation
+  const easeInOutQuad = (t: number): number => {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  };
+
+  // Even smoother easing function
+  const easeInOutCubic = (t: number): number => {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+
+  // Smooth pendulum animation using requestAnimationFrame
+  const animatePendulum = (fromAngle: number, toAngle: number, duration: number) => {
+    startAngle.current = fromAngle;
+    endAngle.current = toAngle;
+    animationDuration.current = duration;
+    animationStartTime.current = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - animationStartTime.current;
+      const progress = Math.min(elapsed / animationDuration.current, 1);
+      const easedProgress = easeInOutCubic(progress);
+      
+      const currentAngle = startAngle.current + (endAngle.current - startAngle.current) * easedProgress;
+      setPendulumAngle(currentAngle);
+
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+  };
+
   // Scheduler function
   const scheduler = useCallback(async () => {
     const currentTime = performance.now() / 1000;
@@ -61,8 +100,20 @@ export default function Metronome() {
     while (nextNoteTimeRef.current < currentTime + 0.1) {
       const isAccent = accentPattern.includes(currentBeat);
       
-      // Play sound
-      await playSound(currentSound, isAccent);
+      // Calculate animation duration (one beat)
+      const beatDuration = 60 / tempo;
+      
+      // Animate pendulum to opposite side
+      const currentAngle = pendulumAngle;
+      const targetAngle = currentAngle === 25 ? -25 : 25;
+      
+      // Play sound at midpoint of animation (when crossing center)
+      setTimeout(async () => {
+        await playSound(currentSound, isAccent);
+      }, (beatDuration / 2) * 1000);
+      
+      // Start smooth animation
+      animatePendulum(currentAngle, targetAngle, beatDuration * 1000);
       
       // Update beat counter
       const nextSubdivision = currentSubdivision + 1;
@@ -74,14 +125,11 @@ export default function Metronome() {
         setCurrentSubdivision(nextSubdivision);
       }
       
-      // Update pendulum direction
-      setPendulumDirection(prev => -prev);
-      
       // Calculate next note time
       const noteInterval = quarterNoteTimeRef.current / subdivision;
       nextNoteTimeRef.current += noteInterval;
     }
-  }, [currentBeat, currentSubdivision, subdivision, timeSignature.beats, accentPattern, playSound, currentSound]);
+  }, [currentBeat, currentSubdivision, subdivision, timeSignature.beats, accentPattern, playSound, currentSound, tempo, pendulumAngle]);
 
   // Main metronome loop
   useEffect(() => {
@@ -109,6 +157,8 @@ export default function Metronome() {
   // Start/Stop functions
   const start = () => {
     nextNoteTimeRef.current = performance.now() / 1000;
+    setPendulumAngle(0); // Start at center (no jump)
+    setAnimationCycle(prev => prev + 1); // Force re-render
     setIsPlaying(true);
   };
 
@@ -118,9 +168,14 @@ export default function Metronome() {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
+    // Cancel any running animation
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
     setCurrentBeat(1);
     setCurrentSubdivision(1);
-    setPendulumDirection(0); // Reset pendulum to center
+    setPendulumAngle(0); // Return to center when stopped
   };
 
   // Tap tempo function
@@ -240,10 +295,10 @@ export default function Metronome() {
             <div className={styles.metronomeCenterLine}></div>
           </div>
           <div 
+            key={`pendulum-${animationCycle}`}
             className={styles.metronomePendulum}
             style={{
-              transform: `translateX(-50%) rotate(${isPlaying ? pendulumDirection * 25 : 0}deg)`,
-              transition: isPlaying ? `transform ${quarterNoteTimeRef.current / subdivision}s ease-in-out` : 'transform 0.5s ease-out'
+              transform: `translateX(-50%) rotate(${pendulumAngle}deg)`
             }}
           >
             <div className={styles.metronomeWeight}></div>
@@ -271,6 +326,7 @@ export default function Metronome() {
             min="30" 
             max="300" 
             value={tempo} 
+            id="tempo-slider"
             className={styles.slider} 
             onChange={(e) => handleTempoChange(parseInt(e.target.value))}
           />

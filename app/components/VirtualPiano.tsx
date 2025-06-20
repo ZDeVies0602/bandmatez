@@ -378,6 +378,7 @@ export default function VirtualPiano() {
             max="1"
             step="0.01"
             value={volume}
+            id="volume-slider"
             onChange={(e) => setVolume(parseFloat(e.target.value))}
             className={styles.slider}
           />
@@ -392,6 +393,7 @@ export default function VirtualPiano() {
             max="1"
             step="0.01"
             value={sustain}
+            id="sustain-slider"
             onChange={(e) => setSustain(parseFloat(e.target.value))}
             className={styles.slider}
           />
