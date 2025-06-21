@@ -190,7 +190,7 @@ export default function LandingPage() {
           height: 18rem;
           background: var(--shape-color-1);
           top: 8%;
-          left: 40%;
+          left: 15%;
           border-radius: 1.5rem;
         }
 

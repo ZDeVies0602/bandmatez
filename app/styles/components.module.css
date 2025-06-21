@@ -226,10 +226,7 @@
   transform: translateX(-50%);
   width: 8px;
   height: 330px;
-  background: linear-gradient(to bottom, 
-    rgba(192, 192, 192, 0.95) 0%, 
-    rgba(169, 169, 169, 0.95) 100%
-  );
+  background: linear-gradient(to bottom, #ffffff 0%, #e0e0e0 100%);
   border-radius: 4px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
   z-index: 10;
@@ -242,14 +239,10 @@
   transform: translateX(-50%);
   width: 40px;
   height: 40px;
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(255, 215, 0, 0.95) 0%, 
-    rgba(255, 165, 0, 0.95) 70%, 
-    rgba(218, 165, 32, 0.95) 100%
-  );
+  background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f0f0f0 70%, #d0d0d0 100%);
   border-radius: 50%;
   box-shadow: 
-    0 0 20px rgba(255, 215, 0, 0.4),
+    0 0 20px rgba(0, 0, 0, 0.3),
     inset 0 4px 8px rgba(255, 255, 255, 0.3);
 }
 
@@ -398,91 +391,91 @@
 /* Global theme-specific metronome pendulum colors */
 :global(body.theme-default) .metronomePendulum {
   background: linear-gradient(to bottom, 
-    rgba(107, 15, 26, 0.9) 0%, 
-    rgba(139, 26, 42, 0.9) 100%
+    rgba(220, 224, 217, 0.95) 0%, 
+    rgba(200, 204, 197, 0.95) 100%
   ) !important;
-  box-shadow: 0 0 12px rgba(107, 15, 26, 0.5) !important;
+  box-shadow: 0 0 12px rgba(220, 224, 217, 0.6) !important;
 }
 
 :global(body.theme-royal-gold) .metronomePendulum {
   background: linear-gradient(to bottom, 
-    rgba(76, 106, 245, 0.9) 0%, 
-    rgba(100, 130, 255, 0.9) 100%
+    rgba(212, 160, 23, 0.95) 0%, 
+    rgba(255, 215, 0, 0.95) 100%
   ) !important;
-  box-shadow: 0 0 12px rgba(76, 106, 245, 0.5) !important;
+  box-shadow: 0 0 12px rgba(212, 160, 23, 0.6) !important;
 }
 
 :global(body.theme-terra-cotta) .metronomePendulum {
   background: linear-gradient(to bottom, 
-    rgba(242, 140, 40, 0.9) 0%, 
-    rgba(255, 165, 0, 0.9) 100%
+    rgba(220, 224, 217, 0.95) 0%, 
+    rgba(200, 204, 197, 0.95) 100%
   ) !important;
-  box-shadow: 0 0 12px rgba(242, 140, 40, 0.5) !important;
+  box-shadow: 0 0 12px rgba(220, 224, 217, 0.6) !important;
 }
 
 :global(body.theme-desert-clay) .metronomePendulum {
   background: linear-gradient(to bottom, 
-    rgba(224, 122, 95, 0.9) 0%, 
-    rgba(244, 164, 96, 0.9) 100%
+    rgba(47, 79, 79, 0.95) 0%, 
+    rgba(37, 69, 69, 0.95) 100%
   ) !important;
-  box-shadow: 0 0 12px rgba(224, 122, 95, 0.5) !important;
+  box-shadow: 0 0 12px rgba(47, 79, 79, 0.6) !important;
 }
 
 :global(body.theme-dusty-lilac) .metronomePendulum {
   background: linear-gradient(to bottom, 
-    rgba(200, 182, 200, 0.9) 0%, 
-    rgba(184, 169, 184, 0.9) 100%
+    rgba(220, 224, 217, 0.95) 0%, 
+    rgba(200, 204, 197, 0.95) 100%
   ) !important;
-  box-shadow: 0 0 12px rgba(200, 182, 200, 0.5) !important;
+  box-shadow: 0 0 12px rgba(220, 224, 217, 0.6) !important;
 }
 
 :global(body.theme-crimson-night) .metronomePendulum {
   background: linear-gradient(to bottom, 
-    rgba(139, 0, 0, 0.9) 0%, 
-    rgba(178, 34, 34, 0.9) 100%
+    rgba(220, 224, 217, 0.95) 0%, 
+    rgba(200, 204, 197, 0.95) 100%
   ) !important;
-  box-shadow: 0 0 12px rgba(139, 0, 0, 0.5) !important;
+  box-shadow: 0 0 12px rgba(220, 224, 217, 0.6) !important;
 }
 
 :global(body.theme-forest-floor) .metronomePendulum {
   background: linear-gradient(to bottom, 
-    rgba(143, 151, 121, 0.9) 0%, 
-    rgba(178, 185, 164, 0.9) 100%
+    rgba(220, 224, 217, 0.95) 0%, 
+    rgba(200, 204, 197, 0.95) 100%
   ) !important;
-  box-shadow: 0 0 12px rgba(143, 151, 121, 0.5) !important;
+  box-shadow: 0 0 12px rgba(220, 224, 217, 0.6) !important;
 }
 
 /* Global theme-specific weight colors */
 :global(body.theme-default) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(107, 15, 26, 0.95) 0%, 
-    rgba(139, 26, 42, 0.95) 70%, 
-    rgba(89, 15, 26, 0.95) 100%
+    rgba(49, 8, 31, 0.95) 0%, 
+    rgba(69, 18, 51, 0.95) 70%, 
+    rgba(29, 8, 21, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(107, 15, 26, 0.5),
+    0 0 20px rgba(49, 8, 31, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 :global(body.theme-royal-gold) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(212, 160, 23, 0.95) 0%, 
-    rgba(255, 215, 0, 0.95) 70%, 
-    rgba(184, 134, 11, 0.95) 100%
+    rgba(26, 44, 66, 0.95) 0%, 
+    rgba(46, 64, 86, 0.95) 70%, 
+    rgba(16, 34, 56, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(212, 160, 23, 0.5),
+    0 0 20px rgba(26, 44, 66, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 :global(body.theme-terra-cotta) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(199, 56, 50, 0.95) 0%, 
-    rgba(230, 126, 34, 0.95) 70%, 
-    rgba(179, 46, 40, 0.95) 100%
+    rgba(49, 8, 31, 0.95) 0%, 
+    rgba(69, 18, 51, 0.95) 70%, 
+    rgba(29, 8, 21, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(199, 56, 50, 0.5),
+    0 0 20px rgba(49, 8, 31, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
@@ -500,8 +493,8 @@
 :global(body.theme-dusty-lilac) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
     rgba(47, 79, 79, 0.95) 0%, 
-    rgba(200, 182, 200, 0.95) 70%, 
-    rgba(37, 59, 59, 0.95) 100%
+    rgba(67, 99, 99, 0.95) 70%, 
+    rgba(27, 59, 59, 0.95) 100%
   ) !important;
   box-shadow: 
     0 0 20px rgba(47, 79, 79, 0.5),
@@ -510,23 +503,23 @@
 
 :global(body.theme-crimson-night) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(84, 1, 1, 0.95) 0%, 
-    rgba(139, 0, 0, 0.95) 70%, 
-    rgba(64, 1, 1, 0.95) 100%
+    rgba(220, 224, 217, 0.95) 0%, 
+    rgba(200, 204, 197, 0.95) 70%, 
+    rgba(180, 184, 177, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(84, 1, 1, 0.5),
+    0 0 20px rgba(220, 224, 217, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 :global(body.theme-forest-floor) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(94, 69, 75, 0.95) 0%, 
-    rgba(143, 151, 121, 0.95) 70%, 
-    rgba(74, 69, 75, 0.95) 100%
+    rgba(220, 224, 217, 0.95) 0%, 
+    rgba(200, 204, 197, 0.95) 70%, 
+    rgba(180, 184, 177, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(94, 69, 75, 0.5),
+    0 0 20px rgba(220, 224, 217, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
