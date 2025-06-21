@@ -190,80 +190,16 @@
   width: 320px;
   height: 400px;
   background: linear-gradient(135deg, 
-    rgba(139, 69, 19, 0.9) 0%, 
-    rgba(160, 82, 45, 0.9) 50%, 
-    rgba(139, 69, 19, 0.9) 100%
+    rgba(107, 15, 26, 0.9) 0%, 
+    rgba(139, 26, 42, 0.9) 50%, 
+    rgba(107, 15, 26, 0.9) 100%
   );
-  border: 5px solid rgba(101, 67, 33, 0.8);
+  border: 5px solid rgba(89, 15, 26, 0.8);
   border-radius: 25px 25px 10px 10px;
   box-shadow: 
     0 20px 50px rgba(0, 0, 0, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-}
-
-/* Theme-specific metronome colors */
-.theme-default .metronomeBody {
-  background: linear-gradient(135deg, 
-    rgba(139, 69, 19, 0.9) 0%, 
-    rgba(160, 82, 45, 0.9) 50%, 
-    rgba(139, 69, 19, 0.9) 100%
-  );
-  border-color: rgba(101, 67, 33, 0.8);
-}
-
-.theme-grand-canyon .metronomeBody {
-  background: linear-gradient(135deg, 
-    rgba(205, 92, 92, 0.9) 0%, 
-    rgba(255, 140, 0, 0.9) 50%, 
-    rgba(178, 34, 34, 0.9) 100%
-  );
-  border-color: rgba(139, 69, 19, 0.8);
-}
-
-.theme-moon .metronomeBody {
-  background: linear-gradient(135deg, 
-    rgba(105, 105, 105, 0.9) 0%, 
-    rgba(169, 169, 169, 0.9) 50%, 
-    rgba(105, 105, 105, 0.9) 100%
-  );
-  border-color: rgba(75, 75, 75, 0.8);
-}
-
-.theme-sunset-beach .metronomeBody {
-  background: linear-gradient(135deg, 
-    rgba(255, 165, 0, 0.9) 0%, 
-    rgba(255, 218, 185, 0.9) 50%, 
-    rgba(255, 140, 0, 0.9) 100%
-  );
-  border-color: rgba(218, 165, 32, 0.8);
-}
-
-.theme-north-pole .metronomeBody {
-  background: linear-gradient(135deg, 
-    rgba(176, 224, 230, 0.9) 0%, 
-    rgba(240, 248, 255, 0.9) 50%, 
-    rgba(173, 216, 230, 0.9) 100%
-  );
-  border-color: rgba(135, 206, 235, 0.8);
-}
-
-.theme-rainforest .metronomeBody {
-  background: linear-gradient(135deg, 
-    rgba(34, 139, 34, 0.9) 0%, 
-    rgba(107, 142, 35, 0.9) 50%, 
-    rgba(85, 107, 47, 0.9) 100%
-  );
-  border-color: rgba(34, 139, 34, 0.8);
-}
-
-.theme-ocean-depths .metronomeBody {
-  background: linear-gradient(135deg, 
-    rgba(25, 25, 112, 0.9) 0%, 
-    rgba(70, 130, 180, 0.9) 50%, 
-    rgba(0, 0, 139, 0.9) 100%
-  );
-  border-color: rgba(0, 0, 139, 0.8);
 }
 
 .metronomeCenterLine {
@@ -317,223 +253,280 @@
     inset 0 4px 8px rgba(255, 255, 255, 0.3);
 }
 
-/* Theme-specific weight colors */
-.theme-default .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(255, 215, 0, 0.95) 0%, 
-    rgba(255, 165, 0, 0.95) 70%, 
-    rgba(218, 165, 32, 0.95) 100%
-  );
-  box-shadow: 
-    0 0 20px rgba(255, 215, 0, 0.4),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3);
-}
-
-.theme-grand-canyon .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(255, 140, 0, 0.95) 0%, 
-    rgba(255, 69, 0, 0.95) 70%, 
-    rgba(255, 99, 71, 0.95) 100%
-  );
-  box-shadow: 
-    0 0 20px rgba(255, 140, 0, 0.4),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3);
-}
-
-.theme-moon .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(220, 220, 220, 0.95) 0%, 
-    rgba(192, 192, 192, 0.95) 70%, 
-    rgba(169, 169, 169, 0.95) 100%
-  );
-  box-shadow: 
-    0 0 20px rgba(220, 220, 220, 0.4),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3);
-}
-
-.theme-sunset-beach .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(255, 215, 0, 0.95) 0%, 
-    rgba(255, 165, 0, 0.95) 70%, 
-    rgba(255, 140, 0, 0.95) 100%
-  );
-  box-shadow: 
-    0 0 20px rgba(255, 215, 0, 0.4),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3);
-}
-
-.theme-north-pole .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(173, 216, 230, 0.95) 0%, 
-    rgba(135, 206, 235, 0.95) 70%, 
-    rgba(100, 149, 237, 0.95) 100%
-  );
-  box-shadow: 
-    0 0 20px rgba(173, 216, 230, 0.4),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3);
-}
-
-.theme-rainforest .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(144, 238, 144, 0.95) 0%, 
-    rgba(60, 179, 113, 0.95) 70%, 
-    rgba(46, 139, 87, 0.95) 100%
-  );
-  box-shadow: 
-    0 0 20px rgba(144, 238, 144, 0.4),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3);
-}
-
-.theme-ocean-depths .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(100, 149, 237, 0.95) 0%, 
-    rgba(70, 130, 180, 0.95) 70%, 
-    rgba(30, 144, 255, 0.95) 100%
-  );
-  box-shadow: 
-    0 0 20px rgba(100, 149, 237, 0.4),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3);
-}
-
-/* Global theme-specific metronome colors */
+/* Global theme-specific metronome body colors */
 :global(body.theme-default) .metronomeBody {
   background: linear-gradient(135deg, 
-    rgba(139, 69, 19, 0.9) 0%, 
-    rgba(160, 82, 45, 0.9) 50%, 
-    rgba(139, 69, 19, 0.9) 100%
+    rgba(107, 15, 26, 0.9) 0%, 
+    rgba(139, 26, 42, 0.9) 50%, 
+    rgba(107, 15, 26, 0.9) 100%
   ) !important;
-  border-color: rgba(101, 67, 33, 0.8) !important;
+  border-color: rgba(89, 15, 26, 0.8) !important;
 }
 
-:global(body.theme-grand-canyon) .metronomeBody {
+:global(body.theme-royal-gold) .metronomeBody {
   background: linear-gradient(135deg, 
-    rgba(205, 92, 92, 0.9) 0%, 
-    rgba(255, 140, 0, 0.9) 50%, 
-    rgba(178, 34, 34, 0.9) 100%
+    rgba(26, 44, 66, 0.9) 0%, 
+    rgba(76, 106, 245, 0.9) 50%, 
+    rgba(26, 44, 66, 0.9) 100%
   ) !important;
-  border-color: rgba(139, 69, 19, 0.8) !important;
+  border-color: rgba(76, 106, 245, 0.8) !important;
 }
 
-:global(body.theme-moon) .metronomeBody {
+:global(body.theme-terra-cotta) .metronomeBody {
   background: linear-gradient(135deg, 
-    rgba(105, 105, 105, 0.9) 0%, 
-    rgba(169, 169, 169, 0.9) 50%, 
-    rgba(105, 105, 105, 0.9) 100%
+    rgba(199, 56, 50, 0.9) 0%, 
+    rgba(242, 140, 40, 0.9) 50%, 
+    rgba(199, 56, 50, 0.9) 100%
   ) !important;
-  border-color: rgba(75, 75, 75, 0.8) !important;
+  border-color: rgba(199, 56, 50, 0.8) !important;
 }
 
-:global(body.theme-sunset-beach) .metronomeBody {
+:global(body.theme-desert-clay) .metronomeBody {
   background: linear-gradient(135deg, 
-    rgba(255, 165, 0, 0.9) 0%, 
-    rgba(255, 218, 185, 0.9) 50%, 
-    rgba(255, 140, 0, 0.9) 100%
+    rgba(224, 122, 95, 0.9) 0%, 
+    rgba(244, 221, 181, 0.9) 50%, 
+    rgba(224, 122, 95, 0.9) 100%
   ) !important;
-  border-color: rgba(218, 165, 32, 0.8) !important;
+  border-color: rgba(224, 122, 95, 0.8) !important;
 }
 
-:global(body.theme-north-pole) .metronomeBody {
+:global(body.theme-dusty-lilac) .metronomeBody {
   background: linear-gradient(135deg, 
-    rgba(176, 224, 230, 0.9) 0%, 
-    rgba(240, 248, 255, 0.9) 50%, 
-    rgba(173, 216, 230, 0.9) 100%
+    rgba(47, 79, 79, 0.9) 0%, 
+    rgba(200, 182, 200, 0.9) 50%, 
+    rgba(47, 79, 79, 0.9) 100%
   ) !important;
-  border-color: rgba(135, 206, 235, 0.8) !important;
+  border-color: rgba(47, 79, 79, 0.8) !important;
 }
 
-:global(body.theme-rainforest) .metronomeBody {
+:global(body.theme-crimson-night) .metronomeBody {
   background: linear-gradient(135deg, 
-    rgba(34, 139, 34, 0.9) 0%, 
-    rgba(107, 142, 35, 0.9) 50%, 
-    rgba(85, 107, 47, 0.9) 100%
+    rgba(84, 1, 1, 0.9) 0%, 
+    rgba(139, 0, 0, 0.9) 50%, 
+    rgba(84, 1, 1, 0.9) 100%
   ) !important;
-  border-color: rgba(34, 139, 34, 0.8) !important;
+  border-color: rgba(84, 1, 1, 0.8) !important;
 }
 
-:global(body.theme-ocean-depths) .metronomeBody {
+:global(body.theme-forest-floor) .metronomeBody {
   background: linear-gradient(135deg, 
-    rgba(25, 25, 112, 0.9) 0%, 
-    rgba(70, 130, 180, 0.9) 50%, 
-    rgba(0, 0, 139, 0.9) 100%
+    rgba(94, 69, 75, 0.9) 0%, 
+    rgba(143, 151, 121, 0.9) 50%, 
+    rgba(94, 69, 75, 0.9) 100%
   ) !important;
-  border-color: rgba(0, 0, 139, 0.8) !important;
+  border-color: rgba(94, 69, 75, 0.8) !important;
 }
 
 /* Global theme-specific weight colors */
 :global(body.theme-default) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(255, 215, 0, 0.95) 0%, 
-    rgba(255, 165, 0, 0.95) 70%, 
-    rgba(218, 165, 32, 0.95) 100%
+    rgba(107, 15, 26, 0.95) 0%, 
+    rgba(139, 26, 42, 0.95) 70%, 
+    rgba(89, 15, 26, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(255, 215, 0, 0.4),
+    0 0 20px rgba(107, 15, 26, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-:global(body.theme-grand-canyon) .metronomeWeight {
+:global(body.theme-royal-gold) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(255, 140, 0, 0.95) 0%, 
-    rgba(255, 69, 0, 0.95) 70%, 
-    rgba(255, 99, 71, 0.95) 100%
+    rgba(212, 160, 23, 0.95) 0%, 
+    rgba(255, 215, 0, 0.95) 70%, 
+    rgba(184, 134, 11, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(255, 140, 0, 0.4),
+    0 0 20px rgba(212, 160, 23, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-:global(body.theme-moon) .metronomeWeight {
+:global(body.theme-terra-cotta) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(220, 220, 220, 0.95) 0%, 
-    rgba(192, 192, 192, 0.95) 70%, 
-    rgba(169, 169, 169, 0.95) 100%
+    rgba(199, 56, 50, 0.95) 0%, 
+    rgba(230, 126, 34, 0.95) 70%, 
+    rgba(179, 46, 40, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(220, 220, 220, 0.4),
+    0 0 20px rgba(199, 56, 50, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-:global(body.theme-sunset-beach) .metronomeWeight {
+:global(body.theme-desert-clay) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(255, 215, 0, 0.95) 0%, 
-    rgba(255, 165, 0, 0.95) 70%, 
-    rgba(255, 140, 0, 0.95) 100%
+    rgba(244, 221, 181, 0.95) 0%, 
+    rgba(255, 228, 196, 0.95) 70%, 
+    rgba(210, 180, 140, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(255, 215, 0, 0.4),
+    0 0 20px rgba(244, 221, 181, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-:global(body.theme-north-pole) .metronomeWeight {
+:global(body.theme-dusty-lilac) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(173, 216, 230, 0.95) 0%, 
-    rgba(135, 206, 235, 0.95) 70%, 
-    rgba(100, 149, 237, 0.95) 100%
+    rgba(47, 79, 79, 0.95) 0%, 
+    rgba(200, 182, 200, 0.95) 70%, 
+    rgba(37, 59, 59, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(173, 216, 230, 0.4),
+    0 0 20px rgba(47, 79, 79, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-:global(body.theme-rainforest) .metronomeWeight {
+:global(body.theme-crimson-night) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(144, 238, 144, 0.95) 0%, 
-    rgba(60, 179, 113, 0.95) 70%, 
-    rgba(46, 139, 87, 0.95) 100%
+    rgba(84, 1, 1, 0.95) 0%, 
+    rgba(139, 0, 0, 0.95) 70%, 
+    rgba(64, 1, 1, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(144, 238, 144, 0.4),
+    0 0 20px rgba(84, 1, 1, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-:global(body.theme-ocean-depths) .metronomeWeight {
+:global(body.theme-forest-floor) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(100, 149, 237, 0.95) 0%, 
-    rgba(70, 130, 180, 0.95) 70%, 
-    rgba(30, 144, 255, 0.95) 100%
+    rgba(94, 69, 75, 0.95) 0%, 
+    rgba(143, 151, 121, 0.95) 70%, 
+    rgba(74, 69, 75, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(100, 149, 237, 0.4),
+    0 0 20px rgba(94, 69, 75, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Global theme-specific metronome pendulum colors */
+:global(body.theme-default) .metronomePendulum {
+  background: linear-gradient(to bottom, 
+    rgba(107, 15, 26, 0.9) 0%, 
+    rgba(139, 26, 42, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(107, 15, 26, 0.5) !important;
+}
+
+:global(body.theme-royal-gold) .metronomePendulum {
+  background: linear-gradient(to bottom, 
+    rgba(76, 106, 245, 0.9) 0%, 
+    rgba(100, 130, 255, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(76, 106, 245, 0.5) !important;
+}
+
+:global(body.theme-terra-cotta) .metronomePendulum {
+  background: linear-gradient(to bottom, 
+    rgba(242, 140, 40, 0.9) 0%, 
+    rgba(255, 165, 0, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(242, 140, 40, 0.5) !important;
+}
+
+:global(body.theme-desert-clay) .metronomePendulum {
+  background: linear-gradient(to bottom, 
+    rgba(224, 122, 95, 0.9) 0%, 
+    rgba(244, 164, 96, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(224, 122, 95, 0.5) !important;
+}
+
+:global(body.theme-dusty-lilac) .metronomePendulum {
+  background: linear-gradient(to bottom, 
+    rgba(200, 182, 200, 0.9) 0%, 
+    rgba(184, 169, 184, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(200, 182, 200, 0.5) !important;
+}
+
+:global(body.theme-crimson-night) .metronomePendulum {
+  background: linear-gradient(to bottom, 
+    rgba(139, 0, 0, 0.9) 0%, 
+    rgba(178, 34, 34, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(139, 0, 0, 0.5) !important;
+}
+
+:global(body.theme-forest-floor) .metronomePendulum {
+  background: linear-gradient(to bottom, 
+    rgba(143, 151, 121, 0.9) 0%, 
+    rgba(178, 185, 164, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(143, 151, 121, 0.5) !important;
+}
+
+/* Global theme-specific weight colors */
+:global(body.theme-default) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(107, 15, 26, 0.95) 0%, 
+    rgba(139, 26, 42, 0.95) 70%, 
+    rgba(89, 15, 26, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(107, 15, 26, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-royal-gold) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(212, 160, 23, 0.95) 0%, 
+    rgba(255, 215, 0, 0.95) 70%, 
+    rgba(184, 134, 11, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(212, 160, 23, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-terra-cotta) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(199, 56, 50, 0.95) 0%, 
+    rgba(230, 126, 34, 0.95) 70%, 
+    rgba(179, 46, 40, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(199, 56, 50, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-desert-clay) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(244, 221, 181, 0.95) 0%, 
+    rgba(255, 228, 196, 0.95) 70%, 
+    rgba(210, 180, 140, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(244, 221, 181, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-dusty-lilac) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(47, 79, 79, 0.95) 0%, 
+    rgba(200, 182, 200, 0.95) 70%, 
+    rgba(37, 59, 59, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(47, 79, 79, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-crimson-night) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(84, 1, 1, 0.95) 0%, 
+    rgba(139, 0, 0, 0.95) 70%, 
+    rgba(64, 1, 1, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(84, 1, 1, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-forest-floor) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(94, 69, 75, 0.95) 0%, 
+    rgba(143, 151, 121, 0.95) 70%, 
+    rgba(74, 69, 75, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(94, 69, 75, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 

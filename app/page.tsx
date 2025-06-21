@@ -10,6 +10,9 @@ export default function LandingPage() {
         <div className="shape shape2"></div>
         <div className="shape shape3"></div>
         <div className="shape shape4"></div>
+        <div className="shape shape5"></div>
+        <div className="shape shape6"></div>
+        <div className="shape shape7"></div>
       </div>
       
       <main className="main-content">
@@ -62,40 +65,77 @@ export default function LandingPage() {
         /* Abstract Geometric Background */
         .background-shapes .shape {
           position: absolute;
-          transition: transform 0.5s ease-out;
+          transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+          will-change: transform;
         }
+        
         .shape1 {
-          width: 30vw;
-          height: 30vw;
+          width: 35vw;
+          height: 35vw;
           background: var(--bg-muted);
           top: -10vw;
-          left: -5vw;
-          clip-path: polygon(0 0, 100% 0, 0 100%);
+          left: -8vw;
+          clip-path: polygon(0 0, 100% 0, 50% 100%);
+          transform: rotate(-25deg);
         }
         .shape2 {
-          width: 25vmax;
-          height: 25vmax;
+          width: 28vmax;
+          height: 28vmax;
           background: var(--accent-red);
-          bottom: -15vmax;
-          right: -15vmax;
+          bottom: -18vmax;
+          right: -12vmax;
           border-radius: 50%;
         }
         .shape3 {
-          width: 40vw;
-          height: 10px;
+          width: 50vw;
+          height: 2px;
           background: var(--neutral-gray);
-          top: 30%;
-          right: -10vw;
+          top: 35%;
+          right: -15vw;
           transform: rotate(-45deg);
         }
-         .shape4 {
-          width: 40vw;
-          height: 40vw;
+        .shape4 {
+          width: 20vw;
+          height: 20vw;
           background: var(--text-dark);
-          top: 50%;
-          left: 5%;
+          top: 60%;
+          left: 10%;
           clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-          opacity: 0.1;
+          opacity: 0.8;
+        }
+
+        /* New Shapes */
+        .shape5 { /* Quarter Circle */
+            width: 25rem;
+            height: 25rem;
+            background: var(--neutral-gray);
+            position: absolute;
+            top: -10rem;
+            right: -10rem;
+            border-bottom-left-radius: 25rem;
+            opacity: 0.6;
+        }
+
+        .shape6 { /* Donut */
+            width: 12rem;
+            height: 12rem;
+            border-radius: 50%;
+            border: 2.5rem solid var(--bg-muted);
+            position: absolute;
+            bottom: 10%;
+            left: 20%;
+            opacity: 0.9;
+        }
+
+        .shape7 { /* Vertical bars */
+            width: 1rem;
+            height: 15rem;
+            background: var(--accent-red);
+            position: absolute;
+            bottom: 5%;
+            right: 5%;
+            box-shadow: -2.5rem 0 0 var(--accent-red), -5rem 0 0 var(--accent-red);
+            opacity: 0.7;
         }
 
         .main-content {
@@ -132,30 +172,39 @@ export default function LandingPage() {
           display: inline-block;
           background: var(--accent-red);
           color: var(--bg-light);
-          padding: 1rem 3rem;
+          padding: 1.2rem 3.5rem;
           text-decoration: none;
           font-weight: 700;
           font-size: 1.1rem;
           transition: all 0.3s ease;
           border: 2px solid var(--accent-red);
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .cta-button:hover {
-          background: transparent;
-          color: var(--accent-red);
-          transform: translateY(-3px);
+          background: var(--text-dark);
+          color: var(--bg-light);
+          transform: translateY(-5px) scale(1.05);
+          box-shadow: 0 15px 25px rgba(49, 8, 31, 0.2);
+          border-color: var(--text-dark);
         }
 
         .features {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 1.5rem;
+          gap: 2rem;
           text-align: left;
         }
 
         .feature-card {
-          padding: 2rem;
+          padding: 2.5rem;
           border: 2px solid var(--text-dark);
+          transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -10px rgba(49, 8, 31, 0.3);
         }
         
         .feature-card.card1 {

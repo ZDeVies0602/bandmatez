@@ -1,3 +1,5 @@
+import { Pitch } from 'tonal';
+
 export interface AudioNote {
   note: string;
   octave: number;
@@ -11,11 +13,16 @@ export interface ActiveOscillator {
 
 export type TabType = 'metronome' | 'tuner' | 'piano';
 
-export type ThemeType = 'default' | 'grand-canyon' | 'moon' | 'sunset-beach' | 'north-pole' | 'rainforest' | 'ocean-depths';
+export type ThemeType = 
+  | 'default' 
+  | 'royal-gold'
+  | 'terra-cotta'
+  | 'desert-clay'
+  | 'dusty-lilac'
+  | 'crimson-night'
+  | 'forest-floor';
 
-export type FontType = 'inter' | 'bebas-neue' | 'vt323' | 'press-start-2p' | 'orbitron' | 'russo-one' | 'righteous' | 'bangers';
-
-export type WaveType = 'sine' | 'triangle' | 'sawtooth' | 'square';
+export type WaveType = 'sine' | 'square' | 'sawtooth' | 'triangle';
 
 export type MetronomeSound = 'digital' | 'wood' | 'mechanical' | 'cowbell' | 'rimshot' | 'sine' | 'triangle' | 'tick';
 
@@ -97,4 +104,6 @@ declare global {
   interface Window {
     webkitAudioContext?: typeof AudioContext;
   }
-} 
+}
+
+export type Note = Pitch; 
