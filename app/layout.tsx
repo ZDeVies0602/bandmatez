@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Bangers } from 'next/font/google';
 import './styles/globals.css';
 import { SoundProvider } from './contexts/SoundContext';
+import PracticeTracker from './components/PracticeTracker';
 
 const bangers = Bangers({ subsets: ['latin'], variable: '--font-bangers', weight: '400' });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={bangers.variable}>
         {children}
+        <PracticeTracker />
       </body>
     </html>
   );

@@ -32,7 +32,10 @@ export default function Dashboard() {
       
       {/* Account Link */}
       <div className="account-nav">
-        <a href="/account" className="account-link">
+        <a href="/practice" className="nav-link practice-link">
+          📊 Practice
+        </a>
+        <a href="/account" className="nav-link account-link">
           👤 Account
         </a>
       </div>
@@ -81,9 +84,11 @@ export default function Dashboard() {
           top: 20px;
           right: 90px;
           z-index: 1000;
+          display: flex;
+          gap: 10px;
         }
 
-        .account-link {
+        .nav-link {
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
@@ -100,20 +105,26 @@ export default function Dashboard() {
           border-radius: 25px;
         }
 
-        .account-link:hover {
+        .nav-link:hover {
           background: rgba(255, 255, 255, 0.25);
           color: var(--accent-red);
           transform: translateY(-2px);
           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
+        .practice-link:hover {
+          color: rgba(34, 197, 94, 0.9);
+        }
+
         @media (max-width: 768px) {
           .account-nav {
             top: 15px;
             right: 15px;
+            flex-direction: column;
+            gap: 8px;
           }
           
-          .account-link {
+          .nav-link {
             padding: 0.5rem 1rem;
             font-size: 0.8rem;
           }

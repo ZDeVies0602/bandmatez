@@ -1,0 +1,477 @@
+.practiceWrapper {
+  position: relative;
+  min-height: 100vh;
+  z-index: 1;
+  padding: 2rem 0;
+}
+
+.loadingWrapper {
+  position: relative;
+  min-height: 100vh;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingContent {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 2rem 3rem;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.loadingText {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.mainContent {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  z-index: 2;
+  position: relative;
+}
+
+.practiceContainer {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 25px;
+  padding: 3rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  z-index: 2;
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.practiceHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.practiceTitle {
+  font-family: var(--font-bangers), sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 400;
+  color: white;
+  letter-spacing: 3px;
+  margin: 0 0 1rem 0;
+  line-height: 1.1;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+}
+
+.practiceSubtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Current Session Styles */
+.currentSession {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+  transition: all 0.3s ease;
+}
+
+.currentSession:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.sessionDisplay {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 2rem;
+}
+
+.timerDisplay {
+  text-align: center;
+  flex: 1;
+}
+
+.timerText {
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+}
+
+.timerLabel {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sessionControls {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
+.startButton, .endButton {
+  padding: 1.5rem 3rem;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid transparent;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.startButton {
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.9) 0%, 
+    rgba(21, 128, 61, 0.9) 100%
+  );
+  color: white;
+  border-color: rgba(34, 197, 94, 0.8);
+}
+
+.startButton:hover {
+  background: linear-gradient(135deg, 
+    rgba(21, 128, 61, 0.95) 0%, 
+    rgba(15, 118, 110, 0.95) 100%
+  );
+  border-color: rgba(21, 128, 61, 0.9);
+  transform: translateY(-3px);
+  box-shadow: 
+    0 15px 35px rgba(34, 197, 94, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.endButton {
+  background: linear-gradient(135deg, 
+    rgba(239, 68, 68, 0.9) 0%, 
+    rgba(220, 38, 38, 0.9) 100%
+  );
+  color: white;
+  border-color: rgba(239, 68, 68, 0.8);
+}
+
+.endButton:hover {
+  background: linear-gradient(135deg, 
+    rgba(220, 38, 38, 0.95) 0%, 
+    rgba(185, 28, 28, 0.95) 100%
+  );
+  border-color: rgba(220, 38, 38, 0.9);
+  transform: translateY(-3px);
+  box-shadow: 
+    0 15px 35px rgba(239, 68, 68, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Notes Section */
+.notesSection {
+  margin-top: 2rem;
+}
+
+.notesLabel {
+  display: block;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.notesTextarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.2rem;
+  color: white;
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: vertical;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.notesTextarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.notesTextarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* History Section */
+.historySection {
+  margin: 3rem 0;
+}
+
+.historyTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.emptyHistory {
+  text-align: center;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+}
+
+.emptyHistory p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.historyList {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.historyItem {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1.8rem;
+  transition: all 0.3s ease;
+}
+
+.historyItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.historyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.historyDate {
+  font-weight: 600;
+  color: white;
+  font-size: 1.1rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.historyDuration {
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: rgba(34, 197, 94, 0.9);
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.historyNotes {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Navigation Section */
+.navigationSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navLink:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .mainContent {
+    padding: 1.5rem;
+  }
+  
+  .practiceContainer {
+    padding: 2.5rem;
+  }
+  
+  .practiceTitle {
+    font-size: 3.5rem;
+  }
+  
+  .sessionDisplay {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .timerText {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 1rem;
+  }
+  
+  .practiceContainer {
+    padding: 2rem;
+  }
+  
+  .practiceTitle {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+  
+  .currentSession {
+    padding: 2rem;
+  }
+  
+  .timerText {
+    font-size: 2.5rem;
+  }
+  
+  .startButton, .endButton {
+    padding: 1.2rem 2rem;
+    font-size: 1rem;
+  }
+  
+  .historyHeader {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .navigationSection {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .practiceWrapper {
+    padding: 1rem 0;
+  }
+  
+  .mainContent {
+    padding: 0.5rem;
+  }
+  
+  .practiceContainer {
+    padding: 1.5rem;
+    border-radius: 15px;
+  }
+  
+  .practiceTitle {
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
+  
+  .practiceSubtitle {
+    font-size: 1rem;
+  }
+  
+  .currentSession {
+    padding: 1.5rem;
+  }
+  
+  .timerText {
+    font-size: 2rem;
+  }
+  
+  .startButton, .endButton {
+    padding: 1rem 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .notesTextarea {
+    padding: 1rem;
+  }
+  
+  .historyItem {
+    padding: 1.5rem;
+  }
+  
+  .historyTitle {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+} 
