@@ -23,6 +23,8 @@ export default function Dashboard() {
         <div className="shape shape-6"></div>
         <div className="shape shape-7"></div>
         <div className="shape shape-8"></div>
+        <div className="shape shape-9"></div>
+        <div className="shape shape-10"></div>
       </div>
       
       <SoundMenu />
@@ -77,7 +79,7 @@ export default function Dashboard() {
         .account-nav {
           position: fixed;
           top: 20px;
-          right: 20px;
+          right: 90px;
           z-index: 1000;
         }
 
@@ -86,22 +88,23 @@ export default function Dashboard() {
           align-items: center;
           gap: 0.5rem;
           padding: 0.75rem 1.5rem;
-          background: rgba(255, 255, 255, 0.9);
+          background: rgba(255, 255, 255, 0.15);
           backdrop-filter: blur(10px);
-          border: 2px solid #31081F;
-          color: #31081F;
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          color: var(--text-dark);
           text-decoration: none;
           font-weight: 600;
           font-size: 0.9rem;
           transition: all 0.3s ease;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          border-radius: 25px;
         }
 
         .account-link:hover {
-          background: #31081F;
-          color: white;
+          background: rgba(255, 255, 255, 0.25);
+          color: var(--accent-red);
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(49, 8, 31, 0.2);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         @media (max-width: 768px) {

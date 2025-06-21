@@ -10,6 +10,9 @@
 body {
   font-family: var(--font-bangers);
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
 
 /* THEME DEFINITIONS
@@ -18,26 +21,32 @@ body {
 /* Define color variables for each geometric theme */
 body.theme-default {
   --bg-light: #DCE0D9; --text-dark: #31081F; --accent-red: #6B0F1A; --neutral-gray: #595959; --bg-muted: #808F85;
+  --shape-color-1: #31081F; --shape-color-2: #6B0F1A; --shape-color-3: #595959; --shape-color-4: #808F85; --shape-color-5: #DCE0D9;
 }
 body.theme-royal-gold {
-  --bg-light: #F0F0F0; --text-dark: #1A2C42; --accent-red: #4C6AF5; --neutral-gray: #1A2C42; --bg-muted: #D4A017;
+  --bg-light: #E8E8FF; --text-dark: #1A2C42; --accent-red: #4C6AF5; --neutral-gray: #1A2C42; --bg-muted: #D4A017;
+  --shape-color-1: #1A2C42; --shape-color-2: #4C6AF5; --shape-color-3: #6464FF; --shape-color-4: #D4A017; --shape-color-5: #FFD700;
 }
 body.theme-terra-cotta {
   --bg-light: #FDF5E6; --text-dark: #C73832; --accent-red: #F28C28; --neutral-gray: #4A6D56; --bg-muted: #F0D757;
+  --shape-color-1: #C73832; --shape-color-2: #F28C28; --shape-color-3: #F0D757; --shape-color-4: #4A6D56; --shape-color-5: #E67E22;
 }
 body.theme-desert-clay {
   --bg-light: #FFF8F0; --text-dark: #262322; --accent-red: #E07A5F; --neutral-gray: #81A4B1; --bg-muted: #F4DDB5;
+  --shape-color-1: #262322; --shape-color-2: #E07A5F; --shape-color-3: #3A3A3A; --shape-color-4: #81A4B1; --shape-color-5: #F4DDB5;
 }
 body.theme-dusty-lilac {
-  --bg-light: #F5F5F5; --text-dark: #2F4F4F; --accent-red: #C8B6C8; --neutral-gray: #D3D3D3; --bg-muted: #C8B6C8;
+  --bg-light: #F0F0F5; --text-dark: #2F4F4F; --accent-red: #C8B6C8; --neutral-gray: #8A8A8A; --bg-muted: #E6E6FA;
+  --shape-color-1: #F5F5F5; --shape-color-2: #C8B6C8; --shape-color-3: #D8BFD8; --shape-color-4: #2F4F4F; --shape-color-5: #E6E6FA;
 }
 body.theme-crimson-night {
   --bg-light: #FAFAFA; --text-dark: #540101; --accent-red: #8B0000; --neutral-gray: #B22222; --bg-muted: #8B0000;
+  --shape-color-1: #540101; --shape-color-2: #8B0000; --shape-color-3: #B22222; --shape-color-4: #DC143C; --shape-color-5: #FAFAFA;
 }
 body.theme-forest-floor {
   --bg-light: #F5F5DC; --text-dark: #5E454B; --accent-red: #8F9779; --neutral-gray: #B2B9A4; --bg-muted: #8F9779;
+  --shape-color-1: #5E454B; --shape-color-2: #8F9779; --shape-color-3: #6B8E23; --shape-color-4: #B2B9A4; --shape-color-5: #9ACD32;
 }
-
 
 /* Apply base styles for all geometric themes */
 body.theme-default,
@@ -47,10 +56,35 @@ body.theme-desert-clay,
 body.theme-dusty-lilac,
 body.theme-crimson-night,
 body.theme-forest-floor {
-  background-color: var(--bg-light);
+  background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-muted) 50%, var(--bg-light) 100%);
   color: var(--text-dark);
+  position: relative;
 }
 
+/* Enhanced Background Pattern System */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  opacity: 0.05;
+  background-image: 
+    radial-gradient(circle at 25% 25%, var(--shape-color-2) 2px, transparent 2px),
+    radial-gradient(circle at 75% 75%, var(--shape-color-3) 1px, transparent 1px),
+    linear-gradient(45deg, transparent 40%, var(--shape-color-1) 40%, var(--shape-color-1) 60%, transparent 60%),
+    linear-gradient(-45deg, transparent 40%, var(--shape-color-4) 40%, var(--shape-color-4) 60%, transparent 60%);
+  background-size: 50px 50px, 30px 30px, 100px 100px, 100px 100px;
+  background-position: 0 0, 25px 25px, 0 0, 50px 50px;
+  animation: patternShift 60s linear infinite;
+}
+
+@keyframes patternShift {
+  0% { background-position: 0 0, 25px 25px, 0 0, 50px 50px; }
+  100% { background-position: 50px 50px, 75px 75px, 100px 100px, 150px 150px; }
+}
 
 /* Shared component styles for all geometric themes */
 body.theme-default h1,
@@ -67,6 +101,7 @@ body.theme-forest-floor h1 {
   margin-bottom: 2rem;
   letter-spacing: 2px;
   font-weight: 400;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
 }
 
 body.theme-default .tab-navigation,
@@ -81,6 +116,10 @@ body.theme-forest-floor .tab-navigation {
   gap: 0.5rem;
   margin-bottom: 2rem;
   border-bottom: 2px solid var(--neutral-gray);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px 20px 0 0;
+  padding: 0.5rem;
 }
 
 body.theme-default .tab-button,
@@ -92,7 +131,7 @@ body.theme-crimson-night .tab-button,
 body.theme-forest-floor .tab-button {
   font-family: var(--font-bangers), sans-serif;
   padding: 1rem 2rem;
-  background-color: transparent;
+  background: rgba(255, 255, 255, 0.1);
   color: var(--neutral-gray);
   border: none;
   border-bottom: 4px solid transparent;
@@ -101,6 +140,36 @@ body.theme-forest-floor .tab-button {
   font-weight: 700;
   transition: all 0.3s ease;
   transform: translateY(2px);
+  border-radius: 15px 15px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+body.theme-default .tab-button::before,
+body.theme-royal-gold .tab-button::before,
+body.theme-terra-cotta .tab-button::before,
+body.theme-desert-clay .tab-button::before,
+body.theme-dusty-lilac .tab-button::before,
+body.theme-crimson-night .tab-button::before,
+body.theme-forest-floor .tab-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+body.theme-default .tab-button:hover::before,
+body.theme-royal-gold .tab-button:hover::before,
+body.theme-terra-cotta .tab-button:hover::before,
+body.theme-desert-clay .tab-button:hover::before,
+body.theme-dusty-lilac .tab-button:hover::before,
+body.theme-crimson-night .tab-button:hover::before,
+body.theme-forest-floor .tab-button:hover::before {
+  left: 100%;
 }
 
 body.theme-default .tab-button:hover,
@@ -110,8 +179,9 @@ body.theme-desert-clay .tab-button:hover,
 body.theme-dusty-lilac .tab-button:hover,
 body.theme-crimson-night .tab-button:hover,
 body.theme-forest-floor .tab-button:hover {
-  background-color: rgba(0,0,0,0.05);
+  background: rgba(255, 255, 255, 0.2);
   color: var(--text-dark);
+  transform: translateY(-2px);
 }
 
 body.theme-default .tab-button.active,
@@ -123,6 +193,8 @@ body.theme-crimson-night .tab-button.active,
 body.theme-forest-floor .tab-button.active {
   color: var(--accent-red);
   border-bottom-color: var(--accent-red);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 /* LAYOUT & SHARED
@@ -133,11 +205,20 @@ body.theme-forest-floor .tab-button.active {
   padding: 2rem;
   position: relative;
   z-index: 2;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
 }
 
 .tab-content {
   display: none;
   animation: fadeIn 0.5s;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 15px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .tab-content.active {
@@ -145,11 +226,11 @@ body.theme-forest-floor .tab-button.active {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Geometric background shapes - enhanced with theme-specific styling */
+/* Enhanced Geometric Background Shapes System */
 .dashboard-background {
   display: block;
   position: fixed;
@@ -165,265 +246,231 @@ body.theme-forest-floor .tab-button.active {
 .dashboard-background .shape {
   position: absolute;
   opacity: 0.8;
-  transition: all 0.5s ease;
+  transition: all 0.8s ease;
   z-index: -1;
+  will-change: transform;
 }
 
-/* Base shapes that adapt to theme colors */
+/* Primary Geometric Shapes - Inspired by Reference Images */
+
+/* Large Background Triangles */
 .shape-1 {
+  width: 30rem;
+  height: 30rem;
+  background: linear-gradient(135deg, var(--shape-color-1), var(--shape-color-2));
+  top: -15%;
+  left: -15%;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform: rotate(-15deg);
+  filter: blur(0.5px);
+}
+
+/* Large Circles/Donuts */
+.shape-2 {
   width: 25rem;
   height: 25rem;
-  background: var(--bg-muted);
-  top: -10%;
-  left: -15%;
-  transform: rotate(45deg);
-  border-radius: 20px;
-}
-
-.shape-2 {
-  width: 18rem;
-  height: 18rem;
-  border: 2rem solid var(--accent-red);
-  bottom: -8%;
-  right: -12%;
+  border: 4rem solid var(--shape-color-2);
+  bottom: -10%;
+  right: -15%;
   border-radius: 50%;
+  background: transparent;
 }
 
+/* Medium Triangles */
 .shape-3 {
-  width: 12rem;
-  height: 12rem;
-  background: var(--neutral-gray);
-  top: 20%;
-  right: 20%;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-}
-
-.shape-4 {
-  width: 8rem;
-  height: 8rem;
-  background: var(--accent-red);
-  top: 60%;
-  left: 10%;
-  transform: rotate(30deg);
-  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-}
-
-.shape-5 {
   width: 15rem;
   height: 15rem;
-  border: 1.5rem solid var(--bg-muted);
-  top: 40%;
-  right: -5%;
-  transform: rotate(-15deg);
-  clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+  background: var(--shape-color-3);
+  top: 15%;
+  right: 15%;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  transform: rotate(30deg);
 }
 
-.shape-6 {
-  width: 6rem;
-  height: 6rem;
-  background: var(--text-dark);
-  bottom: 30%;
-  left: 25%;
-  transform: rotate(60deg);
-  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+/* Diamond/Rhombus */
+.shape-4 {
+  width: 12rem;
+  height: 12rem;
+  background: var(--shape-color-1);
+  top: 65%;
+  left: 8%;
+  transform: rotate(45deg);
+  border-radius: 10%;
 }
 
-.shape-7 {
-  width: 10rem;
-  height: 10rem;
-  background: var(--neutral-gray);
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-}
-
-.shape-8 {
+/* Quarter Circle */
+.shape-5 {
   width: 20rem;
   height: 20rem;
-  border: 1rem solid var(--accent-red);
-  bottom: 15%;
-  left: -8%;
-  transform: rotate(-30deg);
+  background: var(--shape-color-4);
+  top: 35%;
+  right: -10rem;
+  border-radius: 0 0 0 100%;
+  transform: rotate(-25deg);
+}
+
+/* Small Circles Row */
+.shape-6 {
+  width: 8rem;
+  height: 8rem;
+  background: var(--shape-color-2);
+  bottom: 25%;
+  left: 20%;
   border-radius: 50%;
 }
 
-/* Theme-specific shape variations */
-body.theme-default .shape-1 {
-  background: linear-gradient(45deg, #808F85, #6B0F1A);
-  box-shadow: 0 0 40px rgba(107, 15, 26, 0.4);
+.shape-6::before {
+  content: '';
+  position: absolute;
+  width: 8rem;
+  height: 8rem;
+  background: var(--shape-color-3);
+  border-radius: 50%;
+  left: 10rem;
+  top: 0;
 }
 
-body.theme-default .shape-2 {
-  border-color: #6B0F1A;
-  box-shadow: inset 0 0 30px rgba(107, 15, 26, 0.3);
+.shape-6::after {
+  content: '';
+  position: absolute;
+  width: 8rem;
+  height: 8rem;
+  background: var(--shape-color-4);
+  border-radius: 50%;
+  left: 20rem;
+  top: 0;
 }
 
-body.theme-default .shape-4 {
-  background: linear-gradient(135deg, #6B0F1A, #8B1A2A);
-  box-shadow: 0 0 25px rgba(107, 15, 26, 0.5);
+/* Vertical Rectangle Strips */
+.shape-7 {
+  width: 3rem;
+  height: 18rem;
+  background: var(--shape-color-1);
+  top: 8%;
+  left: 40%;
+  border-radius: 1.5rem;
 }
 
-body.theme-royal-gold .shape-1 {
-  background: linear-gradient(45deg, #D4A017, #FFD700);
-  box-shadow: 0 0 40px rgba(76, 106, 245, 0.5);
+.shape-7::before {
+  content: '';
+  position: absolute;
+  width: 3rem;
+  height: 18rem;
+  background: var(--shape-color-2);
+  border-radius: 1.5rem;
+  left: 5rem;
+  top: 0;
 }
 
-body.theme-royal-gold .shape-2 {
-  border-color: #4C6AF5;
-  box-shadow: inset 0 0 30px rgba(76, 106, 245, 0.4);
+.shape-7::after {
+  content: '';
+  position: absolute;
+  width: 3rem;
+  height: 18rem;
+  background: var(--shape-color-3);
+  border-radius: 1.5rem;
+  left: 10rem;
+  top: 0;
 }
 
-body.theme-royal-gold .shape-3 {
-  background: linear-gradient(135deg, #1A2C42, #4C6AF5);
+/* Large Bottom Circle */
+.shape-8 {
+  width: 30rem;
+  height: 30rem;
+  border: 2rem solid var(--shape-color-5);
+  bottom: -15rem;
+  left: -8rem;
+  border-radius: 50%;
+  background: transparent;
 }
 
-body.theme-royal-gold .shape-5 {
-  border-color: #FFD700;
-  box-shadow: 0 0 30px rgba(212, 160, 23, 0.4);
+/* Additional Smaller Geometric Elements */
+.shape-9 {
+  width: 6rem;
+  height: 6rem;
+  background: var(--shape-color-4);
+  top: 50%;
+  right: 25%;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  transform: rotate(45deg);
 }
 
-body.theme-royal-gold .shape-7 {
-  background: linear-gradient(135deg, #1A2C42, #D4A017);
+.shape-10 {
+  width: 12rem;
+  height: 12rem;
+  background: var(--shape-color-5);
+  bottom: 40%;
+  right: 5%;
+  border-radius: 50% 50% 0 50%;
+  transform: rotate(-30deg);
 }
 
-body.theme-terra-cotta .shape-1 {
-  background: linear-gradient(45deg, #F0D757, #F28C28);
-  box-shadow: 0 0 40px rgba(199, 56, 50, 0.4);
-}
-
-body.theme-terra-cotta .shape-2 {
-  border-color: #F28C28;
-  box-shadow: inset 0 0 30px rgba(242, 140, 40, 0.4);
-}
-
-body.theme-terra-cotta .shape-4 {
-  background: linear-gradient(135deg, #F28C28, #E67E22);
-  box-shadow: 0 0 25px rgba(242, 140, 40, 0.5);
-}
-
-body.theme-terra-cotta .shape-6 {
-  background: linear-gradient(135deg, #C73832, #E67E22);
-}
-
-body.theme-terra-cotta .shape-8 {
-  border-color: #F0D757;
-  box-shadow: 0 0 30px rgba(240, 215, 87, 0.4);
-}
-
-body.theme-desert-clay .shape-1 {
-  background: linear-gradient(45deg, #F4DDB5, #E07A5F);
-  box-shadow: 0 0 40px rgba(224, 122, 95, 0.4);
-}
-
-body.theme-desert-clay .shape-2 {
-  border-color: #E07A5F;
-  box-shadow: inset 0 0 30px rgba(244, 221, 181, 0.4);
-}
-
-body.theme-desert-clay .shape-3 {
-  background: linear-gradient(135deg, #81A4B1, #E07A5F);
-}
-
-body.theme-desert-clay .shape-5 {
-  border-color: #F4DDB5;
-  box-shadow: 0 0 30px rgba(244, 221, 181, 0.4);
-}
-
-body.theme-desert-clay .shape-7 {
-  background: linear-gradient(135deg, #81A4B1, #F4DDB5);
-}
-
-body.theme-dusty-lilac .shape-1 {
-  background: linear-gradient(45deg, #C8B6C8, #B8A9B8);
-  box-shadow: 0 0 40px rgba(200, 182, 200, 0.5);
-}
-
-body.theme-dusty-lilac .shape-2 {
-  border-color: #C8B6C8;
-  box-shadow: inset 0 0 30px rgba(200, 182, 200, 0.4);
-}
-
-body.theme-dusty-lilac .shape-4 {
-  background: linear-gradient(135deg, #C8B6C8, #B8A9B8);
-  box-shadow: 0 0 25px rgba(200, 182, 200, 0.5);
-}
-
-body.theme-dusty-lilac .shape-6 {
-  background: linear-gradient(135deg, #2F4F4F, #C8B6C8);
-}
-
-body.theme-dusty-lilac .shape-8 {
-  border-color: #D3D3D3;
-  box-shadow: 0 0 30px rgba(211, 211, 211, 0.4);
-}
-
-body.theme-crimson-night .shape-1 {
-  background: linear-gradient(45deg, #8B0000, #B22222);
-  box-shadow: 0 0 40px rgba(139, 0, 0, 0.5);
-}
-
-body.theme-crimson-night .shape-2 {
-  border-color: #8B0000;
-  box-shadow: inset 0 0 30px rgba(139, 0, 0, 0.4);
-}
-
-body.theme-crimson-night .shape-3 {
-  background: linear-gradient(135deg, #B22222, #8B0000);
-}
-
-body.theme-crimson-night .shape-5 {
-  border-color: #8B0000;
-  box-shadow: 0 0 30px rgba(178, 34, 34, 0.4);
-}
-
-body.theme-crimson-night .shape-7 {
-  background: linear-gradient(135deg, #540101, #8B0000);
-}
-
-body.theme-forest-floor .shape-1 {
-  background: linear-gradient(45deg, #8F9779, #6B8E23);
-  box-shadow: 0 0 40px rgba(143, 151, 121, 0.4);
-}
-
-body.theme-forest-floor .shape-2 {
-  border-color: #8F9779;
-  box-shadow: inset 0 0 30px rgba(143, 151, 121, 0.4);
-}
-
-body.theme-forest-floor .shape-4 {
-  background: linear-gradient(135deg, #8F9779, #6B8E23);
-  box-shadow: 0 0 25px rgba(143, 151, 121, 0.5);
-}
-
-body.theme-forest-floor .shape-6 {
-  background: linear-gradient(135deg, #5E454B, #8F9779);
-}
-
-body.theme-forest-floor .shape-8 {
-  border-color: #B2B9A4;
-  box-shadow: 0 0 30px rgba(178, 185, 164, 0.4);
-}
-
-/* Hover effects for shapes */
-.dashboard-background .shape:hover {
-  transform: scale(1.05) rotate(5deg);
-  opacity: 1;
-  transition: all 0.3s ease;
-}
-
-/* Animation for subtle movement */
+/* Enhanced animations for subtle movement */
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg) scale(1); 
+  }
+  33% { 
+    transform: translateY(-15px) rotate(2deg) scale(1.02); 
+  }
+  66% { 
+    transform: translateY(5px) rotate(-1deg) scale(0.98); 
+  }
 }
 
-.shape-1, .shape-3, .shape-5, .shape-7 {
-  animation: float 6s ease-in-out infinite;
+@keyframes floatReverse {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg) scale(1); 
+  }
+  33% { 
+    transform: translateY(10px) rotate(-2deg) scale(0.98); 
+  }
+  66% { 
+    transform: translateY(-8px) rotate(1deg) scale(1.02); 
+  }
 }
 
-.shape-2, .shape-4, .shape-6, .shape-8 {
-  animation: float 8s ease-in-out infinite reverse;
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 0.8; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.9; 
+    transform: scale(1.05); 
+  }
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Apply animations to shapes */
+.shape-1, .shape-3, .shape-5, .shape-7, .shape-9 {
+  animation: float 12s ease-in-out infinite;
+}
+
+.shape-2, .shape-4, .shape-6, .shape-8, .shape-10 {
+  animation: floatReverse 10s ease-in-out infinite;
+}
+
+.shape-2, .shape-8 {
+  animation: rotate 120s linear infinite, pulse 8s ease-in-out infinite;
+}
+
+.shape-6::before, .shape-6::after,
+.shape-7::before, .shape-7::after {
+  animation: pulse 6s ease-in-out infinite;
+  animation-delay: 1s, 2s;
+}
+
+/* Hover effects for interactive feel */
+.dashboard-background .shape:hover {
+  transform: scale(1.1) rotate(10deg);
+  opacity: 1;
+  transition: all 0.4s ease;
+  filter: brightness(1.2);
 }
 
 /* MENUS (Theme & Sound)
