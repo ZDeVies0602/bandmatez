@@ -5,133 +5,60 @@ import TabNavigation from './components/TabNavigation';
 import VirtualPiano from './components/VirtualPiano';
 import Metronome from './components/Metronome';
 import PitchTuner from './components/PitchTuner';
-import { useTheme } from './hooks/useTheme';
+import ThemeMenu from './components/ThemeMenu';
+import SoundMenu from './components/SoundMenu';
+import { useFont } from './hooks/useFont';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('piano');
-  const { theme, setTheme, themes } = useTheme();
-  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
-  const [soundMenuOpen, setSoundMenuOpen] = useState(false);
+  const { font, setFont } = useFont();
+  const [currentFontFamily, setCurrentFontFamily] = useState('Inter, sans-serif');
 
-  // Apply theme to body
+  // Apply font to body
   useEffect(() => {
-    document.body.className = `theme-${theme}`;
-  }, [theme]);
-
-  const renderActiveComponent = () => {
-    switch (activeTab) {
-      case 'piano':
-        return <VirtualPiano />;
-      case 'metronome':
-        return <Metronome />;
-      case 'tuner':
-        return <PitchTuner />;
-      default:
-        return <VirtualPiano />;
-    }
-  };
-
-  const getThemePreviewClass = (themeKey: string) => {
-    const previewMap: { [key: string]: string } = {
-      'default': 'theme-preview-default',
-      'grand-canyon': 'theme-preview-canyon',
-      'moon': 'theme-preview-moon',
-      'sunset-beach': 'theme-preview-sunset',
-      'north-pole': 'theme-preview-pole',
-      'rainforest': 'theme-preview-forest',
-      'ocean-depths': 'theme-preview-ocean'
+    const fontFamilies = {
+      'inter': 'Inter, sans-serif',
+      'bebas-neue': 'Bebas Neue, sans-serif',
+      'vt323': 'VT323, monospace',
+      'press-start-2p': 'Press Start 2P, cursive',
+      'orbitron': 'Orbitron, sans-serif',
+      'russo-one': 'Russo One, sans-serif',
+      'righteous': 'Righteous, cursive',
+      'bangers': 'Bangers, cursive'
     };
-    return previewMap[themeKey] || 'theme-preview-default';
-  };
+    const fontFamily = fontFamilies[font] || 'Inter, sans-serif';
+    document.body.style.setProperty('font-family', fontFamily, 'important');
+    setCurrentFontFamily(fontFamily);
+    console.log('Font applied:', font, fontFamily);
+    console.log('Body font-family:', document.body.style.fontFamily);
+  }, [font]);
+
+  // Apply initial font on mount
+  useEffect(() => {
+    const fontFamilies = {
+      'inter': 'Inter, sans-serif',
+      'bebas-neue': 'Bebas Neue, sans-serif',
+      'vt323': 'VT323, monospace',
+      'press-start-2p': 'Press Start 2P, cursive',
+      'orbitron': 'Orbitron, sans-serif',
+      'russo-one': 'Russo One, sans-serif',
+      'righteous': 'Righteous, cursive',
+      'bangers': 'Bangers, cursive'
+    };
+    const fontFamily = fontFamilies[font] || 'Inter, sans-serif';
+    document.body.style.setProperty('font-family', fontFamily, 'important');
+    setCurrentFontFamily(fontFamily);
+    console.log('Initial font applied:', font, fontFamily);
+    console.log('Body font-family:', document.body.style.fontFamily);
+  }, []);
 
   return (
     <>
       {/* Sound Menu (Top Left) */}
-      <div className={`sound-menu ${soundMenuOpen ? 'open' : ''}`}>
-        <div 
-          className="sound-menu-toggle"
-          onClick={() => setSoundMenuOpen(!soundMenuOpen)}
-        >
-          <div className="sound-icon"></div>
-        </div>
-        <div className="sound-options">
-          <h3>Sound Selection</h3>
-          
-          {/* Metronome Sounds Section */}
-          <div className="sound-section">
-            <h4>Metronome Sounds</h4>
-            <div className="sound-list">
-              <button className="sound-option active">
-                <span className="sound-name">Digital Beep</span>
-                <span className="sound-preview">▶</span>
-              </button>
-              <button className="sound-option">
-                <span className="sound-name">Wood Block</span>
-                <span className="sound-preview">▶</span>
-              </button>
-              <button className="sound-option">
-                <span className="sound-name">Mechanical Click</span>
-                <span className="sound-preview">▶</span>
-              </button>
-              <button className="sound-option">
-                <span className="sound-name">Classic Tick</span>
-                <span className="sound-preview">▶</span>
-              </button>
-            </div>
-          </div>
-          
-          {/* Piano Wave Types Section */}
-          <div className="sound-section">
-            <h4>Piano Wave Types</h4>
-            <div className="sound-list">
-              <button className="sound-option active">
-                <span className="sound-name">Sine (Pure)</span>
-                <span className="sound-preview">▶</span>
-              </button>
-              <button className="sound-option">
-                <span className="sound-name">Triangle (Mellow)</span>
-                <span className="sound-preview">▶</span>
-              </button>
-              <button className="sound-option">
-                <span className="sound-name">Sawtooth (Bright)</span>
-                <span className="sound-preview">▶</span>
-              </button>
-              <button className="sound-option">
-                <span className="sound-name">Square (Buzzy)</span>
-                <span className="sound-preview">▶</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SoundMenu />
 
       {/* Floating Theme Menu (Top Right) */}
-      <div className={`theme-menu ${themeMenuOpen ? 'open' : ''}`}>
-        <div 
-          className="theme-menu-toggle"
-          onClick={() => setThemeMenuOpen(!themeMenuOpen)}
-        >
-          <div className="palette-icon"></div>
-        </div>
-        <div className="theme-options">
-          <h3>Choose Your Vibe</h3>
-          <div className="theme-grid">
-            {Object.entries(themes).map(([key, { name, emoji }]) => (
-              <button
-                key={key}
-                className={`theme-option ${theme === key ? 'active' : ''}`}
-                onClick={() => {
-                  setTheme(key as any);
-                  setThemeMenuOpen(false);
-                }}
-              >
-                <div className={`theme-preview ${getThemePreviewClass(key)}`}></div>
-                <span>{name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      <ThemeMenu />
 
       {/* Main Content */}
       <div className="container">

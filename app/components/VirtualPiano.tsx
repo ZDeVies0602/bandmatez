@@ -2,16 +2,17 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAudioManager } from '../hooks/useAudioManager';
+import { useSound } from '../contexts/SoundContext';
 import { PianoKey } from '../types';
 import styles from '../styles/piano.module.css';
 
 export default function VirtualPiano() {
   const { audioContext, masterGain, playTone, stopTone } = useAudioManager();
+  const { pianoWaveType } = useSound();
   
   // Piano state
   const [volume, setVolume] = useState(0.5);
   const [sustain, setSustain] = useState(0.5);
-  const [waveType, setWaveType] = useState<OscillatorType>('sine');
   const [currentNote, setCurrentNote] = useState('');
   const [currentFrequency, setCurrentFrequency] = useState('');
   const [selectedChord, setSelectedChord] = useState('');
@@ -139,7 +140,7 @@ export default function VirtualPiano() {
     gainNode.connect(masterGain);
     
     oscillator.frequency.value = frequency;
-    oscillator.type = waveType;
+    oscillator.type = pianoWaveType;
     
     // Set up ADSR envelope
     const now = audioContext.currentTime;
@@ -397,21 +398,6 @@ export default function VirtualPiano() {
             onChange={(e) => setSustain(parseFloat(e.target.value))}
             className={styles.slider}
           />
-        </div>
-
-        {/* Wave Type Control */}
-        <div className={styles.controlGroup}>
-          <label>Wave Type:</label>
-          <select
-            value={waveType}
-            onChange={(e) => setWaveType(e.target.value as OscillatorType)}
-            className={styles.select}
-          >
-            <option value="sine">Sine</option>
-            <option value="square">Square</option>
-            <option value="sawtooth">Sawtooth</option>
-            <option value="triangle">Triangle</option>
-          </select>
         </div>
 
         {/* Chord Controls */}

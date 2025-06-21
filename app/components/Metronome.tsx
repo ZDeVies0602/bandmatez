@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useMetronomeSounds } from '../hooks/useMetronomeSounds';
+import { useSound } from '../contexts/SoundContext';
 import { MetronomeSettings } from '../types';
 import styles from '../styles/components.module.css';
 
 export default function Metronome() {
-  const { currentSound, playSound } = useMetronomeSounds();
+  const { metronomeSound } = useSound();
   
   // Core state
   const [isPlaying, setIsPlaying] = useState(false);
@@ -28,6 +28,86 @@ export default function Metronome() {
   const nextNoteTimeRef = useRef(0);
   const quarterNoteTimeRef = useRef(60.0 / 120);
   
+  // Audio context for metronome sounds
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const masterGainRef = useRef<GainNode | null>(null);
+
+  // Initialize audio context
+  const initializeAudio = useCallback(async () => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      masterGainRef.current = audioContextRef.current.createGain();
+      masterGainRef.current.connect(audioContextRef.current.destination);
+      masterGainRef.current.gain.value = 0.3;
+    }
+
+    if (audioContextRef.current.state === 'suspended') {
+      await audioContextRef.current.resume();
+    }
+  }, []);
+
+  // Create and play metronome sound
+  const playMetronomeSound = useCallback(async (isAccent: boolean = false) => {
+    await initializeAudio();
+    
+    if (!audioContextRef.current || !masterGainRef.current) return;
+
+    const oscillator = audioContextRef.current.createOscillator();
+    const gainNode = audioContextRef.current.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(masterGainRef.current);
+    
+    const now = audioContextRef.current.currentTime;
+    
+    // Configure sound based on type
+    switch (metronomeSound) {
+      case 'digital':
+        oscillator.frequency.value = isAccent ? 1200 : 1000;
+        oscillator.type = 'square';
+        break;
+      case 'wood':
+        oscillator.frequency.value = isAccent ? 300 : 250;
+        oscillator.type = 'sine';
+        break;
+      case 'mechanical':
+        oscillator.frequency.value = isAccent ? 800 : 600;
+        oscillator.type = 'square';
+        break;
+      case 'cowbell':
+        oscillator.frequency.value = isAccent ? 800 : 600;
+        oscillator.type = 'triangle';
+        break;
+      case 'rimshot':
+        oscillator.frequency.value = isAccent ? 1000 : 800;
+        oscillator.type = 'sawtooth';
+        break;
+      case 'sine':
+        oscillator.frequency.value = isAccent ? 800 : 600;
+        oscillator.type = 'sine';
+        break;
+      case 'triangle':
+        oscillator.frequency.value = isAccent ? 600 : 500;
+        oscillator.type = 'triangle';
+        break;
+      case 'tick':
+        oscillator.frequency.value = isAccent ? 1000 : 800;
+        oscillator.type = 'square';
+        break;
+      default:
+        oscillator.frequency.value = isAccent ? 1000 : 800;
+        oscillator.type = 'square';
+    }
+    
+    // Volume envelope
+    gainNode.gain.setValueAtTime(0, now);
+    gainNode.gain.linearRampToValueAtTime(0.3, now + 0.01);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+    
+    oscillator.start(now);
+    oscillator.stop(now + 0.1);
+  }, [metronomeSound, initializeAudio]);
+
   // Tempo markings
   const tempoMarkings = {
     30: 'Larghissimo', 40: 'Grave', 60: 'Largo', 66: 'Larghetto',
@@ -70,7 +150,7 @@ export default function Metronome() {
       
       // Play sound at the exact beat time
       setTimeout(async () => {
-        await playSound(currentSound, isAccent);
+        await playMetronomeSound(isAccent);
       }, 0);
       
       // Update beat counter
@@ -88,7 +168,7 @@ export default function Metronome() {
       nextNoteTimeRef.current += noteInterval;
       lastBeatTime.current = nextNoteTimeRef.current;
     }
-  }, [currentBeat, currentSubdivision, subdivision, timeSignature.beats, accentPattern, playSound, currentSound, tempo]);
+  }, [currentBeat, currentSubdivision, subdivision, timeSignature.beats, accentPattern, playMetronomeSound, tempo]);
 
   // Main metronome loop
   useEffect(() => {
@@ -204,18 +284,18 @@ export default function Metronome() {
 
     let animationId: number;
     const startTime = performance.now();
-    const beatDuration = (60 / tempo) * 1000; // Convert to milliseconds
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
+      const beatDuration = (60 / tempo) * 1000;
       const beatProgress = (elapsed % beatDuration) / beatDuration;
       
-      // Calculate which beat we're on to determine swing direction
+      // Calculate which beat we're on
       const beatNumber = Math.floor(elapsed / beatDuration);
       const isEvenBeat = beatNumber % 2 === 0;
-      
-      // Swing left on even beats, right on odd beats
       const swingDirection = isEvenBeat ? 1 : -1;
+      
+      // Calculate pendulum angle with smooth sine wave
       const angle = Math.sin(beatProgress * Math.PI) * 25 * swingDirection;
       setPendulumAngle(angle);
       

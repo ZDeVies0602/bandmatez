@@ -1,84 +1,121 @@
 'use client';
 
 import { useState } from 'react';
-import { useMetronomeSounds } from '../hooks/useMetronomeSounds';
+import { useSound } from '../contexts/SoundContext';
 import { MetronomeSound, WaveType } from '../types';
 import styles from '../styles/components.module.css';
 
 export default function SoundMenu() {
-  const { currentSound, setCurrentSound, playSound } = useMetronomeSounds();
   const [isOpen, setIsOpen] = useState(false);
-  const [currentPianoWave, setCurrentPianoWave] = useState<WaveType>('sine');
+  const { 
+    metronomeSound, 
+    setMetronomeSound, 
+    pianoWaveType, 
+    setPianoWaveType,
+    previewMetronomeSound,
+    previewPianoSound
+  } = useSound();
 
-  const metronomeSounds: { value: MetronomeSound; name: string }[] = [
-    { value: 'digital', name: 'Digital Beep' },
-    { value: 'wood', name: 'Wood Block' },
-    { value: 'mechanical', name: 'Mechanical Click' },
-    { value: 'cowbell', name: 'Cowbell' },
-    { value: 'rimshot', name: 'Rim Shot' },
-    { value: 'sine', name: 'Pure Tone' },
-    { value: 'triangle', name: 'Triangle Wave' },
-    { value: 'tick', name: 'Classic Tick' }
+  const metronomeSounds = [
+    { value: 'digital', name: 'Digital Beep', description: 'Clean electronic beep' },
+    { value: 'wood', name: 'Wood Block', description: 'Natural wooden sound' },
+    { value: 'mechanical', name: 'Mechanical Click', description: 'Classic metronome click' },
+    { value: 'cowbell', name: 'Cowbell', description: 'Percussive cowbell sound' },
+    { value: 'rimshot', name: 'Rimshot', description: 'Sharp rimshot sound' },
+    { value: 'sine', name: 'Sine Wave', description: 'Pure sine wave tone' },
+    { value: 'triangle', name: 'Triangle Wave', description: 'Mellow triangle wave' },
+    { value: 'tick', name: 'Classic Tick', description: 'Traditional tick sound' }
   ];
 
-  const pianoWaves: { value: WaveType; name: string }[] = [
-    { value: 'sine', name: 'Sine (Pure)' },
-    { value: 'triangle', name: 'Triangle (Mellow)' },
-    { value: 'sawtooth', name: 'Sawtooth (Bright)' },
-    { value: 'square', name: 'Square (Buzzy)' }
+  const pianoWaveTypes = [
+    { value: 'sine', name: 'Sine (Pure)', description: 'Clean, pure tone' },
+    { value: 'triangle', name: 'Triangle (Mellow)', description: 'Soft, mellow sound' },
+    { value: 'sawtooth', name: 'Sawtooth (Bright)', description: 'Bright, rich harmonics' },
+    { value: 'square', name: 'Square (Buzzy)', description: 'Buzzy, electronic sound' }
   ];
 
-  const handleSoundPreview = async (sound: MetronomeSound) => {
-    await playSound(sound);
+  const handleMetronomeSoundSelect = (sound: MetronomeSound) => {
+    setMetronomeSound(sound);
+    previewMetronomeSound(sound);
+  };
+
+  const handlePianoWaveSelect = (waveType: WaveType) => {
+    setPianoWaveType(waveType);
+    previewPianoSound(waveType);
+  };
+
+  const handlePreviewMetronome = (sound: MetronomeSound) => {
+    previewMetronomeSound(sound);
+  };
+
+  const handlePreviewPiano = (waveType: WaveType) => {
+    previewPianoSound(waveType);
   };
 
   return (
-    <div className={styles.soundMenu}>
+    <div className={`sound-menu ${isOpen ? 'open' : ''}`}>
       <div 
-        className={styles.soundMenuToggle}
+        className="sound-menu-toggle"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className={styles.soundIcon}></div>
+        <div className="sound-icon"></div>
       </div>
       
       {isOpen && (
-        <div className={styles.soundOptions}>
+        <div className="sound-options">
           <h3>Sound Selection</h3>
           
-          <div className={styles.soundSection}>
+          {/* Metronome Sounds Section */}
+          <div className="sound-section">
             <h4>Metronome Sounds</h4>
-            <div className={styles.soundList}>
+            <div className="sound-list">
               {metronomeSounds.map(sound => (
-                <button
+                <button 
                   key={sound.value}
-                  className={`${styles.soundOption} ${currentSound === sound.value ? styles.active : ''}`}
-                  onClick={() => setCurrentSound(sound.value)}
+                  className={`sound-option ${metronomeSound === sound.value ? 'active' : ''}`}
+                  onClick={() => handleMetronomeSoundSelect(sound.value as MetronomeSound)}
                 >
-                  <span className={styles.soundName}>{sound.name}</span>
-                  <span 
-                    className={styles.soundPreview}
+                  <div className="sound-info">
+                    <span className="sound-name">{sound.name}</span>
+                    <span className="sound-description">{sound.description}</span>
+                  </div>
+                  <button 
+                    className="sound-preview"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleSoundPreview(sound.value);
+                      handlePreviewMetronome(sound.value as MetronomeSound);
                     }}
                   >
                     ▶
-                  </span>
+                  </button>
                 </button>
               ))}
             </div>
           </div>
-
-          <div className={styles.soundSection}>
+          
+          {/* Piano Wave Types Section */}
+          <div className="sound-section">
             <h4>Piano Wave Types</h4>
-            <div className={styles.soundList}>
-              {pianoWaves.map(wave => (
-                <button
+            <div className="sound-list">
+              {pianoWaveTypes.map(wave => (
+                <button 
                   key={wave.value}
-                  className={`${styles.soundOption} ${currentPianoWave === wave.value ? styles.active : ''}`}
-                  onClick={() => setCurrentPianoWave(wave.value)}
+                  className={`sound-option ${pianoWaveType === wave.value ? 'active' : ''}`}
+                  onClick={() => handlePianoWaveSelect(wave.value as WaveType)}
                 >
-                  <span className={styles.soundName}>{wave.name}</span>
+                  <div className="sound-info">
+                    <span className="sound-name">{wave.name}</span>
+                    <span className="sound-description">{wave.description}</span>
+                  </div>
+                  <button 
+                    className="sound-preview"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePreviewPiano(wave.value as WaveType);
+                    }}
+                  >
+                    ▶
+                  </button>
                 </button>
               ))}
             </div>
