@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Bebas_Neue, VT323, Press_Start_2P, Orbitron, Russo_One, Righteous, Bangers } from 'next/font/google';
 import './styles/globals.css';
-import { SoundProvider } from './contexts/SoundContext';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const bebasNeue = Bebas_Neue({ subsets: ['latin'], variable: '--font-bebas-neue', weight: '400' });
@@ -39,9 +38,7 @@ export default function RootLayout({
           bangers.variable
         ].join(' ')}
       >
-        <SoundProvider>
-          {children}
-        </SoundProvider>
+        {children}
       </body>
     </html>
   );
