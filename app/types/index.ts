@@ -1,5 +1,3 @@
-import { Pitch } from 'tonal';
-
 export interface AudioNote {
   note: string;
   octave: number;
@@ -104,6 +102,4 @@ declare global {
   interface Window {
     webkitAudioContext?: typeof AudioContext;
   }
-}
-
-export type Note = Pitch; 
+} 
