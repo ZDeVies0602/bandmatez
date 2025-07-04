@@ -10,11 +10,11 @@ interface PracticeSession {
   id?: number;
   user_id: string;
   start_time: string;
-  end_time?: string;
+  end_time?: string | null;
   duration_seconds: number;
   session_date: string;
   notes?: string;
-  is_active: boolean;
+  is_active?: boolean; // Keep for backward compatibility
 }
 
 export default function Practice() {
@@ -99,7 +99,7 @@ export default function Practice() {
     }
   }, [isSessionActive, sessionStartTime, currentSessionId, sessionNotes]);
 
-  // Check for existing active session
+  // Check for existing active session using start_time/end_time approach
   const checkForActiveSession = async (userId: string) => {
     try {
       // Check localStorage first
@@ -107,28 +107,38 @@ export default function Practice() {
       if (savedSession) {
         const parsed = JSON.parse(savedSession);
         if (parsed.isActive) {
-          setIsSessionActive(true);
-          setSessionStartTime(new Date(parsed.startTime));
-          setCurrentSessionId(parsed.sessionId);
-          setSessionNotes(parsed.notes || '');
-          
-          // Calculate elapsed time
-          const now = new Date();
-          const elapsed = Math.floor((now.getTime() - new Date(parsed.startTime).getTime()) / 1000);
-          setElapsedTime(elapsed);
-          return;
+          // Verify the session is still reasonable (not stale - less than 4 hours)
+          const hoursRunning = (new Date().getTime() - new Date(parsed.startTime).getTime()) / (1000 * 60 * 60);
+          if (hoursRunning < 4) {
+            setIsSessionActive(true);
+            setSessionStartTime(new Date(parsed.startTime));
+            setCurrentSessionId(parsed.sessionId);
+            setSessionNotes(parsed.notes || '');
+            
+            const now = new Date();
+            const elapsed = Math.floor((now.getTime() - new Date(parsed.startTime).getTime()) / 1000);
+            setElapsedTime(elapsed);
+            return;
+          } else {
+            // Session is stale, remove from localStorage
+            localStorage.removeItem('practiceSession');
+          }
         }
       }
 
-      // Check database for active session
-      const { data: activeSession, error } = await supabase
+      // Check database for active session (end_time is null and started within last 4 hours)
+      const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
+      const { data: activeSessions, error } = await supabase
         .from('practice_sessions')
         .select('*')
         .eq('user_id', userId)
-        .eq('is_active', true)
-        .single();
+        .is('end_time', null)
+        .gte('start_time', fourHoursAgo)
+        .order('start_time', { ascending: false });
 
-      if (!error && activeSession) {
+      if (!error && activeSessions && activeSessions.length > 0) {
+        const activeSession = activeSessions[0];
+        
         setIsSessionActive(true);
         setSessionStartTime(new Date(activeSession.start_time));
         setCurrentSessionId(activeSession.id);
@@ -150,7 +160,7 @@ export default function Practice() {
         .from('practice_sessions')
         .select('*')
         .eq('user_id', userId)
-        .eq('is_active', false)
+        .not('end_time', 'is', null) // Only get completed sessions
         .order('start_time', { ascending: false })
         .limit(10);
 
@@ -168,6 +178,18 @@ export default function Practice() {
     console.log('Starting practice session...');
     
     try {
+      // End any stale sessions (running for more than 4 hours without end_time)
+      const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
+      await supabase
+        .from('practice_sessions')
+        .update({ 
+          end_time: new Date().toISOString(),
+          is_active: false
+        })
+        .eq('user_id', user.id)
+        .is('end_time', null)
+        .lt('start_time', fourHoursAgo);
+
       const startTime = new Date();
       console.log('Start time:', startTime);
       
@@ -179,7 +201,8 @@ export default function Practice() {
           duration_seconds: 0,
           session_date: startTime.toISOString().split('T')[0],
           notes: sessionNotes,
-          is_active: true
+          end_time: null, // Explicitly set to null for active sessions
+          is_active: true // Keep for backward compatibility
         })
         .select()
         .single();
