@@ -6,7 +6,7 @@ export function getBaseUrl(): string {
   // Server-side: Use environment variables
   if (typeof window === 'undefined') {
     // Production: Use NEXTAUTH_URL or NEXT_PUBLIC_APP_URL
-    const url = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL;
+    const url = process.env.NEXT_PUBLIC_APP_URL;
     if (url) return url;
     
     // Vercel deployment
