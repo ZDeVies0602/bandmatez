@@ -3,7 +3,7 @@
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { SoundProvider } from '../contexts/SoundContext';
 import '../styles/globals.css';
 
@@ -35,7 +35,7 @@ export default function UserLayout({
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: AuthChangeEvent, session: Session | null) => {
         if (event === 'SIGNED_OUT' || !session?.user) {
           setUser(null);
           router.push('/Signin');
