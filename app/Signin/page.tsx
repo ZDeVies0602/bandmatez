@@ -20,12 +20,16 @@ export default function SignIn() {
       const callbackUrl = getAuthCallbackUrl('/dashboard');
       console.log('🔍 Magic link callback URL:', callbackUrl);
       
-      const { error } = await supabase.auth.signInWithOtp({
+      const supabaseParams = {
         email,
         options: {
           emailRedirectTo: callbackUrl
         }
-      });
+      };
+      console.log('🔍 Supabase signInWithOtp params:', JSON.stringify(supabaseParams, null, 2));
+      
+      const { error } = await supabase.auth.signInWithOtp(supabaseParams);
+      console.log('🔍 Supabase signInWithOtp response error:', error);
 
       if (error) throw error;
 
@@ -33,6 +37,7 @@ export default function SignIn() {
       setMessageType('success');
       setEmail(''); // Clear the email field
     } catch (error: any) {
+      console.error('🔍 Magic link error:', error);
       setMessage(error.message);
       setMessageType('error');
     } finally {
