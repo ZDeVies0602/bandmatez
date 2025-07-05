@@ -17,10 +17,13 @@ export default function SignIn() {
     setMessage('');
 
     try {
+      const callbackUrl = getAuthCallbackUrl('/dashboard');
+      console.log('🔍 Magic link callback URL:', callbackUrl);
+      
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: getAuthCallbackUrl('/dashboard')
+          emailRedirectTo: callbackUrl
         }
       });
 

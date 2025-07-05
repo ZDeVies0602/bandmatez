@@ -57,6 +57,10 @@ export function getBaseUrl(): string {
  * Get the auth callback URL for OAuth redirects
  */
 export function getAuthCallbackUrl(next: string = '/dashboard'): string {
+  console.log('🔍 getAuthCallbackUrl called with next:', next);
   const baseUrl = getBaseUrl();
-  return `${baseUrl}/api/auth/callback?next=${encodeURIComponent(next)}`;
+  console.log('🔍 Base URL from getBaseUrl:', baseUrl);
+  const fullUrl = `${baseUrl}/api/auth/callback?next=${encodeURIComponent(next)}`;
+  console.log('🔍 Full callback URL:', fullUrl);
+  return fullUrl;
 } 
