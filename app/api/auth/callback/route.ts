@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { ensurePublicUserExists } from "@/lib/supabase/user-utils";
 import rateLimiter from "@/lib/ratelimiter";
+import { getBaseUrl } from "@/utils/getBaseUrl";
 
 export async function GET(request: Request) {
   try {
@@ -41,20 +42,13 @@ export async function GET(request: Request) {
           );
         }
         
-        const forwardedHost = request.headers.get("x-forwarded-host");
-        const isLocalEnv = process.env.NODE_ENV === "development";
-        
-        if (isLocalEnv) {
-          return NextResponse.redirect(`${url.origin}${next}`);
-        } else if (forwardedHost) {
-          return NextResponse.redirect(`https://${forwardedHost}${next}`);
-        } else {
-          return NextResponse.redirect(`${url.origin}${next}`);
-        }
+        const baseUrl = getBaseUrl();
+        return NextResponse.redirect(`${baseUrl}${next}`);
       }
     }
     
-    return NextResponse.redirect(`${url.origin}/auth/auth-code-error`);
+    const baseUrl = getBaseUrl();
+    return NextResponse.redirect(`${baseUrl}/auth/auth-code-error`);
   } catch (err: any) {
     if (err?.msBeforeNext) {
       return NextResponse.json(

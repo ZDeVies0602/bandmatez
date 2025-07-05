@@ -23,6 +23,7 @@ export default function ThemeMenu() {
       'dusty-lilac': 'theme-preview-dusty-lilac',
       'crimson-night': 'theme-preview-crimson-night',
       'forest-floor': 'theme-preview-forest-floor',
+      'navy-geometric': 'theme-preview-navy-geometric',
     };
     return previewMap[themeKey] || 'theme-preview-default';
   };
@@ -35,6 +36,7 @@ export default function ThemeMenu() {
     { value: 'dusty-lilac', name: 'Dusty Lilac' },
     { value: 'crimson-night', name: 'Crimson Night' },
     { value: 'forest-floor', name: 'Forest Floor' },
+    { value: 'navy-geometric', name: 'Navy Geometric' },
   ];
 
   return (

@@ -310,6 +310,15 @@
   border-color: rgba(94, 69, 75, 0.8) !important;
 }
 
+:global(body.theme-navy-geometric) .metronomeBody {
+  background: linear-gradient(135deg, 
+    rgba(0, 44, 96, 0.9) 0%, 
+    rgba(80, 107, 139, 0.9) 50%, 
+    rgba(0, 44, 96, 0.9) 100%
+  ) !important;
+  border-color: rgba(26, 31, 35, 0.8) !important;
+}
+
 /* Global theme-specific weight colors */
 :global(body.theme-default) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
@@ -379,13 +388,24 @@
 
 :global(body.theme-forest-floor) .metronomeWeight {
   background: radial-gradient(circle at 30% 30%, 
-    rgba(94, 69, 75, 0.95) 0%, 
-    rgba(143, 151, 121, 0.95) 70%, 
-    rgba(74, 69, 75, 0.95) 100%
+    rgba(220, 224, 217, 0.95) 0%, 
+    rgba(200, 204, 197, 0.95) 70%, 
+    rgba(180, 184, 177, 0.95) 100%
   ) !important;
   box-shadow: 
-    0 0 20px rgba(94, 69, 75, 0.5),
+    0 0 20px rgba(220, 224, 217, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+:global(body.theme-navy-geometric) .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(0, 44, 96, 0.95) 0%, 
+    rgba(80, 107, 139, 0.95) 70%, 
+    rgba(26, 31, 35, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(0, 44, 96, 0.5),
+    inset 0 4px 8px rgba(252, 253, 252, 0.3) !important;
 }
 
 /* Global theme-specific metronome pendulum colors */
@@ -443,6 +463,14 @@
     rgba(200, 204, 197, 0.95) 100%
   ) !important;
   box-shadow: 0 0 12px rgba(220, 224, 217, 0.6) !important;
+}
+
+:global(body.theme-navy-geometric) .metronomePendulum {
+  background: linear-gradient(to bottom, 
+    rgba(252, 253, 252, 0.95) 0%, 
+    rgba(196, 205, 213, 0.95) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(196, 205, 213, 0.6) !important;
 }
 
 /* Global theme-specific weight colors */

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Bangers } from 'next/font/google';
 import './styles/globals.css';
 import { SoundProvider } from './contexts/SoundContext';
@@ -11,7 +11,11 @@ export const metadata: Metadata = {
   description: 'Professional music tools including virtual piano with ultra-optimized scrolling, advanced metronome with tap tempo, and precision pitch tuner.',
   keywords: 'virtual piano, metronome, pitch tuner, music tools, piano keyboard, tempo, tuning',
   authors: [{ name: 'Music Tools Suite' }],
-  viewport: 'width=device-width, initial-scale=1',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({

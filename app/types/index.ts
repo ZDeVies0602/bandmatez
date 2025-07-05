@@ -18,7 +18,8 @@ export type ThemeType =
   | 'desert-clay'
   | 'dusty-lilac'
   | 'crimson-night'
-  | 'forest-floor';
+  | 'forest-floor'
+  | 'navy-geometric';
 
 export type WaveType = 'sine' | 'square' | 'sawtooth' | 'triangle';
 

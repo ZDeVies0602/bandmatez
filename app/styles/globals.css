@@ -47,6 +47,10 @@ body.theme-forest-floor {
   --bg-light: #F5F5DC; --text-dark: #5E454B; --accent-red: #8F9779; --neutral-gray: #B2B9A4; --bg-muted: #8F9779;
   --shape-color-1: #5E454B; --shape-color-2: #8F9779; --shape-color-3: #6B8E23; --shape-color-4: #B2B9A4; --shape-color-5: #9ACD32;
 }
+body.theme-navy-geometric {
+  --bg-light: #FCFDFC; --text-dark: #1A1F23; --accent-red: #002C60; --neutral-gray: #C4CDD5; --bg-muted: #506B8B;
+  --shape-color-1: #002C60; --shape-color-2: #506B8B; --shape-color-3: #1A1F23; --shape-color-4: #C4CDD5; --shape-color-5: #FCFDFC;
+}
 
 /* Apply base styles for all geometric themes */
 body.theme-default,
@@ -55,7 +59,8 @@ body.theme-terra-cotta,
 body.theme-desert-clay,
 body.theme-dusty-lilac,
 body.theme-crimson-night,
-body.theme-forest-floor {
+body.theme-forest-floor,
+body.theme-navy-geometric {
   background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-muted) 50%, var(--bg-light) 100%);
   color: var(--text-dark);
   position: relative;
@@ -93,7 +98,8 @@ body.theme-terra-cotta h1,
 body.theme-desert-clay h1,
 body.theme-dusty-lilac h1,
 body.theme-crimson-night h1,
-body.theme-forest-floor h1 {
+body.theme-forest-floor h1,
+body.theme-navy-geometric h1 {
   font-family: var(--font-bangers), sans-serif;
   font-size: clamp(3rem, 8vw, 5rem);
   color: var(--text-dark);
@@ -110,7 +116,8 @@ body.theme-terra-cotta .tab-navigation,
 body.theme-desert-clay .tab-navigation,
 body.theme-dusty-lilac .tab-navigation,
 body.theme-crimson-night .tab-navigation,
-body.theme-forest-floor .tab-navigation {
+body.theme-forest-floor .tab-navigation,
+body.theme-navy-geometric .tab-navigation {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -128,7 +135,8 @@ body.theme-terra-cotta .tab-button,
 body.theme-desert-clay .tab-button,
 body.theme-dusty-lilac .tab-button,
 body.theme-crimson-night .tab-button,
-body.theme-forest-floor .tab-button {
+body.theme-forest-floor .tab-button,
+body.theme-navy-geometric .tab-button {
   font-family: var(--font-bangers), sans-serif;
   padding: 1rem 2rem;
   background: rgba(255, 255, 255, 0.1);
@@ -151,7 +159,8 @@ body.theme-terra-cotta .tab-button::before,
 body.theme-desert-clay .tab-button::before,
 body.theme-dusty-lilac .tab-button::before,
 body.theme-crimson-night .tab-button::before,
-body.theme-forest-floor .tab-button::before {
+body.theme-forest-floor .tab-button::before,
+body.theme-navy-geometric .tab-button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -168,7 +177,8 @@ body.theme-terra-cotta .tab-button:hover::before,
 body.theme-desert-clay .tab-button:hover::before,
 body.theme-dusty-lilac .tab-button:hover::before,
 body.theme-crimson-night .tab-button:hover::before,
-body.theme-forest-floor .tab-button:hover::before {
+body.theme-forest-floor .tab-button:hover::before,
+body.theme-navy-geometric .tab-button:hover::before {
   left: 100%;
 }
 
@@ -178,7 +188,8 @@ body.theme-terra-cotta .tab-button:hover,
 body.theme-desert-clay .tab-button:hover,
 body.theme-dusty-lilac .tab-button:hover,
 body.theme-crimson-night .tab-button:hover,
-body.theme-forest-floor .tab-button:hover {
+body.theme-forest-floor .tab-button:hover,
+body.theme-navy-geometric .tab-button:hover {
   background: rgba(255, 255, 255, 0.2);
   color: var(--text-dark);
   transform: translateY(-2px);
@@ -190,7 +201,8 @@ body.theme-terra-cotta .tab-button.active,
 body.theme-desert-clay .tab-button.active,
 body.theme-dusty-lilac .tab-button.active,
 body.theme-crimson-night .tab-button.active,
-body.theme-forest-floor .tab-button.active {
+body.theme-forest-floor .tab-button.active,
+body.theme-navy-geometric .tab-button.active {
   color: var(--accent-red);
   border-bottom-color: var(--accent-red);
   background: rgba(255, 255, 255, 0.3);
@@ -573,6 +585,10 @@ body.theme-forest-floor .tab-button.active {
 
 .theme-preview { width: 100%; height: 40px; border-radius: 6px; margin-bottom: 8px; }
 .theme-preview-default { background-color: var(--bg-light); border: 1px solid var(--neutral-gray); }
+.theme-preview-navy-geometric { 
+  background: linear-gradient(135deg, #002C60 0%, #506B8B 50%, #002C60 100%);
+  border: 1px solid #1A1F23;
+}
 
 /* METRONOME THEME-SPECIFIC STYLING
 /==========================================================================/ */
@@ -711,6 +727,25 @@ body.theme-forest-floor .metronomeWeight {
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
+body.theme-navy-geometric .metronomePendulum {
+  background: linear-gradient(to bottom, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(226, 232, 240, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.5) !important;
+}
+
+body.theme-navy-geometric .metronomeWeight {
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(226, 232, 240, 0.95) 70%, 
+    rgba(203, 213, 225, 0.95) 100%
+  ) !important;
+  box-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
 /* IMPROVED TEXT CONTRAST FOR MUSIC TOOLS
 /==========================================================================/ */
 
@@ -722,7 +757,7 @@ body.theme-forest-floor .metronomeWeight {
 .tool-container h6 {
   color: var(--text-dark) !important;
   font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
 }
 
 .tool-container input,
@@ -744,7 +779,7 @@ body.theme-forest-floor .metronomeWeight {
 .tool-container button {
   color: var(--text-dark) !important;
   font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* Metronome-specific text enhancements */
@@ -755,7 +790,7 @@ body.theme-forest-floor .metronomeWeight {
 .metronome .beatCounter {
   color: var(--text-dark) !important;
   font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* Tuner-specific text enhancements */
@@ -766,7 +801,7 @@ body.theme-forest-floor .metronomeWeight {
 .tunerContainer .tunerInstructions {
   color: var(--text-dark) !important;
   font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* Piano-specific text enhancements */
@@ -775,7 +810,7 @@ body.theme-forest-floor .metronomeWeight {
 .piano label {
   color: var(--text-dark) !important;
   font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* Scrollbar Styling */
