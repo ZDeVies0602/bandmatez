@@ -1,3 +1,9 @@
+/* TAILWIND DIRECTIVES
+/==========================================================================/ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* FONT & COLOR VARIABLES
 /==========================================================================/ */
 :root {
@@ -20,36 +26,100 @@ body {
 
 /* Define color variables for each geometric theme */
 body.theme-default {
-  --bg-light: #DCE0D9; --text-dark: #31081F; --accent-red: #6B0F1A; --neutral-gray: #595959; --bg-muted: #808F85;
-  --shape-color-1: #31081F; --shape-color-2: #6B0F1A; --shape-color-3: #595959; --shape-color-4: #808F85; --shape-color-5: #DCE0D9;
+  --bg-light: #dce0d9;
+  --text-dark: #31081f;
+  --accent-red: #6b0f1a;
+  --neutral-gray: #595959;
+  --bg-muted: #808f85;
+  --shape-color-1: #31081f;
+  --shape-color-2: #6b0f1a;
+  --shape-color-3: #595959;
+  --shape-color-4: #808f85;
+  --shape-color-5: #dce0d9;
 }
 body.theme-royal-gold {
-  --bg-light: #E8E8FF; --text-dark: #1A2C42; --accent-red: #4C6AF5; --neutral-gray: #1A2C42; --bg-muted: #D4A017;
-  --shape-color-1: #1A2C42; --shape-color-2: #4C6AF5; --shape-color-3: #6464FF; --shape-color-4: #D4A017; --shape-color-5: #FFD700;
+  --bg-light: #e8e8ff;
+  --text-dark: #1a2c42;
+  --accent-red: #4c6af5;
+  --neutral-gray: #1a2c42;
+  --bg-muted: #d4a017;
+  --shape-color-1: #1a2c42;
+  --shape-color-2: #4c6af5;
+  --shape-color-3: #6464ff;
+  --shape-color-4: #d4a017;
+  --shape-color-5: #ffd700;
 }
 body.theme-terra-cotta {
-  --bg-light: #FDF5E6; --text-dark: #C73832; --accent-red: #F28C28; --neutral-gray: #4A6D56; --bg-muted: #F0D757;
-  --shape-color-1: #C73832; --shape-color-2: #F28C28; --shape-color-3: #F0D757; --shape-color-4: #4A6D56; --shape-color-5: #E67E22;
+  --bg-light: #fdf5e6;
+  --text-dark: #c73832;
+  --accent-red: #f28c28;
+  --neutral-gray: #4a6d56;
+  --bg-muted: #f0d757;
+  --shape-color-1: #c73832;
+  --shape-color-2: #f28c28;
+  --shape-color-3: #f0d757;
+  --shape-color-4: #4a6d56;
+  --shape-color-5: #e67e22;
 }
 body.theme-desert-clay {
-  --bg-light: #FFF8F0; --text-dark: #262322; --accent-red: #E07A5F; --neutral-gray: #81A4B1; --bg-muted: #F4DDB5;
-  --shape-color-1: #262322; --shape-color-2: #E07A5F; --shape-color-3: #3A3A3A; --shape-color-4: #81A4B1; --shape-color-5: #F4DDB5;
+  --bg-light: #fff8f0;
+  --text-dark: #262322;
+  --accent-red: #e07a5f;
+  --neutral-gray: #81a4b1;
+  --bg-muted: #f4ddb5;
+  --shape-color-1: #262322;
+  --shape-color-2: #e07a5f;
+  --shape-color-3: #3a3a3a;
+  --shape-color-4: #81a4b1;
+  --shape-color-5: #f4ddb5;
 }
 body.theme-dusty-lilac {
-  --bg-light: #F0F0F5; --text-dark: #2F4F4F; --accent-red: #C8B6C8; --neutral-gray: #8A8A8A; --bg-muted: #E6E6FA;
-  --shape-color-1: #F5F5F5; --shape-color-2: #C8B6C8; --shape-color-3: #D8BFD8; --shape-color-4: #2F4F4F; --shape-color-5: #E6E6FA;
+  --bg-light: #f0f0f5;
+  --text-dark: #2f4f4f;
+  --accent-red: #c8b6c8;
+  --neutral-gray: #8a8a8a;
+  --bg-muted: #e6e6fa;
+  --shape-color-1: #f5f5f5;
+  --shape-color-2: #c8b6c8;
+  --shape-color-3: #d8bfd8;
+  --shape-color-4: #2f4f4f;
+  --shape-color-5: #e6e6fa;
 }
 body.theme-crimson-night {
-  --bg-light: #FAFAFA; --text-dark: #540101; --accent-red: #8B0000; --neutral-gray: #B22222; --bg-muted: #8B0000;
-  --shape-color-1: #540101; --shape-color-2: #8B0000; --shape-color-3: #B22222; --shape-color-4: #DC143C; --shape-color-5: #FAFAFA;
+  --bg-light: #fafafa;
+  --text-dark: #540101;
+  --accent-red: #8b0000;
+  --neutral-gray: #b22222;
+  --bg-muted: #8b0000;
+  --shape-color-1: #540101;
+  --shape-color-2: #8b0000;
+  --shape-color-3: #b22222;
+  --shape-color-4: #dc143c;
+  --shape-color-5: #fafafa;
 }
 body.theme-forest-floor {
-  --bg-light: #F5F5DC; --text-dark: #5E454B; --accent-red: #8F9779; --neutral-gray: #B2B9A4; --bg-muted: #8F9779;
-  --shape-color-1: #5E454B; --shape-color-2: #8F9779; --shape-color-3: #6B8E23; --shape-color-4: #B2B9A4; --shape-color-5: #9ACD32;
+  --bg-light: #f5f5dc;
+  --text-dark: #5e454b;
+  --accent-red: #8f9779;
+  --neutral-gray: #b2b9a4;
+  --bg-muted: #8f9779;
+  --shape-color-1: #5e454b;
+  --shape-color-2: #8f9779;
+  --shape-color-3: #6b8e23;
+  --shape-color-4: #b2b9a4;
+  --shape-color-5: #9acd32;
 }
 body.theme-navy-geometric {
-  --bg-light: #FCFDFC; --text-dark: #1A1F23; --accent-red: #002C60; --neutral-gray: #C4CDD5; --bg-muted: #506B8B;
-  --shape-color-1: #002C60; --shape-color-2: #506B8B; --shape-color-3: #1A1F23; --shape-color-4: #C4CDD5; --shape-color-5: #FCFDFC;
+  --bg-light: #fcfdfc;
+  --text-dark: #1a1f23;
+  --accent-red: #002c60;
+  --neutral-gray: #c4cdd5;
+  --bg-muted: #506b8b;
+  --shape-color-1: #002c60;
+  --shape-color-2: #506b8b;
+  --shape-color-3: #1a1f23;
+  --shape-color-4: #c4cdd5;
+  --shape-color-5: #fcfdfc;
 }
 
 /* Apply base styles for all geometric themes */
@@ -61,14 +131,19 @@ body.theme-dusty-lilac,
 body.theme-crimson-night,
 body.theme-forest-floor,
 body.theme-navy-geometric {
-  background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-muted) 50%, var(--bg-light) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bg-light) 0%,
+    var(--bg-muted) 50%,
+    var(--bg-light) 100%
+  );
   color: var(--text-dark);
   position: relative;
 }
 
 /* Enhanced Background Pattern System */
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
@@ -76,170 +151,55 @@ body::before {
   height: 100vh;
   z-index: -2;
   opacity: 0.05;
-  background-image: 
-    radial-gradient(circle at 25% 25%, var(--shape-color-2) 2px, transparent 2px),
-    radial-gradient(circle at 75% 75%, var(--shape-color-3) 1px, transparent 1px),
-    linear-gradient(45deg, transparent 40%, var(--shape-color-1) 40%, var(--shape-color-1) 60%, transparent 60%),
-    linear-gradient(-45deg, transparent 40%, var(--shape-color-4) 40%, var(--shape-color-4) 60%, transparent 60%);
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      var(--shape-color-2) 2px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      var(--shape-color-3) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      45deg,
+      transparent 40%,
+      var(--shape-color-1) 40%,
+      var(--shape-color-1) 60%,
+      transparent 60%
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 40%,
+      var(--shape-color-4) 40%,
+      var(--shape-color-4) 60%,
+      transparent 60%
+    );
   background-size: 50px 50px, 30px 30px, 100px 100px, 100px 100px;
   background-position: 0 0, 25px 25px, 0 0, 50px 50px;
   animation: patternShift 60s linear infinite;
 }
 
 @keyframes patternShift {
-  0% { background-position: 0 0, 25px 25px, 0 0, 50px 50px; }
-  100% { background-position: 50px 50px, 75px 75px, 100px 100px, 150px 150px; }
+  0% {
+    background-position: 0 0, 25px 25px, 0 0, 50px 50px;
+  }
+  100% {
+    background-position: 50px 50px, 75px 75px, 100px 100px, 150px 150px;
+  }
 }
 
-/* Shared component styles for all geometric themes */
-body.theme-default h1,
-body.theme-royal-gold h1,
-body.theme-terra-cotta h1,
-body.theme-desert-clay h1,
-body.theme-dusty-lilac h1,
-body.theme-crimson-night h1,
-body.theme-forest-floor h1,
-body.theme-navy-geometric h1 {
-  font-family: var(--font-bangers), sans-serif;
-  font-size: clamp(3rem, 8vw, 5rem);
-  color: var(--text-dark);
-  text-align: center;
-  margin-bottom: 2rem;
-  letter-spacing: 2px;
-  font-weight: 400;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-}
-
-body.theme-default .tab-navigation,
-body.theme-royal-gold .tab-navigation,
-body.theme-terra-cotta .tab-navigation,
-body.theme-desert-clay .tab-navigation,
-body.theme-dusty-lilac .tab-navigation,
-body.theme-crimson-night .tab-navigation,
-body.theme-forest-floor .tab-navigation,
-body.theme-navy-geometric .tab-navigation {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  border-bottom: 2px solid var(--neutral-gray);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px 20px 0 0;
-  padding: 0.5rem;
-}
-
-body.theme-default .tab-button,
-body.theme-royal-gold .tab-button,
-body.theme-terra-cotta .tab-button,
-body.theme-desert-clay .tab-button,
-body.theme-dusty-lilac .tab-button,
-body.theme-crimson-night .tab-button,
-body.theme-forest-floor .tab-button,
-body.theme-navy-geometric .tab-button {
-  font-family: var(--font-bangers), sans-serif;
-  padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--neutral-gray);
-  border: none;
-  border-bottom: 4px solid transparent;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  transform: translateY(2px);
-  border-radius: 15px 15px 0 0;
-  position: relative;
-  overflow: hidden;
-}
-
-body.theme-default .tab-button::before,
-body.theme-royal-gold .tab-button::before,
-body.theme-terra-cotta .tab-button::before,
-body.theme-desert-clay .tab-button::before,
-body.theme-dusty-lilac .tab-button::before,
-body.theme-crimson-night .tab-button::before,
-body.theme-forest-floor .tab-button::before,
-body.theme-navy-geometric .tab-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-body.theme-default .tab-button:hover::before,
-body.theme-royal-gold .tab-button:hover::before,
-body.theme-terra-cotta .tab-button:hover::before,
-body.theme-desert-clay .tab-button:hover::before,
-body.theme-dusty-lilac .tab-button:hover::before,
-body.theme-crimson-night .tab-button:hover::before,
-body.theme-forest-floor .tab-button:hover::before,
-body.theme-navy-geometric .tab-button:hover::before {
-  left: 100%;
-}
-
-body.theme-default .tab-button:hover,
-body.theme-royal-gold .tab-button:hover,
-body.theme-terra-cotta .tab-button:hover,
-body.theme-desert-clay .tab-button:hover,
-body.theme-dusty-lilac .tab-button:hover,
-body.theme-crimson-night .tab-button:hover,
-body.theme-forest-floor .tab-button:hover,
-body.theme-navy-geometric .tab-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--text-dark);
-  transform: translateY(-2px);
-}
-
-body.theme-default .tab-button.active,
-body.theme-royal-gold .tab-button.active,
-body.theme-terra-cotta .tab-button.active,
-body.theme-desert-clay .tab-button.active,
-body.theme-dusty-lilac .tab-button.active,
-body.theme-crimson-night .tab-button.active,
-body.theme-forest-floor .tab-button.active,
-body.theme-navy-geometric .tab-button.active {
-  color: var(--accent-red);
-  border-bottom-color: var(--accent-red);
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* LAYOUT & SHARED
-/==========================================================================/ */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  position: relative;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-}
-
-.tab-content {
-  display: none;
-  animation: fadeIn 0.5s;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 15px;
-  padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.tab-content.active {
-  display: block;
-}
+/* Animation keyframes still needed for components */
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Enhanced Geometric Background Shapes System */
@@ -269,7 +229,11 @@ body.theme-navy-geometric .tab-button.active {
 .shape-1 {
   width: 30rem;
   height: 30rem;
-  background: linear-gradient(135deg, var(--shape-color-1), var(--shape-color-2));
+  background: linear-gradient(
+    135deg,
+    var(--shape-color-1),
+    var(--shape-color-2)
+  );
   top: -15%;
   left: -15%;
   clip-path: polygon(0 0, 100% 0, 50% 100%);
@@ -332,7 +296,7 @@ body.theme-navy-geometric .tab-button.active {
 }
 
 .shape-6::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 8rem;
   height: 8rem;
@@ -343,7 +307,7 @@ body.theme-navy-geometric .tab-button.active {
 }
 
 .shape-6::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 8rem;
   height: 8rem;
@@ -364,7 +328,7 @@ body.theme-navy-geometric .tab-button.active {
 }
 
 .shape-7::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 3rem;
   height: 18rem;
@@ -375,7 +339,7 @@ body.theme-navy-geometric .tab-button.active {
 }
 
 .shape-7::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 3rem;
   height: 18rem;
@@ -419,60 +383,78 @@ body.theme-navy-geometric .tab-button.active {
 
 /* Enhanced animations for subtle movement */
 @keyframes float {
-  0%, 100% { 
-    transform: translateY(0px) rotate(0deg) scale(1); 
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
   }
-  33% { 
-    transform: translateY(-15px) rotate(2deg) scale(1.02); 
+  33% {
+    transform: translateY(-15px) rotate(2deg) scale(1.02);
   }
-  66% { 
-    transform: translateY(5px) rotate(-1deg) scale(0.98); 
+  66% {
+    transform: translateY(5px) rotate(-1deg) scale(0.98);
   }
 }
 
 @keyframes floatReverse {
-  0%, 100% { 
-    transform: translateY(0px) rotate(0deg) scale(1); 
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
   }
-  33% { 
-    transform: translateY(10px) rotate(-2deg) scale(0.98); 
+  33% {
+    transform: translateY(10px) rotate(-2deg) scale(0.98);
   }
-  66% { 
-    transform: translateY(-8px) rotate(1deg) scale(1.02); 
+  66% {
+    transform: translateY(-8px) rotate(1deg) scale(1.02);
   }
 }
 
 @keyframes pulse {
-  0%, 100% { 
-    opacity: 0.8; 
-    transform: scale(1); 
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
   }
-  50% { 
-    opacity: 0.9; 
-    transform: scale(1.05); 
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
   }
 }
 
 @keyframes rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Apply animations to shapes */
-.shape-1, .shape-3, .shape-5, .shape-7, .shape-9 {
+.shape-1,
+.shape-3,
+.shape-5,
+.shape-7,
+.shape-9 {
   animation: float 12s ease-in-out infinite;
 }
 
-.shape-2, .shape-4, .shape-6, .shape-8, .shape-10 {
+.shape-2,
+.shape-4,
+.shape-6,
+.shape-8,
+.shape-10 {
   animation: floatReverse 10s ease-in-out infinite;
 }
 
-.shape-2, .shape-8 {
+.shape-2,
+.shape-8 {
   animation: rotate 120s linear infinite, pulse 8s ease-in-out infinite;
 }
 
-.shape-6::before, .shape-6::after,
-.shape-7::before, .shape-7::after {
+.shape-6::before,
+.shape-6::after,
+.shape-7::before,
+.shape-7::after {
   animation: pulse 6s ease-in-out infinite;
   animation-delay: 1s, 2s;
 }
@@ -487,15 +469,21 @@ body.theme-navy-geometric .tab-button.active {
 
 /* MENUS (Theme & Sound)
 /==========================================================================/ */
-.theme-menu, .sound-menu {
+.theme-menu,
+.sound-menu {
   position: fixed;
   top: 20px;
   z-index: 1000;
 }
-.theme-menu { right: 20px; }
-.sound-menu { left: 20px; }
+.theme-menu {
+  right: 20px;
+}
+.sound-menu {
+  left: 20px;
+}
 
-.theme-menu-toggle, .sound-menu-toggle {
+.theme-menu-toggle,
+.sound-menu-toggle {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -509,7 +497,8 @@ body.theme-navy-geometric .tab-button.active {
   transition: all 0.3s ease;
 }
 
-.theme-menu-toggle:hover, .sound-menu-toggle:hover {
+.theme-menu-toggle:hover,
+.sound-menu-toggle:hover {
   transform: scale(1.1);
   background: rgba(100, 100, 100, 0.2);
 }
@@ -518,17 +507,34 @@ body.theme-navy-geometric .tab-button.active {
 .palette-icon {
   width: 24px;
   height: 24px;
-  background: conic-gradient(from 90deg, #6B0F1A, #595959, #808F85, #31081F, #DCE0D9, #6B0F1A);
+  background: conic-gradient(
+    from 90deg,
+    #6b0f1a,
+    #595959,
+    #808f85,
+    #31081f,
+    #dce0d9,
+    #6b0f1a
+  );
   border-radius: 50%;
 }
 .sound-icon {
   width: 24px;
   height: 24px;
   background-color: var(--neutral-gray);
-  clip-path: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
+  clip-path: polygon(
+    0% 20%,
+    60% 20%,
+    60% 0%,
+    100% 50%,
+    60% 100%,
+    60% 80%,
+    0% 80%
+  );
 }
 
-.theme-options, .sound-options {
+.theme-options,
+.sound-options {
   position: absolute;
   top: 60px;
   background: var(--bg-light);
@@ -542,9 +548,12 @@ body.theme-navy-geometric .tab-button.active {
   transition: all 0.3s ease;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
-.theme-options { right: 0; }
-.sound-options { left: 0; }
-
+.theme-options {
+  right: 0;
+}
+.sound-options {
+  left: 0;
+}
 
 .theme-menu.open .theme-options,
 .sound-menu.open .sound-options {
@@ -553,7 +562,8 @@ body.theme-navy-geometric .tab-button.active {
   visibility: visible;
 }
 
-.theme-options h3, .sound-options h3 {
+.theme-options h3,
+.sound-options h3 {
   color: var(--text-dark);
   text-shadow: none;
   margin-bottom: 15px;
@@ -580,14 +590,26 @@ body.theme-navy-geometric .tab-button.active {
   color: var(--bg-light);
 }
 
-.theme-option:hover { transform: translateY(-2px); }
-.theme-option.active { border-color: var(--accent-red); }
+.theme-option:hover {
+  transform: translateY(-2px);
+}
+.theme-option.active {
+  border-color: var(--accent-red);
+}
 
-.theme-preview { width: 100%; height: 40px; border-radius: 6px; margin-bottom: 8px; }
-.theme-preview-default { background-color: var(--bg-light); border: 1px solid var(--neutral-gray); }
-.theme-preview-navy-geometric { 
-  background: linear-gradient(135deg, #002C60 0%, #506B8B 50%, #002C60 100%);
-  border: 1px solid #1A1F23;
+.theme-preview {
+  width: 100%;
+  height: 40px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.theme-preview-default {
+  background-color: var(--bg-light);
+  border: 1px solid var(--neutral-gray);
+}
+.theme-preview-navy-geometric {
+  background: linear-gradient(135deg, #002c60 0%, #506b8b 50%, #002c60 100%);
+  border: 1px solid #1a1f23;
 }
 
 /* METRONOME THEME-SPECIFIC STYLING
@@ -595,223 +617,166 @@ body.theme-navy-geometric .tab-button.active {
 
 /* Metronome pendulum colors for each theme */
 body.theme-default .metronomePendulum {
-  background: linear-gradient(to bottom, 
-    rgba(107, 15, 26, 0.9) 0%, 
+  background: linear-gradient(
+    to bottom,
+    rgba(107, 15, 26, 0.9) 0%,
     rgba(139, 26, 42, 0.9) 100%
   ) !important;
   box-shadow: 0 0 12px rgba(107, 15, 26, 0.5) !important;
 }
 
 body.theme-default .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(107, 15, 26, 0.95) 0%, 
-    rgba(139, 26, 42, 0.95) 70%, 
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(107, 15, 26, 0.95) 0%,
+    rgba(139, 26, 42, 0.95) 70%,
     rgba(89, 15, 26, 0.95) 100%
   ) !important;
-  box-shadow: 
-    0 0 20px rgba(107, 15, 26, 0.5),
+  box-shadow: 0 0 20px rgba(107, 15, 26, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.theme-royal-gold .metronomePendulum {
-  background: linear-gradient(to bottom, 
-    rgba(76, 106, 245, 0.9) 0%, 
+  background: linear-gradient(
+    to bottom,
+    rgba(76, 106, 245, 0.9) 0%,
     rgba(100, 130, 255, 0.9) 100%
   ) !important;
   box-shadow: 0 0 12px rgba(76, 106, 245, 0.5) !important;
 }
 
 body.theme-royal-gold .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(212, 160, 23, 0.95) 0%, 
-    rgba(255, 215, 0, 0.95) 70%, 
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(212, 160, 23, 0.95) 0%,
+    rgba(255, 215, 0, 0.95) 70%,
     rgba(184, 134, 11, 0.95) 100%
   ) !important;
-  box-shadow: 
-    0 0 20px rgba(212, 160, 23, 0.5),
+  box-shadow: 0 0 20px rgba(212, 160, 23, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.theme-terra-cotta .metronomePendulum {
-  background: linear-gradient(to bottom, 
-    rgba(242, 140, 40, 0.9) 0%, 
+  background: linear-gradient(
+    to bottom,
+    rgba(242, 140, 40, 0.9) 0%,
     rgba(255, 165, 0, 0.9) 100%
   ) !important;
   box-shadow: 0 0 12px rgba(242, 140, 40, 0.5) !important;
 }
 
 body.theme-terra-cotta .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(199, 56, 50, 0.95) 0%, 
-    rgba(230, 126, 34, 0.95) 70%, 
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(199, 56, 50, 0.95) 0%,
+    rgba(230, 126, 34, 0.95) 70%,
     rgba(179, 46, 40, 0.95) 100%
   ) !important;
-  box-shadow: 
-    0 0 20px rgba(199, 56, 50, 0.5),
+  box-shadow: 0 0 20px rgba(199, 56, 50, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.theme-desert-clay .metronomePendulum {
-  background: linear-gradient(to bottom, 
-    rgba(224, 122, 95, 0.9) 0%, 
+  background: linear-gradient(
+    to bottom,
+    rgba(224, 122, 95, 0.9) 0%,
     rgba(244, 164, 96, 0.9) 100%
   ) !important;
   box-shadow: 0 0 12px rgba(224, 122, 95, 0.5) !important;
 }
 
 body.theme-desert-clay .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(244, 221, 181, 0.95) 0%, 
-    rgba(255, 228, 196, 0.95) 70%, 
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(244, 221, 181, 0.95) 0%,
+    rgba(255, 228, 196, 0.95) 70%,
     rgba(210, 180, 140, 0.95) 100%
   ) !important;
-  box-shadow: 
-    0 0 20px rgba(244, 221, 181, 0.5),
+  box-shadow: 0 0 20px rgba(244, 221, 181, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.theme-dusty-lilac .metronomePendulum {
-  background: linear-gradient(to bottom, 
-    rgba(200, 182, 200, 0.9) 0%, 
+  background: linear-gradient(
+    to bottom,
+    rgba(200, 182, 200, 0.9) 0%,
     rgba(184, 169, 184, 0.9) 100%
   ) !important;
   box-shadow: 0 0 12px rgba(200, 182, 200, 0.5) !important;
 }
 
 body.theme-dusty-lilac .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(47, 79, 79, 0.95) 0%, 
-    rgba(200, 182, 200, 0.95) 70%, 
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(47, 79, 79, 0.95) 0%,
+    rgba(200, 182, 200, 0.95) 70%,
     rgba(37, 59, 59, 0.95) 100%
   ) !important;
-  box-shadow: 
-    0 0 20px rgba(47, 79, 79, 0.5),
+  box-shadow: 0 0 20px rgba(47, 79, 79, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.theme-crimson-night .metronomePendulum {
-  background: linear-gradient(to bottom, 
-    rgba(139, 0, 0, 0.9) 0%, 
+  background: linear-gradient(
+    to bottom,
+    rgba(139, 0, 0, 0.9) 0%,
     rgba(178, 34, 34, 0.9) 100%
   ) !important;
   box-shadow: 0 0 12px rgba(139, 0, 0, 0.5) !important;
 }
 
 body.theme-crimson-night .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(84, 1, 1, 0.95) 0%, 
-    rgba(139, 0, 0, 0.95) 70%, 
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(84, 1, 1, 0.95) 0%,
+    rgba(139, 0, 0, 0.95) 70%,
     rgba(64, 1, 1, 0.95) 100%
   ) !important;
-  box-shadow: 
-    0 0 20px rgba(84, 1, 1, 0.5),
+  box-shadow: 0 0 20px rgba(84, 1, 1, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.theme-forest-floor .metronomePendulum {
-  background: linear-gradient(to bottom, 
-    rgba(143, 151, 121, 0.9) 0%, 
+  background: linear-gradient(
+    to bottom,
+    rgba(143, 151, 121, 0.9) 0%,
     rgba(178, 185, 164, 0.9) 100%
   ) !important;
   box-shadow: 0 0 12px rgba(143, 151, 121, 0.5) !important;
 }
 
 body.theme-forest-floor .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(94, 69, 75, 0.95) 0%, 
-    rgba(143, 151, 121, 0.95) 70%, 
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(94, 69, 75, 0.95) 0%,
+    rgba(143, 151, 121, 0.95) 70%,
     rgba(74, 69, 75, 0.95) 100%
   ) !important;
-  box-shadow: 
-    0 0 20px rgba(94, 69, 75, 0.5),
+  box-shadow: 0 0 20px rgba(94, 69, 75, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.theme-navy-geometric .metronomePendulum {
-  background: linear-gradient(to bottom, 
-    rgba(255, 255, 255, 0.9) 0%, 
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.9) 0%,
     rgba(226, 232, 240, 0.9) 100%
   ) !important;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.5) !important;
 }
 
 body.theme-navy-geometric .metronomeWeight {
-  background: radial-gradient(circle at 30% 30%, 
-    rgba(255, 255, 255, 0.95) 0%, 
-    rgba(226, 232, 240, 0.95) 70%, 
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(226, 232, 240, 0.95) 70%,
     rgba(203, 213, 225, 0.95) 100%
   ) !important;
-  box-shadow: 
-    0 0 20px rgba(255, 255, 255, 0.5),
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-/* IMPROVED TEXT CONTRAST FOR MUSIC TOOLS
-/==========================================================================/ */
-
-/* Enhanced text contrast for all music tool components */
-.tool-container label,
-.tool-container h3,
-.tool-container h4,
-.tool-container h5,
-.tool-container h6 {
-  color: var(--text-dark) !important;
-  font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-}
-
-.tool-container input,
-.tool-container select,
-.tool-container textarea {
-  color: var(--text-dark) !important;
-  font-weight: 600 !important;
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  border: 2px solid var(--neutral-gray) !important;
-}
-
-.tool-container input:focus,
-.tool-container select:focus,
-.tool-container textarea:focus {
-  border-color: var(--accent-red) !important;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2) !important;
-}
-
-.tool-container button {
-  color: var(--text-dark) !important;
-  font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-}
-
-/* Metronome-specific text enhancements */
-.metronome .tempoDisplay,
-.metronome .bpmNumber,
-.metronome .tempoMarking,
-.metronome label,
-.metronome .beatCounter {
-  color: var(--text-dark) !important;
-  font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-}
-
-/* Tuner-specific text enhancements */
-.tunerContainer .noteDisplay,
-.tunerContainer .frequencyDisplay,
-.tunerContainer .centsDisplay,
-.tunerContainer label,
-.tunerContainer .tunerInstructions {
-  color: var(--text-dark) !important;
-  font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-}
-
-/* Piano-specific text enhancements */
-.piano .currentNote,
-.piano .currentFrequency,
-.piano label {
-  color: var(--text-dark) !important;
-  font-weight: 700 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-}
+/* All text styles are now inline Tailwind classes */
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
@@ -851,23 +816,23 @@ body.theme-navy-geometric .metronomeWeight {
     font-size: 2.5rem;
     letter-spacing: 4px;
   }
-  
+
   .container {
     padding: 20px 15px;
   }
-  
+
   .tab-navigation {
     flex-direction: column;
     gap: 5px;
   }
-  
+
   .tab-button {
     margin: 0;
     padding: 12px 20px;
   }
-  
+
   .theme-menu {
     top: 15px;
     right: 15px;
   }
-} 
+}
