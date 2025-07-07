@@ -10,6 +10,7 @@ import AccountCircle from "./AccountCircle";
 import ThemeMenu from "./ThemeMenu";
 import PitchTuner from "./PitchTuner";
 import PracticeTracker from "./PracticeTracker";
+import Link from "next/link";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -81,8 +82,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           {/* Main Content - Simple scrollable container */}
           <main className="flex-1 p-6 overflow-y-auto">
             <div className="w-full max-w-6xl mx-auto space-y-6">
-              {/* Pitch Tuner and Piano in Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Pitch Tuner, Piano, and Audio Visualizer in Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {/* Compact Pitch Tuner Module */}
                 <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
                   <div className="text-center mb-4">
@@ -107,6 +108,28 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     </p>
                   </div>
                   <VirtualPiano />
+                </div>
+
+                {/* Audio Visualizer Module */}
+                <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
+                  <div className="text-center mb-4">
+                    <h1 className="text-2xl font-bold text-[var(--text-dark)] mb-2">
+                      🎨 Audio Visualizer
+                    </h1>
+                    <p className="text-sm text-[var(--neutral-gray)]">
+                      Create unique artwork from music
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <Link href="/audio-visualizer">
+                      <button className="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                        Open Visualizer
+                      </button>
+                    </Link>
+                    <p className="text-xs text-[var(--neutral-gray)] mt-2">
+                      Generate colorful visuals from live audio
+                    </p>
+                  </div>
                 </div>
               </div>
 

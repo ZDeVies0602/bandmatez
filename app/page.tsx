@@ -62,6 +62,17 @@ export default function LandingPage() {
               Tune any instrument with professional-grade accuracy.
             </p>
           </div>
+
+          <Link href="/audio-visualizer" className="no-underline">
+            <div className="p-10 border-2 border-white/15 transition-all duration-300 rounded-3xl backdrop-blur-[10px] relative overflow-hidden bg-[rgba(138,43,226,0.1)] text-[color:var(--text-dark)] hover:-translate-y-3 hover:shadow-[0_20px_40px_-10px_rgba(49,8,31,0.3)] hover:border-white/25 before:content-[''] before:absolute before:inset-0 before:opacity-5 before:transition-opacity before:duration-300 before:bg-[linear-gradient(135deg,#8A2BE2,#FF69B4)] hover:before:opacity-10">
+              <h3 className="font-['Bebas_Neue'] text-[2rem] m-0 mb-2 tracking-wider relative z-10">
+                Audio Visualizer
+              </h3>
+              <p className="text-base leading-relaxed m-0 opacity-90 relative z-10">
+                Create unique artwork from music with real-time visualization.
+              </p>
+            </div>
+          </Link>
         </section>
       </main>
     </div>
