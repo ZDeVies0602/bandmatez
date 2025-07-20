@@ -179,6 +179,17 @@ export default function AccountCircle({ className = "" }: AccountCircleProps) {
               <span>Practice History</span>
             </button>
 
+            <button
+              onClick={() => {
+                router.push("/audio-visualizer");
+                setIsOpen(false);
+              }}
+              className="w-full px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 flex items-center gap-3 text-[var(--text-dark)]"
+            >
+              <span className="text-lg">🎨</span>
+              <span>Audio Visualizer</span>
+            </button>
+
             <div className="border-t border-white/10 my-2"></div>
 
             <button

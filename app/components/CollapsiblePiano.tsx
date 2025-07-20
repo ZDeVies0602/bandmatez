@@ -6,13 +6,11 @@ import VirtualPiano from "./VirtualPiano";
 
 interface CollapsiblePianoProps {
   className?: string;
-  onToggle?: (expanded: boolean) => void;
   sidebarCollapsed?: boolean;
 }
 
 export default function CollapsiblePiano({
   className = "",
-  onToggle,
   sidebarCollapsed = false,
 }: CollapsiblePianoProps) {
   const themeClasses = useThemeClasses();
@@ -20,18 +18,15 @@ export default function CollapsiblePiano({
   const [isMinimized, setIsMinimized] = useState(false);
 
   const handleToggleCollapse = () => {
-    console.log("Toggle collapse clicked, current state:", isCollapsed);
     const newCollapsed = !isCollapsed;
     setIsCollapsed(newCollapsed);
     // Reset minimized state when expanding
     if (!newCollapsed) {
       setIsMinimized(false);
     }
-    onToggle?.(!newCollapsed);
   };
 
   const handleToggleMinimize = () => {
-    console.log("Toggle minimize clicked, current state:", isMinimized);
     const newMinimized = !isMinimized;
     setIsMinimized(newMinimized);
   };
@@ -39,70 +34,15 @@ export default function CollapsiblePiano({
   return (
     <div
       className={`
-        w-full h-full bg-white/10 backdrop-blur-xl border-t border-white/20 shadow-[0_-8px_32px_rgba(0,0,0,0.1)]
+        w-full bg-white/10 backdrop-blur-xl border-t border-white/20 shadow-[0_-8px_32px_rgba(0,0,0,0.1)]
         ${className}
-        flex flex-col
+        ${isCollapsed ? 'h-16' : 'h-80'}
+        ${isCollapsed ? 'flex flex-col justify-end' : 'flex flex-col-reverse'}
+        overflow-hidden transition-all duration-300 ease-in-out
       `}
     >
-      {/* Expanded Content - Takes up available space */}
-      {!isCollapsed && (
-        <div className="flex-1 overflow-hidden">
-          {/* Piano Content */}
-          {!isMinimized && (
-            <div className="p-6 h-full overflow-y-auto">
-              <VirtualPiano />
-            </div>
-          )}
-
-          {/* Minimized Piano Preview */}
-          {isMinimized && (
-            <div className="px-6 py-4 flex items-center justify-center h-full">
-              <div className="text-center">
-                <div className="flex gap-px mb-2 justify-center">
-                  {/* White keys */}
-                  {[...Array(14)].map((_, i) => (
-                    <div
-                      key={`white-${i}`}
-                      className="w-6 h-12 bg-white/90 border border-gray-300/50 rounded-b-md cursor-pointer hover:bg-white transition-colors duration-150"
-                      onClick={() => console.log(`White key ${i} clicked`)}
-                    />
-                  ))}
-                </div>
-                <div className="flex gap-px justify-center -mt-8 relative z-10">
-                  {/* Black keys */}
-                  {[1, 2, 4, 5, 6, 8, 9, 11, 12, 13].map((i) => (
-                    <div
-                      key={`black-${i}`}
-                      className={`w-4 h-8 bg-gray-800 rounded-b-md cursor-pointer hover:bg-gray-700 transition-colors duration-150 ${
-                        i === 3 || i === 7 || i === 10 ? "mr-6" : ""
-                      }`}
-                      style={{
-                        marginLeft:
-                          i === 1
-                            ? "12px"
-                            : i === 4 || i === 8 || i === 11
-                            ? "12px"
-                            : "0",
-                        marginRight:
-                          i === 2 || i === 6 || i === 9 || i === 13
-                            ? "12px"
-                            : "0",
-                      }}
-                      onClick={() => console.log(`Black key ${i} clicked`)}
-                    />
-                  ))}
-                </div>
-                <p className="text-sm text-[var(--neutral-gray)] mt-2">
-                  Click expand button to access full piano
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Bottom Bar - Always visible at bottom */}
-      <div className="h-16 flex items-center justify-between px-6 border-t border-white/10 flex-shrink-0">
+      {/* Bottom Bar - Always visible and fixed at bottom */}
+      <div className="h-16 flex items-center justify-between px-6 border-t border-white/10 flex-shrink-0 bg-white/5">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-[var(--accent-red)]/20 rounded-full flex items-center justify-center">
@@ -151,6 +91,51 @@ export default function CollapsiblePiano({
           </button>
         </div>
       </div>
+
+      {/* Expanded Content - Only rendered when not collapsed */}
+      {!isCollapsed && (
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-white/5">
+          {/* Piano Content */}
+          {!isMinimized && (
+            <div className="flex-1 p-6 overflow-y-auto">
+              <VirtualPiano />
+            </div>
+          )}
+
+          {/* Minimized Piano Preview */}
+          {isMinimized && (
+            <div className="flex-1 flex items-center justify-center p-4">
+              <div className="text-center">
+                <div className="flex gap-px mb-4 justify-center">
+                  {/* White keys */}
+                  {[...Array(21)].map((_, i) => (
+                    <div
+                      key={`white-${i}`}
+                      className="w-8 h-16 bg-white/90 border border-gray-300/50 rounded-b-md cursor-pointer hover:bg-white transition-colors duration-150"
+                    />
+                  ))}
+                </div>
+                <div className="flex gap-px justify-center -mt-12 relative z-10">
+                  {/* Black keys */}
+                  {[1, 2, 4, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 20].map((i) => (
+                    <div
+                      key={`black-${i}`}
+                      className="w-5 h-10 bg-gray-800 rounded-b-md cursor-pointer hover:bg-gray-700 transition-colors duration-150"
+                      style={{
+                        marginLeft: [3, 7, 10, 14, 17].includes(i) ? "16px" : "8px",
+                        marginRight: [2, 6, 9, 13, 16, 20].includes(i) ? "16px" : "0",
+                      }}
+                    />
+                  ))}
+                </div>
+                <p className="text-sm text-[var(--neutral-gray)] mt-4">
+                  Click the expand button (⬆️) to access the full piano interface
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

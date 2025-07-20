@@ -289,22 +289,13 @@ export default function PitchTuner() {
   };
 
   return (
-    <div
-      className={`
-      flex flex-col items-center gap-8 p-8 max-w-4xl mx-auto
-    `}
-    >
-      {/* Main Display */}
-      <div
-        className={`
-        text-center p-8 rounded-3xl w-full max-w-2xl
-        ${themeClasses.card}
-      `}
-      >
+    <div className="flex flex-col items-center gap-3 max-w-lg mx-auto">
+      {/* Compact Main Display */}
+      <div className={`text-center p-3 rounded-xl w-full ${themeClasses.card}`}>
         {/* Note Display */}
         <div
           className={`
-          text-8xl font-bold ${themeClasses.textDark} mb-4
+          text-3xl font-bold ${themeClasses.textDark} mb-2
           leading-none drop-shadow-lg
           ${note ? "animate-scale-pulse" : ""}
         `}
@@ -315,27 +306,22 @@ export default function PitchTuner() {
         {/* Frequency Display */}
         <div
           className={`
-          text-2xl ${themeClasses.textDark} opacity-80 mb-6
+          text-sm ${themeClasses.textDark} opacity-80 mb-3
           drop-shadow-sm font-mono
         `}
         >
           {frequency > 0 ? `${frequency} Hz` : "---"}
         </div>
 
-        {/* Cents Meter */}
-        <div className="relative w-full max-w-md mx-auto mb-6">
-          {/* Scale Background */}
-          <div className="relative h-16 bg-gray-200/20 rounded-full overflow-hidden">
+        {/* Compact Cents Meter */}
+        <div className="relative w-full max-w-xs mx-auto mb-3">
+          <div className="relative h-8 bg-gray-200/20 rounded-full overflow-hidden">
             {/* Scale Marks */}
-            <div className="absolute inset-0 flex items-center justify-between px-4">
-              {[-50, -25, 0, 25, 50].map((cent) => (
+            <div className="absolute inset-0 flex items-center justify-between px-2">
+              {[-50, 0, 50].map((cent) => (
                 <div key={cent} className="flex flex-col items-center">
-                  <div className="w-0.5 h-6 bg-white/40"></div>
-                  <span
-                    className={`
-                    text-xs ${themeClasses.textDark} mt-1 font-mono
-                  `}
-                  >
+                  <div className="w-0.5 h-3 bg-white/40"></div>
+                  <span className={`text-xs ${themeClasses.textDark} font-mono`}>
                     {cent}
                   </span>
                 </div>
@@ -346,16 +332,14 @@ export default function PitchTuner() {
             {note && (
               <div
                 className={`
-                  absolute top-1/2 w-4 h-8 rounded-full -translate-y-1/2
+                  absolute top-1/2 w-2 h-4 rounded-full -translate-y-1/2
                   ${getTuningBgColor()}
-                  shadow-lg border-2 border-white
+                  shadow-lg border border-white
                   transition-all duration-200 ease-out
                   ${getTuningStatus() === "in-tune" ? "animate-pulse-fast" : ""}
                 `}
                 style={{
-                  left: `calc(50% + ${
-                    Math.max(-50, Math.min(50, cents)) * 0.8
-                  }%)`,
+                  left: `calc(50% + ${Math.max(-50, Math.min(50, cents)) * 0.8}%)`,
                 }}
               />
             )}
@@ -363,13 +347,7 @@ export default function PitchTuner() {
         </div>
 
         {/* Cents Display */}
-        <div
-          className={`
-          text-xl font-semibold mb-4
-          ${getTuningColor()}
-          drop-shadow-sm
-        `}
-        >
+        <div className={`text-sm font-semibold ${getTuningColor()} drop-shadow-sm`}>
           {Math.abs(cents) < 5
             ? "🎯 In Tune!"
             : cents < -5
@@ -378,17 +356,11 @@ export default function PitchTuner() {
         </div>
       </div>
 
-      {/* Controls */}
-      <div
-        className={`
-        flex flex-col items-center gap-6 p-6 rounded-2xl w-full max-w-lg
-        ${themeClasses.card}
-      `}
-      >
+      {/* Compact Controls */}
+      <div className="flex items-center gap-3 w-full">
         {/* Main Control Button */}
         <button
           onClick={() => {
-            console.log("🔘 Button clicked, isListening:", isListening);
             if (isListening) {
               stopListening();
             } else {
@@ -396,88 +368,31 @@ export default function PitchTuner() {
             }
           }}
           className={`
-            py-4 px-8 rounded-2xl font-semibold text-white text-xl
-            transition-all duration-300 shadow-lg
+            py-2 px-4 rounded-lg font-medium text-white text-sm
+            transition-all duration-300 shadow-md
             ${
               isListening
-                ? "bg-red-500 hover:bg-red-600 hover:shadow-red-500/30 animate-pulse-slow"
-                : "bg-green-500 hover:bg-green-600 hover:shadow-green-500/30"
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-green-500 hover:bg-green-600"
             }
-            hover:scale-105 hover:shadow-xl
-            active:scale-95
-            w-full
+            hover:scale-105 active:scale-95 flex-1
           `}
         >
-          {isListening ? "⏸ Stop Tuning" : "🎤 Start Tuning"}
+          {isListening ? "⏸ Stop" : "🎤 Start"}
         </button>
 
-        {/* Volume Meter */}
-        <div className="w-full">
-          <label
-            className={`
-            block mb-2 ${themeClasses.textDark} font-medium
-          `}
-          >
-            Input Level:
-          </label>
-          <div className="relative w-full h-4 bg-gray-200/20 rounded-full overflow-hidden">
+        {/* Volume Indicator */}
+        <div className="flex items-center gap-2 flex-1">
+          <span className="text-xs text-[var(--neutral-gray)]">Level:</span>
+          <div className="flex-1 h-2 bg-gray-200/20 rounded-full overflow-hidden">
             <div
               className={`
                 h-full rounded-full transition-all duration-200
-                ${
-                  volume > 50
-                    ? "bg-red-400"
-                    : volume > 25
-                    ? "bg-yellow-400"
-                    : "bg-green-400"
-                }
+                ${volume > 50 ? "bg-red-400" : volume > 25 ? "bg-yellow-400" : "bg-green-400"}
               `}
               style={{ width: `${Math.min(100, volume * 3)}%` }}
             />
           </div>
-          <div
-            className={`
-            text-sm ${themeClasses.textNeutral} mt-1 text-center
-          `}
-          >
-            {volume > 1 ? "Good level" : "Speak or play closer to microphone"}
-          </div>
-        </div>
-      </div>
-
-      {/* Instructions */}
-      <div
-        className={`
-        ${themeClasses.card}
-        p-6 rounded-2xl w-full text-center
-      `}
-      >
-        <h3
-          className={`
-          ${themeClasses.textDark} text-lg font-semibold mb-3
-        `}
-        >
-          🎵 How to Use the Pitch Tuner
-        </h3>
-        <div
-          className={`
-          ${themeClasses.textDark} leading-relaxed space-y-2
-        `}
-        >
-          <p>
-            <strong>🎤 Grant microphone access</strong> when prompted
-          </p>
-          <p>
-            <strong>🎸 Play your instrument</strong> or sing a note clearly
-          </p>
-          <p>
-            <strong>🎯 Watch the indicator:</strong> Green = In tune, Blue =
-            Flat, Red = Sharp
-          </p>
-          <p>
-            <strong>📊 Check the meter:</strong> Adjust until the needle is
-            centered
-          </p>
         </div>
       </div>
     </div>

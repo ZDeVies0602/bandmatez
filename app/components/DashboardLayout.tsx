@@ -5,12 +5,11 @@ import { useThemeClasses } from "../hooks/useThemeClasses";
 import { SoundProvider } from "../contexts/SoundContext";
 import MusicLibrarySidebar from "./MusicLibrarySidebar";
 import FloatingMetronome from "./FloatingMetronome";
-import VirtualPiano from "./VirtualPiano";
+import CollapsiblePiano from "./CollapsiblePiano";
 import AccountCircle from "./AccountCircle";
 import ThemeMenu from "./ThemeMenu";
 import PitchTuner from "./PitchTuner";
 import PracticeTracker from "./PracticeTracker";
-import Link from "next/link";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -71,20 +70,25 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Body - Main Content */}
-        <div className="flex overflow-hidden min-h-0">
-          {/* Sidebar space */}
-          <div
-            className={`flex-shrink-0 transition-all duration-300 ${
-              sidebarCollapsed ? "w-16" : "w-80"
-            }`}
-          ></div>
+        <div className="flex flex-col overflow-hidden min-h-0 relative">
+          <div className="flex overflow-hidden min-h-0 flex-1">
+            {/* Sidebar space */}
+            <div
+              className={`flex-shrink-0 transition-all duration-300 ${
+                sidebarCollapsed ? "w-16" : "w-80"
+              }`}
+            ></div>
 
-          {/* Main Content - Simple scrollable container */}
-          <main className="flex-1 p-6 overflow-y-auto">
-            <div className="w-full max-w-6xl mx-auto space-y-6">
-              {/* Pitch Tuner, Piano, and Audio Visualizer in Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Compact Pitch Tuner Module */}
+            {/* Main Content - Adjusts height based on piano state */}
+            <main 
+              className="flex-1 p-6 overflow-hidden flex items-center justify-center"
+              style={{ 
+                paddingBottom: '80px',
+                transition: 'padding-bottom 300ms ease-in-out'
+              }}
+            >
+              <div className="w-full max-w-2xl">
+                {/* Pitch Tuner Module - Centered and compact */}
                 <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
                   <div className="text-center mb-4">
                     <h1 className="text-2xl font-bold text-[var(--text-dark)] mb-2">
@@ -97,53 +101,21 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   <PitchTuner />
                 </div>
 
-                {/* Virtual Piano Module */}
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
-                  <div className="text-center mb-4">
-                    <h1 className="text-2xl font-bold text-[var(--text-dark)] mb-2">
-                      🎹 Virtual Piano
-                    </h1>
-                    <p className="text-sm text-[var(--neutral-gray)]">
-                      Play with your mouse or keyboard
-                    </p>
-                  </div>
-                  <VirtualPiano />
-                </div>
-
-                {/* Audio Visualizer Module */}
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)] md:col-span-2 lg:col-span-1">
-                  <div className="text-center mb-4">
-                    <h1 className="text-2xl font-bold text-[var(--text-dark)] mb-2">
-                      🎨 Audio Visualizer
-                    </h1>
-                    <p className="text-sm text-[var(--neutral-gray)]">
-                      Create unique artwork from music
-                    </p>
-                  </div>
-                  <div className="text-center space-y-4">
-                    <div className="bg-gradient-to-r from-purple-500 to-pink-600 p-1 rounded-xl">
-                      <div className="bg-white/10 backdrop-blur-xl rounded-lg p-4">
-                        <div className="text-4xl mb-2">🎵</div>
-                        <p className="text-sm text-white/80">
-                          Transform music into visual art
-                        </p>
-                      </div>
-                    </div>
-                    <Link href="/audio-visualizer">
-                      <button className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        🎨 Open Visualizer
-                      </button>
-                    </Link>
-                    <p className="text-xs text-[var(--neutral-gray)] opacity-75">
-                      Generate colorful visuals from live audio
-                    </p>
-                  </div>
-                </div>
+                {/* Additional content if any */}
+                {children}
               </div>
+            </main>
+          </div>
 
-              {children}
-            </div>
-          </main>
+          {/* Bottom Collapsible Piano - Fixed at absolute bottom of viewport */}
+          <div 
+            className={`
+              fixed bottom-0 left-0 right-0 z-50
+              ${sidebarCollapsed ? "pl-16" : "pl-80"}
+            `}
+          >
+            <CollapsiblePiano sidebarCollapsed={sidebarCollapsed} />
+          </div>
         </div>
       </div>
     </SoundProvider>
