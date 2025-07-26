@@ -54,6 +54,7 @@ export interface Chord {
 
 export interface PianoKey {
   note: string;
+  flatNote?: string; // Alternative flat notation (e.g., F# vs Gb)
   frequency: number;
   isBlack: boolean;
   octave: number;

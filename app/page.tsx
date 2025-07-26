@@ -73,6 +73,17 @@ export default function LandingPage() {
               </p>
             </div>
           </Link>
+
+          <Link href="/music-notation" className="no-underline">
+            <div className="p-10 border-2 border-white/15 transition-all duration-300 rounded-3xl backdrop-blur-[10px] relative overflow-hidden bg-[rgba(255,165,0,0.1)] text-[color:var(--text-dark)] hover:-translate-y-3 hover:shadow-[0_20px_40px_-10px_rgba(49,8,31,0.3)] hover:border-white/25 before:content-[''] before:absolute before:inset-0 before:opacity-5 before:transition-opacity before:duration-300 before:bg-[linear-gradient(135deg,#FFA500,#FFD700)] hover:before:opacity-10">
+              <h3 className="font-['Bebas_Neue'] text-[2rem] m-0 mb-2 tracking-wider relative z-10">
+                Music Notation & Theory
+              </h3>
+              <p className="text-base leading-relaxed m-0 opacity-90 relative z-10">
+                Create chord progressions with real-time staff notation and Roman numeral analysis.
+              </p>
+            </div>
+          </Link>
         </section>
       </main>
     </div>

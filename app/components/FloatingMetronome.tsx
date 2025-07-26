@@ -26,6 +26,7 @@ export default function FloatingMetronome({
   const [currentBeat, setCurrentBeat] = useState(1);
   const [isExpanded, setIsExpanded] = useState(false);
   const [pendulumAngle, setPendulumAngle] = useState(0);
+  const [noteSubdivision, setNoteSubdivision] = useState<'whole' | 'quarter' | 'eighth' | 'sixteenth' | 'triplet'>('quarter');
 
   // Audio timing
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -92,16 +93,71 @@ export default function FloatingMetronome({
     if (!audioContextRef.current) return;
 
     const currentTime = audioContextRef.current.currentTime;
-    const quarterNote = 60.0 / tempo;
+    
+    // Calculate note duration based on subdivision
+    const getNoteDuration = () => {
+      const quarterNote = 60.0 / tempo;
+      switch (noteSubdivision) {
+        case 'whole':
+          return quarterNote * 4;
+        case 'quarter':
+          return quarterNote;
+        case 'eighth':
+          return quarterNote / 2;
+        case 'sixteenth':
+          return quarterNote / 4;
+        case 'triplet':
+          return quarterNote / 3;
+        default:
+          return quarterNote;
+      }
+    };
+
+    const noteDuration = getNoteDuration();
 
     while (nextNoteTimeRef.current < currentTime + 0.1) {
-      const isDownbeat = currentBeat === 1;
-      playSound(isDownbeat);
+      // Determine if this is an accent beat
+      let isAccent = false;
+      
+      if (noteSubdivision === 'quarter' || noteSubdivision === 'whole') {
+        isAccent = currentBeat === 1;
+      } else if (noteSubdivision === 'eighth') {
+        // Accent on downbeats (1, 3, 5, 7 for 4/4)
+        isAccent = currentBeat % 2 === 1;
+      } else if (noteSubdivision === 'sixteenth') {
+        // Accent on quarter note beats (1, 5, 9, 13 for 4/4)
+        isAccent = (currentBeat - 1) % 4 === 0;
+      } else if (noteSubdivision === 'triplet') {
+        // Accent on beat 1 of each triplet group
+        isAccent = (currentBeat - 1) % 3 === 0;
+      }
 
-      setCurrentBeat((prev) => (prev >= timeSignature.beats ? 1 : prev + 1));
-      nextNoteTimeRef.current += quarterNote;
+      playSound(isAccent);
+
+      // Update beat counter based on subdivision
+      const getMaxBeats = () => {
+        const baseBeats = timeSignature.beats;
+        switch (noteSubdivision) {
+          case 'whole':
+            return Math.max(1, baseBeats / 4);
+          case 'quarter':
+            return baseBeats;
+          case 'eighth':
+            return baseBeats * 2;
+          case 'sixteenth':
+            return baseBeats * 4;
+          case 'triplet':
+            return baseBeats * 3;
+          default:
+            return baseBeats;
+        }
+      };
+
+      const maxBeats = getMaxBeats();
+      setCurrentBeat((prev) => (prev >= maxBeats ? 1 : prev + 1));
+      nextNoteTimeRef.current += noteDuration;
     }
-  }, [tempo, currentBeat, timeSignature.beats, playSound]);
+  }, [tempo, currentBeat, timeSignature.beats, noteSubdivision, playSound]);
 
   // Start metronome
   const start = async () => {
@@ -149,7 +205,8 @@ export default function FloatingMetronome({
       const beatNumber = Math.floor(elapsed / beatDuration);
       const isEvenBeat = beatNumber % 2 === 0;
       const swingDirection = isEvenBeat ? 1 : -1;
-      const angle = Math.sin(beatProgress * Math.PI) * 15 * swingDirection;
+      // Increased swing angle from 15 to 35 degrees for more prominent animation
+      const angle = Math.sin(beatProgress * Math.PI) * 35 * swingDirection;
       setPendulumAngle(angle);
       animationId = requestAnimationFrame(animate);
     };
@@ -166,7 +223,7 @@ export default function FloatingMetronome({
     <div
       className={`
         transition-all duration-300 ease-in-out
-        ${isExpanded ? "w-96 h-auto" : "w-80 h-16"}
+        ${isExpanded ? "w-96 h-auto" : "w-96 h-20"}
         ${className}
       `}
     >
@@ -180,54 +237,80 @@ export default function FloatingMetronome({
         {/* Collapsed View */}
         {!isExpanded && (
           <div className="flex items-center justify-between">
-            {/* Mini Metronome Visual */}
-            <div className="flex items-center gap-4">
-              <div className="relative w-8 h-8">
-                <div className="absolute inset-0 bg-[var(--accent-red)]/20 rounded-full"></div>
-                <div
-                  className="absolute top-1 left-1/2 w-0.5 h-6 bg-[var(--accent-red)] origin-top transform -translate-x-1/2 transition-transform duration-100"
-                  style={{
-                    transform: `translateX(-50%) rotate(${pendulumAngle}deg)`,
-                  }}
-                >
-                  <div className="absolute bottom-0 w-2 h-2 bg-[var(--accent-red)] rounded-full -translate-x-1/2"></div>
+            {/* Simple Metronome Visual */}
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold text-[var(--text-dark)]">
+                    {tempo}
+                  </span>
+                  <span className="text-sm font-medium text-[var(--neutral-gray)]">
+                    BPM
+                  </span>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-[var(--text-dark)]">
-                  {tempo}
-                </span>
-                <span className="text-sm text-[var(--neutral-gray)]">BPM</span>
-              </div>
+                <div className="w-px h-8 bg-white/20"></div>
 
-              <div className="flex gap-1">
-                {Array.from({ length: timeSignature.beats }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`
-                      w-2 h-2 rounded-full transition-all duration-200
-                      ${
-                        currentBeat === i + 1
-                          ? "bg-[var(--accent-red)] scale-125"
-                          : "bg-white/30"
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-[var(--neutral-gray)]">
+                      {timeSignature.beats}/{timeSignature.noteValue}
+                    </span>
+                    <span className="text-xs text-[var(--accent-red)] font-medium">
+                      {noteSubdivision === 'whole' ? '𝅝' : 
+                       noteSubdivision === 'quarter' ? '♩' :
+                       noteSubdivision === 'eighth' ? '♫' :
+                       noteSubdivision === 'sixteenth' ? '♬' :
+                       noteSubdivision === 'triplet' ? '3' : '♩'}
+                    </span>
+                  </div>
+                  {/* Centered Beat Indicator Dots */}
+                  <div className="flex gap-2 justify-center">
+                    {Array.from({ length: (() => {
+                      const baseBeats = timeSignature.beats;
+                      switch (noteSubdivision) {
+                        case 'whole':
+                          return Math.max(1, baseBeats / 4);
+                        case 'quarter':
+                          return baseBeats;
+                        case 'eighth':
+                          return baseBeats * 2;
+                        case 'sixteenth':
+                          return Math.min(baseBeats * 4, 16); // Cap at 16 for visual clarity
+                        case 'triplet':
+                          return baseBeats * 3;
+                        default:
+                          return baseBeats;
                       }
-                    `}
-                  />
-                ))}
+                    })() }).map((_, i) => (
+                      <div
+                        key={i}
+                        className={`
+                          ${noteSubdivision === 'sixteenth' ? 'w-2 h-2' : 'w-3 h-3'} 
+                          rounded-full transition-all duration-150
+                          ${
+                            currentBeat === i + 1
+                              ? "bg-[var(--accent-red)] scale-150 shadow-lg shadow-[var(--accent-red)]/50"
+                              : "bg-white/40 scale-100"
+                          }
+                        `}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Controls */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <button
                 onClick={isPlaying ? stop : start}
                 className={`
-                  px-4 py-2 rounded-lg font-medium text-white transition-all duration-200
+                  px-5 py-2 rounded-xl font-medium text-white transition-all duration-200
                   ${
                     isPlaying
-                      ? "bg-red-500 hover:bg-red-600"
-                      : "bg-green-500 hover:bg-green-600"
+                      ? "bg-red-500 hover:bg-red-600 shadow-lg"
+                      : "bg-green-500 hover:bg-green-600 shadow-lg"
                   }
                   hover:scale-105 active:scale-95
                 `}
@@ -237,7 +320,7 @@ export default function FloatingMetronome({
 
               <button
                 onClick={() => setIsExpanded(true)}
-                className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-[var(--text-dark)] transition-all duration-200 hover:scale-105"
+                className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-[var(--text-dark)] transition-all duration-200 hover:scale-105"
               >
                 ⚙️
               </button>
@@ -250,105 +333,171 @@ export default function FloatingMetronome({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-[var(--text-dark)]">
-                Metronome
+                🎼 Metronome
               </h3>
               <button
                 onClick={() => setIsExpanded(false)}
-                className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-[var(--text-dark)] transition-all duration-200 hover:scale-105"
+                className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[var(--text-dark)] transition-all duration-200 hover:scale-105 text-sm"
               >
                 ✕
               </button>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              {/* Tempo Control */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[var(--text-dark)]">
-                  Tempo
-                </label>
-                <input
-                  type="range"
-                  min="30"
-                  max="300"
-                  value={tempo}
-                  onChange={(e) => setTempo(parseInt(e.target.value))}
-                  className="w-full h-2 rounded-full appearance-none bg-white/20 cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--accent-red)] [&::-webkit-slider-thumb]:cursor-pointer"
-                />
-                <div className="text-center text-sm text-[var(--neutral-gray)]">
-                  {tempo} BPM
+            {/* Large Visual Metronome */}
+            <div className="flex justify-center mb-4">
+              <div className="relative w-32 h-24 flex items-center justify-center">
+                {/* Placeholder for new metronome design */}
+                <div className="text-center text-[var(--neutral-gray)]">
+                  <div className="text-4xl mb-2">🎼</div>
+                  <p className="text-sm">Metronome Visual</p>
+                  <p className="text-xs opacity-70">Ready for new design</p>
                 </div>
-              </div>
-
-              {/* Time Signature */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[var(--text-dark)]">
-                  Time Signature
-                </label>
-                <select
-                  value={`${timeSignature.beats}/${timeSignature.noteValue}`}
-                  onChange={(e) => {
-                    const [beats, noteValue] = e.target.value
-                      .split("/")
-                      .map(Number);
-                    setTimeSignature({ beats, noteValue });
-                    setCurrentBeat(1);
-                  }}
-                  className="w-full p-2 bg-white/10 border border-white/20 rounded-lg text-[var(--text-dark)] focus:outline-none focus:ring-2 focus:ring-white/50"
-                >
-                  <option value="4/4">4/4</option>
-                  <option value="3/4">3/4</option>
-                  <option value="2/4">2/4</option>
-                  <option value="6/8">6/8</option>
-                </select>
-              </div>
-
-              {/* Controls */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[var(--text-dark)]">
-                  Control
-                </label>
-                <button
-                  onClick={isPlaying ? stop : start}
-                  className={`
-                    w-full py-2 px-4 rounded-lg font-medium text-white transition-all duration-200
-                    ${
-                      isPlaying
-                        ? "bg-red-500 hover:bg-red-600"
-                        : "bg-green-500 hover:bg-green-600"
-                    }
-                    hover:scale-105 active:scale-95
-                  `}
-                >
-                  {isPlaying ? "⏸ Stop" : "▶ Start"}
-                </button>
               </div>
             </div>
 
-            {/* Visual Metronome */}
-            <div className="flex justify-center">
-              <div className="relative w-20 h-20">
-                <div className="absolute inset-0 bg-[var(--accent-red)]/20 rounded-full"></div>
-                <div
-                  className="absolute top-2 left-1/2 w-1 h-16 bg-[var(--accent-red)] origin-top transform -translate-x-1/2 transition-transform duration-100"
-                  style={{
-                    transform: `translateX(-50%) rotate(${pendulumAngle}deg)`,
-                  }}
-                >
-                  <div className="absolute bottom-0 w-3 h-3 bg-[var(--accent-red)] rounded-full -translate-x-1/2"></div>
+            <div className="space-y-3">
+              {/* Top Row - Tempo and Time/Notes Controls */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Tempo Control */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-[var(--text-dark)]">
+                    Tempo
+                  </label>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setTempo(Math.max(30, tempo - 5))}
+                      className="w-6 h-6 rounded bg-white/10 hover:bg-white/20 text-[var(--text-dark)] text-xs flex items-center justify-center transition-all duration-200"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      min="30"
+                      max="300"
+                      value={tempo}
+                      onChange={(e) => setTempo(Math.min(300, Math.max(30, parseInt(e.target.value) || 30)))}
+                      className="flex-1 p-1 text-xs text-center bg-white/10 border border-white/20 rounded text-[var(--text-dark)] focus:outline-none focus:ring-1 focus:ring-white/50"
+                    />
+                    <button
+                      onClick={() => setTempo(Math.min(300, tempo + 5))}
+                      className="w-6 h-6 rounded bg-white/10 hover:bg-white/20 text-[var(--text-dark)] text-xs flex items-center justify-center transition-all duration-200"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <input
+                    type="range"
+                    min="30"
+                    max="300"
+                    value={tempo}
+                    onChange={(e) => setTempo(parseInt(e.target.value))}
+                    className="w-full h-1 rounded-full appearance-none bg-white/20 cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--accent-red)] [&::-webkit-slider-thumb]:cursor-pointer"
+                  />
+                </div>
+
+                {/* Time Signature & Note Subdivision */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-[var(--text-dark)]">
+                    Time & Notes
+                  </label>
+                  <div className="flex gap-1">
+                    <select
+                      value={`${timeSignature.beats}/${timeSignature.noteValue}`}
+                      onChange={(e) => {
+                        const [beats, noteValue] = e.target.value
+                          .split("/")
+                          .map(Number);
+                        setTimeSignature({ beats, noteValue });
+                        setCurrentBeat(1);
+                      }}
+                      className="flex-1 p-1 text-xs bg-white/10 border border-white/20 rounded text-[var(--text-dark)] focus:outline-none focus:ring-1 focus:ring-white/50"
+                    >
+                      <option value="4/4">4/4</option>
+                      <option value="3/4">3/4</option>
+                      <option value="2/4">2/4</option>
+                      <option value="6/8">6/8</option>
+                    </select>
+                    <select
+                      value={noteSubdivision}
+                      onChange={(e) => {
+                        setNoteSubdivision(e.target.value as 'whole' | 'quarter' | 'eighth' | 'sixteenth' | 'triplet');
+                        setCurrentBeat(1);
+                      }}
+                      className="flex-1 p-1 text-xs bg-white/10 border border-white/20 rounded text-[var(--text-dark)] focus:outline-none focus:ring-1 focus:ring-white/50"
+                    >
+                      <option value="whole">♩</option>
+                      <option value="quarter">♩</option>
+                      <option value="eighth">♫</option>
+                      <option value="sixteenth">♬</option>
+                      <option value="triplet">3</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Row - Full Width Controls */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-[var(--text-dark)]">
+                  Control
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={isPlaying ? stop : start}
+                    className={`
+                      flex-1 py-2 px-4 rounded text-sm font-medium text-white transition-all duration-200
+                      ${
+                        isPlaying
+                          ? "bg-red-500 hover:bg-red-600"
+                          : "bg-green-500 hover:bg-green-600"
+                      }
+                      hover:scale-105 active:scale-95
+                    `}
+                  >
+                    {isPlaying ? "⏸ Stop" : "▶ Start"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setTempo(120);
+                      setTimeSignature({ beats: 4, noteValue: 4 });
+                      setNoteSubdivision('quarter');
+                      setCurrentBeat(1);
+                      if (isPlaying) stop();
+                    }}
+                    className="px-3 py-2 rounded text-sm bg-white/10 hover:bg-white/20 text-[var(--text-dark)] transition-all duration-200"
+                  >
+                    Reset
+                  </button>
                 </div>
               </div>
             </div>
 
             {/* Beat Indicator */}
-            <div className="flex justify-center gap-2">
-              {Array.from({ length: timeSignature.beats }).map((_, i) => (
+            <div className="flex justify-center gap-1.5 pt-2">
+              {Array.from({ length: (() => {
+                const baseBeats = timeSignature.beats;
+                switch (noteSubdivision) {
+                  case 'whole':
+                    return Math.max(1, baseBeats / 4);
+                  case 'quarter':
+                    return baseBeats;
+                  case 'eighth':
+                    return baseBeats * 2;
+                  case 'sixteenth':
+                    return Math.min(baseBeats * 4, 16); // Cap at 16 for visual clarity
+                  case 'triplet':
+                    return baseBeats * 3;
+                  default:
+                    return baseBeats;
+                }
+              })() }).map((_, i) => (
                 <div
                   key={i}
                   className={`
-                    w-3 h-3 rounded-full transition-all duration-200
+                    ${noteSubdivision === 'sixteenth' ? 'w-2 h-2' : 'w-2.5 h-2.5'}
+                    rounded-full transition-all duration-200
                     ${
                       currentBeat === i + 1
-                        ? "bg-[var(--accent-red)] scale-125"
+                        ? "bg-[var(--accent-red)] scale-125 shadow-lg"
                         : "bg-white/30"
                     }
                   `}
@@ -361,3 +510,4 @@ export default function FloatingMetronome({
     </div>
   );
 }
+

@@ -18,6 +18,7 @@ export default function TabNavigation({
     { id: "tuner", label: "🎤 Pitch Tuner", icon: "🎤" },
     { id: "practice", label: "📊 Practice", icon: "📊" },
     { id: "library", label: "📚 Music Library", icon: "📚" },
+    { id: "notation", label: "🎼 Music Theory", icon: "🎼" },
   ];
 
   return (
