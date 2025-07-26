@@ -16,10 +16,62 @@ export default function VirtualPiano() {
   const [useSharps, setUseSharps] = useState(true); // Toggle between sharps and flats
   const [pressedKeys, setPressedKeys] = useState<Set<number>>(new Set()); // Track pressed keys
   const [hoveredKey, setHoveredKey] = useState<number | null>(null); // Track hovered key
+  const [pressedKeyboardKeys, setPressedKeyboardKeys] = useState<Set<string>>(new Set()); // Track keyboard keys
 
   // Piano configuration - Show all keys, no scrolling
   const totalKeys = 61; // C2 to C7 (5 octaves + C7)
   const visibleKeys = 61; // Show ALL keys at once
+
+  // Keyboard to piano key mapping - intuitive layout
+  const keyboardMapping: { [key: string]: number } = {
+    // QWERTYUIOP row - White keys from C3 to E4
+    'q': 12,  // C3
+    'w': 14,  // D3  
+    'e': 16,  // E3
+    'r': 17,  // F3
+    't': 19,  // G3
+    'y': 21,  // A3
+    'u': 23,  // B3
+    'i': 24,  // C4
+    'o': 26,  // D4
+    'p': 28,  // E4
+    
+    // Number row - Black keys for C3-E4 range
+    '2': 13,  // C#3
+    '3': 15,  // D#3
+    '5': 18,  // F#3
+    '6': 20,  // G#3
+    '7': 22,  // A#3
+    '9': 25,  // C#4
+    '0': 27,  // D#4
+    
+    // ZXCVBNM,./ row - White keys from F4 to A5
+    'z': 29,  // F4
+    'x': 31,  // G4
+    'c': 33,  // A4
+    'v': 35,  // B4
+    'b': 36,  // C5
+    'n': 38,  // D5
+    'm': 40,  // E5
+    ',': 41,  // F5
+    '.': 43,  // G5
+    '/': 45,  // A5
+    
+    // ASDFGHJKL;' row - Black keys for F4-A5 range
+    's': 30,  // F#4
+    'd': 32,  // G#4
+    'f': 34,  // A#4
+    'h': 37,  // C#5
+    'j': 39,  // D#5
+    'l': 42,  // F#5
+    ';': 44,  // G#5
+  };
+
+  // Reverse mapping for display purposes
+  const pianoToKeyboardMapping: { [key: number]: string } = {};
+  Object.entries(keyboardMapping).forEach(([keyboard, piano]) => {
+    pianoToKeyboardMapping[piano] = keyboard;
+  });
 
   // Note mappings with both sharp and flat names
   const noteNames = [
@@ -114,13 +166,29 @@ export default function VirtualPiano() {
 
   const allKeys = generateKeys();
 
-  // Get visible keys (all keys in our case)
-  const getVisibleKeys = (): PianoKey[] => {
-    return allKeys.slice(
-      0, // Start from the beginning
-      visibleKeys
-    );
-  };
+  // Stop note with smooth fadeout
+  const stopNote = useCallback((note: string, octave: number, keyIndex: number) => {
+    const noteKey = `${note}${octave}`;
+    const oscillator = activeOscillators.current.get(noteKey);
+
+    if (oscillator) {
+      try {
+        // Find the gain node (oscillator is connected to it)
+        const gainNode = oscillator.context.createGain();
+        fadeOut(oscillator, gainNode, 200);
+        activeOscillators.current.delete(noteKey);
+        
+        // Remove from pressed keys
+        setPressedKeys(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(keyIndex);
+          return newSet;
+        });
+      } catch (error) {
+        console.error("Error stopping note:", error);
+      }
+    }
+  }, [fadeOut]);
 
   // Play note with improved functionality
   const playNote = useCallback(
@@ -172,38 +240,74 @@ export default function VirtualPiano() {
         console.error("Error playing note:", error);
       }
     },
-    [audioContext, masterGain, pianoWaveType, useSharps]
+    [audioContext, masterGain, pianoWaveType, useSharps, stopNote]
   );
 
-  // Stop note with smooth fadeout
-  const stopNote = useCallback((note: string, octave: number, keyIndex: number) => {
-    const noteKey = `${note}${octave}`;
-    const oscillator = activeOscillators.current.get(noteKey);
-
-    if (oscillator) {
-      try {
-        // Find the gain node (oscillator is connected to it)
-        const gainNode = oscillator.context.createGain();
-        fadeOut(oscillator, gainNode, 200);
-        activeOscillators.current.delete(noteKey);
-        
-        // Remove from pressed keys
-        setPressedKeys(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(keyIndex);
-          return newSet;
-        });
-      } catch (error) {
-        console.error("Error stopping note:", error);
+  // Keyboard event handlers
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    // Prevent default behavior for piano keys
+    const key = event.key;
+    const keyIndex = keyboardMapping[key];
+    
+    if (keyIndex !== undefined && !pressedKeyboardKeys.has(key)) {
+      event.preventDefault();
+      setPressedKeyboardKeys(prev => new Set([...prev, key]));
+      
+      const pianoKey = allKeys[keyIndex];
+      if (pianoKey) {
+        playNote(pianoKey.note, pianoKey.octave, pianoKey.keyIndex, false);
       }
     }
-  }, [fadeOut]);
+  }, [pressedKeyboardKeys, allKeys, playNote]);
+
+  const handleKeyUp = useCallback((event: KeyboardEvent) => {
+    const key = event.key;
+    const keyIndex = keyboardMapping[key];
+    
+    if (keyIndex !== undefined && pressedKeyboardKeys.has(key)) {
+      event.preventDefault();
+      setPressedKeyboardKeys(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(key);
+        return newSet;
+      });
+      
+      const pianoKey = allKeys[keyIndex];
+      if (pianoKey) {
+        stopNote(pianoKey.note, pianoKey.octave, pianoKey.keyIndex);
+      }
+    }
+  }, [pressedKeyboardKeys, allKeys, stopNote]);
+
+  // Add keyboard event listeners
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [handleKeyDown, handleKeyUp]);
+
+  // Get visible keys (all keys in our case)
+  const getVisibleKeys = (): PianoKey[] => {
+    return allKeys.slice(
+      0, // Start from the beginning
+      visibleKeys
+    );
+  };
 
   // Render piano key with Pianosition-inspired professional styling
   const renderKey = (key: PianoKey, index: number) => {
     const isPressed = pressedKeys.has(key.keyIndex);
     const isHovered = hoveredKey === key.keyIndex;
+    const keyboardKey = pianoToKeyboardMapping[key.keyIndex];
+    const isKeyboardPressed = keyboardKey && pressedKeyboardKeys.has(keyboardKey);
     const displayNote = useSharps ? key.note : (key.flatNote || key.note);
+
+    // Key is considered "active" if pressed by mouse or keyboard
+    const isActive = isPressed || isKeyboardPressed;
 
     // Calculate positioning using percentage-based layout for full width
     const totalWhiteKeys = allKeys.filter(k => !k.isBlack).length; // 36 white keys
@@ -272,7 +376,7 @@ export default function VirtualPiano() {
               ? 'shadow-[0_6px_8px_-2px_rgba(0,0,0,0.75)]'
               : 'shadow-[0_4px_6px_0_rgba(0,0,0,0.5)]'
             }
-            ${isPressed ? 'shadow-[0_2px_4px_-1px_rgba(0,0,0,0.3)]' : ''}
+            ${isActive ? 'shadow-[0_2px_4px_-1px_rgba(0,0,0,0.3)]' : ''}
           `}
         />
 
@@ -282,12 +386,12 @@ export default function VirtualPiano() {
             absolute top-0 left-0 w-full h-full rounded-b-lg cursor-pointer
             transition-all duration-200 ease-out select-none 
             ${key.isBlack ? 'border border-gray-700 z-20' : 'border border-black z-20'}
-            ${!isPressed ? 'active:scale-y-[0.99]' : ''}
+            ${!isActive ? 'active:scale-y-[0.99]' : ''}
           `}
           style={{
             backgroundColor: key.isBlack 
-              ? (isPressed ? '#60a5fa' : (isHovered ? '#4b5563' : '#1f2937'))
-              : (isPressed ? 'rgb(136,221,255)' : (isHovered ? 'rgb(209,242,255)' : 'white'))
+              ? (isActive ? '#60a5fa' : (isHovered ? '#4b5563' : '#1f2937'))
+              : (isActive ? 'rgb(136,221,255)' : (isHovered ? 'rgb(209,242,255)' : 'white'))
           }}
           onMouseDown={(e) => {
             e.preventDefault();
@@ -316,15 +420,15 @@ export default function VirtualPiano() {
               absolute bottom-0 left-0 w-full text-center transition-all duration-200
               font-medium select-none pointer-events-none
               ${key.isBlack 
-                ? `pb-6 text-sm ${
-                    isPressed 
+                ? `pb-4 text-xs ${
+                    isActive 
                       ? 'text-black scale-y-95 font-semibold' 
                       : isHovered 
                         ? 'text-white font-semibold'
                         : 'text-white'
                   }`
-                : `pb-8 text-base ${
-                    isPressed 
+                : `pb-6 text-sm ${
+                    isActive 
                       ? 'text-black scale-y-95 font-semibold' 
                       : isHovered
                         ? 'text-[#0a0a0a]'
@@ -333,7 +437,16 @@ export default function VirtualPiano() {
               }
             `}
           >
-            {displayNote}
+            <div>{displayNote}</div>
+            {keyboardKey && (
+              <div className={`
+                text-xs opacity-60 font-normal mt-1
+                ${key.isBlack ? 'text-gray-300' : 'text-gray-600'}
+              `}>
+                {keyboardKey === ' ' ? 'Space' : 
+                 keyboardKey.length > 1 ? keyboardKey.substring(0, 3) : keyboardKey}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -396,8 +509,12 @@ export default function VirtualPiano() {
               🎹 Tall Professional Piano: C2 - C7 (61 Keys)
             </div>
             <div className="text-xs text-[var(--neutral-gray)] mt-1">
-              <span className="inline-block mr-2">• Left-click to play</span>
-              <span className="inline-block">• Right-click to toggle ♯/♭ notation</span>
+              <span className="inline-block mr-3">• Click or use keyboard to play</span>
+              <span className="inline-block mr-3">• Right-click to toggle ♯/♭ notation</span>
+              <span className="inline-block">• Keyboard shortcuts shown on keys</span>
+            </div>
+            <div className="text-xs text-[var(--neutral-gray)] mt-1 opacity-75">
+              Keyboard Layout: QWERTYUIOP (C3-E4), 23 567 90 (black keys), ZXCVBNM,./ (F4-A5), SDF HJ L; (black keys)
             </div>
           </div>
         </div>
