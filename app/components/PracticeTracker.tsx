@@ -160,18 +160,15 @@ export default function PracticeTracker() {
   };
 
   const navigateToPractice = () => {
-    window.location.href = "/practice";
+    window.location.href = "/";
   };
 
-  // Don't show tracker if no active session or if we're on the practice page
+  // Don't show tracker if no active session
   if (!showTracker || !isSessionActive || typeof window === "undefined") {
     return null;
   }
 
-  // Hide tracker on practice page
-  if (window.location.pathname === "/practice") {
-    return null;
-  }
+  // No need to hide tracker on practice page since it no longer exists
 
   return (
     <div

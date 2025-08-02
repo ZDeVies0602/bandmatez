@@ -20,12 +20,18 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const themeClasses = useThemeClasses();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
   // Temporarily commented out for clean dashboard
   // const [activeTab, setActiveTab] = useState("practice");
 
   // Handle sidebar state changes
   const handleSidebarToggle = (collapsed: boolean) => {
     setSidebarCollapsed(collapsed);
+  };
+
+  // Handle instructions dismiss
+  const handleDismissInstructions = () => {
+    setShowInstructions(false);
   };
 
   // Tab functions - kept for later restoration
@@ -139,9 +145,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               }`}
             ></div>
 
-            {/* Center: Floating Metronome */}
+            {/* Center: Empty space where metronome was */}
             <div className="flex-1 flex justify-center">
-              <FloatingMetronome />
+              {/* Metronome moved to floating component below */}
             </div>
 
             {/* Right: User controls */}
@@ -153,78 +159,80 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Body - Main Content */}
-        <div className="flex flex-col overflow-hidden min-h-0 relative">
-          <div className="flex overflow-hidden min-h-0 flex-1">
-            {/* Sidebar space */}
-            <div
-              className={`flex-shrink-0 transition-all duration-300 ${
-                sidebarCollapsed ? "w-16" : "w-80"
-              }`}
-            ></div>
-
-            {/* Main Content */}
-            <main className="flex-1 overflow-auto">
-              <div className="p-6">
-                {/* Tab Navigation - Temporarily Hidden */}
-                {/* <TabNavigation 
-                  activeTab={activeTab} 
-                  onTabChange={handleTabChange} 
-                /> */}
-
-                {/* Main Dashboard Content */}
-                <div className="flex items-center justify-center min-h-0">
+        <div
+          className={`relative transition-all duration-300 ${
+            sidebarCollapsed ? "ml-16" : "ml-80"
+          }`}
+        >
+          <div className="h-full overflow-hidden">
+            <main className="h-full overflow-y-auto">
+              <div className="min-h-full flex flex-col items-center justify-center p-6">
+                {!children && (
                   <div className="w-full max-w-4xl">
                     <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
                       <div className="text-center">
-                        <div className="text-6xl mb-4">🎵</div>
-                        <h1 className="text-3xl font-bold text-[var(--text-dark)] mb-4">
+                        <div className="flex justify-center mb-6">
+                          <div className="relative">
+                            <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-3xl flex items-center justify-center shadow-2xl">
+                              <span className="text-4xl">🎵</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                              <span className="text-lg">✨</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <h1 className="text-4xl font-bold text-[var(--text-dark)] mb-4">
                           Welcome to BandMateZ
                         </h1>
-                        <p className="text-lg text-[var(--neutral-gray)] mb-8">
+                        <p className="text-lg text-[var(--neutral-gray)] mb-8 max-w-2xl mx-auto leading-relaxed">
                           Your complete music practice companion
                         </p>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-                          <div className="p-6 bg-white/5 rounded-xl border border-white/10">
-                            <div className="text-3xl mb-3">🎼</div>
-                            <h3 className="font-semibold text-[var(--text-dark)] mb-2">Metronome</h3>
-                            <p className="text-sm text-[var(--neutral-gray)]">
-                              Advanced metronome with speed trainer in the header dropdown. Perfect for tempo practice and building consistency.
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                            <div className="text-2xl mb-2">🎼</div>
+                            <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Metronome</h3>
+                            <p className="text-xs text-[var(--neutral-gray)]">
+                              Advanced metronome with speed trainer as a floating component. Perfect for tempo practice and building consistency.
                             </p>
                           </div>
                           
-                          <div className="p-6 bg-white/5 rounded-xl border border-white/10">
-                            <div className="text-3xl mb-3">🎹</div>
-                            <h3 className="font-semibold text-[var(--text-dark)] mb-2">Piano</h3>
-                            <p className="text-sm text-[var(--neutral-gray)]">
+                          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                            <div className="text-2xl mb-2">🎹</div>
+                            <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Piano</h3>
+                            <p className="text-xs text-[var(--neutral-gray)]">
                               Interactive piano keyboard at the bottom of the screen. Play along with your practice sessions.
                             </p>
                           </div>
                           
-                          <div className="p-6 bg-white/5 rounded-xl border border-white/10">
-                            <div className="text-3xl mb-3">🎚️</div>
-                            <h3 className="font-semibold text-[var(--text-dark)] mb-2">Tuner</h3>
-                            <p className="text-sm text-[var(--neutral-gray)]">
-                              Precision pitch tuner available on the right side. Keep your instruments perfectly in tune.
+                          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                            <div className="text-2xl mb-2">🎚️</div>
+                            <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Tuner</h3>
+                            <p className="text-xs text-[var(--neutral-gray)]">
+                              Precision pitch tuner available as a floating component. Keep your instruments perfectly in tune.
                             </p>
                           </div>
                         </div>
 
-                        <div className="mt-8 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl border border-purple-500/20">
-                          <p className="text-sm text-[var(--neutral-gray)]">
-                            <strong className="text-[var(--text-dark)]">Quick Start:</strong> Use the metronome dropdown in the header, play the piano at the bottom, and access the tuner on the right side.
+                        <div className="mt-6 p-3 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl border border-purple-500/20">
+                          <p className="text-xs text-[var(--neutral-gray)]">
+                            <strong className="text-[var(--text-dark)]">Quick Start:</strong> Use the floating metronome and tuner components that you can drag around the screen, and play the piano at the bottom.
                           </p>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 {/* Additional content if any */}
                 {children}
               </div>
             </main>
           </div>
+
+          {/* Floating metronome */}
+          <FloatingMetronome />
 
           {/* Always visible collapsible tuner */}
           <PitchTuner />

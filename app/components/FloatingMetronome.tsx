@@ -47,6 +47,11 @@ export default function FloatingMetronome({
   const [volume, setVolume] = useState(70);
   const animationRef = useRef<number | null>(null);
 
+  // Drag and position state
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ x: 400, y: 20 }); // Default position, will be adjusted on mount
+
   // Speed trainer state
   const [isSpeedTrainerMode, setIsSpeedTrainerMode] = useState(false);
   const [speedTrainerEnabled, setSpeedTrainerEnabled] = useState(false);
@@ -351,20 +356,94 @@ export default function FloatingMetronome({
     };
   }, [isPlaying, tempo]);
 
+  // Set initial position relative to viewport center on mount
+  useEffect(() => {
+    const initialX = window.innerWidth / 2 - 200; // Position in header center area
+    setPosition({ x: initialX, y: 20 });
+  }, []);
+
+  // Drag event handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Only allow drag on left mouse button
+    if (e.button !== 0) return;
+    
+    setIsDragging(true);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging) return;
+    
+    e.preventDefault();
+    
+    // Use requestAnimationFrame for smoother updates
+    requestAnimationFrame(() => {
+      const newX = e.clientX - dragOffset.x;
+      const newY = e.clientY - dragOffset.y;
+      
+      // Keep within screen bounds
+      const widgetWidth = isExpanded ? 384 : 384; // w-96 = 384px
+      const widgetHeight = isExpanded ? 300 : 80; // Approximate heights
+      const maxX = window.innerWidth - widgetWidth;
+      const maxY = window.innerHeight - widgetHeight;
+      
+      setPosition({
+        x: Math.max(0, Math.min(newX, maxX)),
+        y: Math.max(0, Math.min(newY, maxY))
+      });
+    });
+  }, [isDragging, dragOffset, isExpanded]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // Add global mouse event listeners for dragging
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.body.style.userSelect = '';
+      };
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
   return (
     <div
       className={`
-        transition-all duration-300 ease-in-out
+        fixed z-50 ease-in-out
         ${isExpanded ? "w-96 h-auto" : "w-96 h-20"}
+        ${isDragging ? "" : "transition-all duration-300"}
         ${className}
       `}
+      style={{ 
+        left: `${position.x}px`, 
+        top: `${position.y}px`,
+        cursor: isDragging ? 'grabbing' : 'default',
+        willChange: isDragging ? 'transform' : 'auto'
+      }}
     >
       <div
         className={`
           bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl
-          shadow-[0_8px_32px_rgba(0,0,0,0.1)] overflow-hidden
+          shadow-[0_8px_32px_rgba(0,0,0,0.1)] overflow-hidden cursor-grab
           ${isExpanded ? "p-6" : "p-4"}
+          ${isDragging ? 'scale-105 shadow-[0_12px_40px_rgba(0,0,0,0.3)] cursor-grabbing' : ''}
+          ${isDragging ? "" : "transition-all duration-200"}
+          hover:bg-white/15
         `}
+        onMouseDown={handleMouseDown}
       >
         {/* Collapsed View */}
         {!isExpanded && (
@@ -417,7 +496,10 @@ export default function FloatingMetronome({
             {/* Controls */}
             <div className="flex items-center gap-3">
               <button
-                onClick={isPlaying ? stop : start}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent drag when clicking play/stop
+                  isPlaying ? stop() : start();
+                }}
                 className={`
                   px-5 py-2 rounded-xl font-medium text-white transition-all duration-200
                   ${
@@ -432,11 +514,26 @@ export default function FloatingMetronome({
               </button>
 
               <button
-                onClick={() => setIsExpanded(true)}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent drag when clicking expand
+                  setIsExpanded(true);
+                }}
                 className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-[var(--text-dark)] transition-all duration-200 hover:scale-105"
               >
                 ⚙️
               </button>
+              
+              {/* Drag indicator dots */}
+              <div className="flex flex-col gap-1 opacity-50 ml-2">
+                <div className="flex gap-1">
+                  <div className="w-1 h-1 bg-white rounded-full"></div>
+                  <div className="w-1 h-1 bg-white rounded-full"></div>
+                </div>
+                <div className="flex gap-1">
+                  <div className="w-1 h-1 bg-white rounded-full"></div>
+                  <div className="w-1 h-1 bg-white rounded-full"></div>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -450,7 +547,8 @@ export default function FloatingMetronome({
               </h3>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent drag when switching modes
                     setIsSpeedTrainerMode(!isSpeedTrainerMode);
                     if (speedTrainerEnabled) stopSpeedTraining();
                   }}
@@ -463,7 +561,10 @@ export default function FloatingMetronome({
                   {isSpeedTrainerMode ? "🎼" : "🚀"}
                 </button>
                 <button
-                  onClick={() => setIsExpanded(false)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent drag when collapsing
+                    setIsExpanded(false);
+                  }}
                   className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[var(--text-dark)] transition-all duration-200 hover:scale-105 text-sm"
                 >
                   ✕
@@ -556,7 +657,10 @@ export default function FloatingMetronome({
                       </label>
                       <div className="flex items-center gap-1">
                         <button
-                          onClick={() => handleTempoChange(tempo - 5)}
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent drag when adjusting tempo
+                            handleTempoChange(tempo - 5);
+                          }}
                           className="w-6 h-6 rounded bg-white/10 hover:bg-white/20 text-[var(--text-dark)] text-xs flex items-center justify-center transition-all duration-200"
                         >
                           −
@@ -566,11 +670,18 @@ export default function FloatingMetronome({
                           min="30"
                           max="300"
                           value={tempo}
-                          onChange={(e) => handleTempoChange(parseInt(e.target.value) || 30)}
+                          onChange={(e) => {
+                            e.stopPropagation(); // Prevent drag when typing tempo
+                            handleTempoChange(parseInt(e.target.value) || 30);
+                          }}
+                          onFocus={(e) => e.stopPropagation()} // Prevent drag when focusing
                           className="flex-1 p-1 text-xs text-center bg-white/10 border border-white/20 rounded text-[var(--text-dark)] focus:outline-none focus:ring-1 focus:ring-white/50"
                         />
                         <button
-                          onClick={() => handleTempoChange(tempo + 5)}
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent drag when adjusting tempo
+                            handleTempoChange(tempo + 5);
+                          }}
                           className="w-6 h-6 rounded bg-white/10 hover:bg-white/20 text-[var(--text-dark)] text-xs flex items-center justify-center transition-all duration-200"
                         >
                           +
@@ -734,7 +845,10 @@ export default function FloatingMetronome({
                   {isSpeedTrainerMode ? (
                     <>
                       <button
-                        onClick={() => speedTrainerEnabled ? stopSpeedTraining() : startSpeedTraining()}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent drag when controlling speed trainer
+                          speedTrainerEnabled ? stopSpeedTraining() : startSpeedTraining();
+                        }}
                         className={`flex-1 py-2 px-4 rounded text-sm font-medium text-white transition-all duration-200 ${
                           speedTrainerEnabled 
                             ? 'bg-red-500 hover:bg-red-600' 
@@ -744,7 +858,10 @@ export default function FloatingMetronome({
                         {speedTrainerEnabled ? '⏹ Stop Training' : '🚀 Start Training'}
                       </button>
                       <button
-                        onClick={isPlaying ? stop : start}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent drag when controlling playback
+                          isPlaying ? stop() : start();
+                        }}
                         className={`px-4 py-2 rounded text-sm font-medium text-white transition-all duration-200 ${
                           isPlaying
                             ? "bg-red-500 hover:bg-red-600"
@@ -757,7 +874,10 @@ export default function FloatingMetronome({
                   ) : (
                     <>
                       <button
-                        onClick={isPlaying ? stop : start}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent drag when controlling playback
+                          isPlaying ? stop() : start();
+                        }}
                         className={`flex-1 py-2 px-4 rounded text-sm font-medium text-white transition-all duration-200 ${
                           isPlaying
                             ? "bg-red-500 hover:bg-red-600"
@@ -767,13 +887,17 @@ export default function FloatingMetronome({
                         {isPlaying ? "⏸ Stop" : "▶ Start"}
                       </button>
                       <button
-                        onClick={processTapTempo}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent drag when using tap tempo
+                          processTapTempo();
+                        }}
                         className="px-3 py-2 rounded text-sm bg-blue-500 hover:bg-blue-600 text-white transition-all duration-200"
                       >
                         🥁
                       </button>
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent drag when resetting
                           handleTempoChange(120);
                           setTimeSignature({ beats: 4, noteValue: 4 });
                           setCurrentBeat(1);

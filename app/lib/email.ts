@@ -261,7 +261,7 @@ export class EmailService {
             
             <p>Keep up the fantastic work and continue your musical journey!</p>
             
-            <a href="${getBaseUrl()}/practice" class="cta">
+            <a href="${getBaseUrl()}" class="cta">
               Continue Your Journey 🎵
             </a>
             
@@ -333,7 +333,7 @@ export class EmailService {
             
             <p>Keep up the excellent work! Consistency is the key to musical mastery.</p>
             
-            <a href="${getBaseUrl()}/practice" class="cta">
+            <a href="${getBaseUrl()}" class="cta">
               Plan Next Week 🎵
             </a>
             

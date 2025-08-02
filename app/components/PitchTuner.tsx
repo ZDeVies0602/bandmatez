@@ -14,12 +14,12 @@ export default function PitchTuner() {
   const [isNearPitch, setIsNearPitch] = useState(false);
   const [isCalibrationMode, setIsCalibrationMode] = useState(false);
   const [calibrationResults, setCalibrationResults] = useState<Array<{target: number, detected: number, note: string}>>([]);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true); // Changed from false to true
   
   // Drag and position state
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [position, setPosition] = useState({ x: 20, y: 20 }); // Default position
+  const [position, setPosition] = useState({ x: 600, y: 20 }); // Default position, will be adjusted on mount
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -36,6 +36,12 @@ export default function PitchTuner() {
   useEffect(() => {
     isListeningRef.current = isListening;
   }, [isListening]);
+
+  // Set initial position relative to viewport center on mount
+  useEffect(() => {
+    const initialX = window.innerWidth / 2 + 200; // Position to the right of metronome
+    setPosition({ x: initialX, y: 20 });
+  }, []);
 
   // Frequency smoothing function to reduce jitter
   const smoothFrequency = (newFrequency: number) => {

@@ -29,6 +29,7 @@ export default function MusicNotationDictation() {
   const { audioContext, masterGain, masterVolume, setMasterVolume } = useAudioManager();
   const { pianoWaveType } = useSound();
   const themeClasses = useThemeClasses();
+  const [showInstructions, setShowInstructions] = useState(true);
 
   // Music theory state
   const [bars, setBars] = useState<Array<Note[]>>(new Array<Note[]>(8).fill([]));
@@ -516,16 +517,36 @@ export default function MusicNotationDictation() {
         )}
 
         {/* Instructions */}
-        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg p-4 mb-6">
-          <h3 className="font-semibold mb-2">Instructions:</h3>
-          <div className="text-sm space-y-1">
-            <p><strong>1.</strong> Click "Key Selection" and choose a key on the piano to set the tonal center</p>
-            <p><strong>2.</strong> Switch to "Note Entry" mode and click piano keys to add notes to the current chord</p>
-            <p><strong>3.</strong> Right-click keys to remove notes from the staff</p>
-            <p><strong>4.</strong> Use "Prev/Next Chord" to navigate between the 8 available bars</p>
-            <p><strong>5.</strong> View real-time chord symbols and Roman numeral analysis above and below the staff</p>
+        {showInstructions && (
+          <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg p-4 mb-6 relative">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="font-semibold mb-2">Instructions:</h3>
+                <div className="text-sm space-y-1">
+                  <p><strong>1.</strong> Click "Key Selection" and choose a key on the piano to set the tonal center</p>
+                  <p><strong>2.</strong> Switch to "Note Entry" mode and click piano keys to add notes to the current chord</p>
+                  <p><strong>3.</strong> Right-click keys to remove notes from the staff</p>
+                  <p><strong>4.</strong> Use "Prev/Next Chord" to navigate between the 8 available bars</p>
+                  <p><strong>5.</strong> View real-time chord symbols and Roman numeral analysis above and below the staff</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowInstructions(false)}
+                className="ml-4 w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all duration-200 group flex-shrink-0"
+                title="Hide instructions"
+              >
+                <svg 
+                  className="w-3 h-3 text-white/70 group-hover:text-white" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Piano Keyboard */}
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg p-4">
