@@ -115,7 +115,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <SoundProvider>
-      <div className="h-screen bg-transparent overflow-hidden grid grid-rows-[auto_1fr]">
+      <div className="h-screen bg-transparent grid grid-rows-[auto_1fr]">
         {/* Background Shapes */}
         <div className="dashboard-background fixed inset-0 -z-10">
           <div className="shape shape-1"></div>
@@ -135,8 +135,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <MusicLibrarySidebar onToggle={handleSidebarToggle} />
         </div>
 
-        {/* Header */}
-        <header className="bg-transparent z-40">
+        {/* Header - Remove overflow restrictions to prevent menu clipping */}
+        <header className="bg-transparent z-40 relative">
           <div className="flex items-center justify-between p-4">
             {/* Left: Sidebar space */}
             <div
@@ -150,21 +150,21 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               {/* Metronome moved to floating component below */}
             </div>
 
-            {/* Right: User controls */}
-            <div className="flex items-center gap-3">
+            {/* Right: User controls - Ensure dropdowns aren't clipped */}
+            <div className="flex items-center gap-3 relative z-50">
               <AccountCircle />
               <ThemeMenu />
             </div>
           </div>
         </header>
 
-        {/* Body - Main Content */}
+        {/* Body - Main Content with proper overflow handling */}
         <div
-          className={`relative transition-all duration-300 ${
+          className={`relative transition-all duration-300 overflow-hidden ${
             sidebarCollapsed ? "ml-16" : "ml-80"
           }`}
         >
-          <div className="h-full overflow-hidden">
+          <div className="h-full">
             <main className="h-full overflow-y-auto">
               <div className="min-h-full flex flex-col items-center justify-center p-6">
                 {!children && (
