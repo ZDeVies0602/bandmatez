@@ -12,6 +12,7 @@ import TabNavigation from "./TabNavigation";
 import PitchTuner from "./PitchTuner";
 import PracticeTracker from "./PracticeTracker";
 import MusicNotationDictation from "./MusicNotationDictation";
+import Metronome from "./Metronome";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -20,7 +21,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const themeClasses = useThemeClasses();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState("tuner");
+  const [activeTab, setActiveTab] = useState("metronome");
 
   // Handle sidebar state changes
   const handleSidebarToggle = (collapsed: boolean) => {
@@ -35,56 +36,44 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   // Render content based on active tab
   const renderTabContent = () => {
     switch (activeTab) {
-      case "tuner":
-        return (
-          <div className="w-full max-w-2xl">
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
-              <div className="text-center mb-4">
-                <h1 className="text-2xl font-bold text-[var(--text-dark)] mb-2">
-                  🎤 Pitch Tuner
-                </h1>
-                <p className="text-sm text-[var(--neutral-gray)]">
-                  Professional-grade tuning with real-time pitch detection
-                </p>
-              </div>
-              <PitchTuner />
-            </div>
-          </div>
-        );
+      case "metronome":
+        return <Metronome />;
       case "practice":
         return (
           <div className="w-full max-w-4xl">
             <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
               <div className="text-center mb-4">
                 <h1 className="text-2xl font-bold text-[var(--text-dark)] mb-2">
-                  📊 Practice Tracker
+                  📊 Practice Dashboard
                 </h1>
                 <p className="text-sm text-[var(--neutral-gray)]">
-                  Track your practice sessions and progress
-                </p>
-              </div>
-              <PracticeTracker />
-            </div>
-          </div>
-        );
-      case "library":
-        return (
-          <div className="w-full max-w-4xl">
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
-              <div className="text-center mb-4">
-                <h1 className="text-2xl font-bold text-[var(--text-dark)] mb-2">
-                  📚 Music Library
-                </h1>
-                <p className="text-sm text-[var(--neutral-gray)]">
-                  Manage your music collection and playlists
+                  Track your progress and practice sessions
                 </p>
               </div>
               <div className="text-center text-[var(--neutral-gray)] py-8">
-                <p>Music library features coming soon...</p>
+                <p>Practice features coming soon...</p>
               </div>
             </div>
           </div>
         );
+      // case "library":
+      //   return (
+      //     <div className="w-full max-w-4xl">
+      //       <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
+      //         <div className="text-center mb-4">
+      //           <h1 className="text-2xl font-bold text-[var(--text-dark)] mb-2">
+      //             📚 Music Library
+      //           </h1>
+      //           <p className="text-sm text-[var(--neutral-gray)]">
+      //             Manage your music collection and playlists
+      //           </p>
+      //         </div>
+      //         <div className="text-center text-[var(--neutral-gray)] py-8">
+      //           <p>Music library features coming soon...</p>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   ); // Temporarily hidden
       case "notation":
         return <MusicNotationDictation />;
       default:
@@ -167,12 +156,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </main>
           </div>
 
-          {/* Bottom Collapsible Piano - Only show for certain tabs */}
-          {(activeTab === "tuner" || activeTab === "practice" || activeTab === "library") && (
-            <div className="fixed bottom-0 left-0 right-0 z-50">
-              <CollapsiblePiano sidebarCollapsed={sidebarCollapsed} />
-            </div>
-          )}
+          {/* Always visible collapsible tuner */}
+          <PitchTuner />
+
+          {/* Bottom Collapsible Piano - Always show now */}
+          <div className="fixed bottom-0 left-0 right-0 z-50">
+            <CollapsiblePiano sidebarCollapsed={sidebarCollapsed} />
+          </div>
         </div>
       </div>
     </SoundProvider>

@@ -15,9 +15,9 @@ export default function TabNavigation({
   const themeClasses = useThemeClasses();
 
   const tabs = [
-    { id: "tuner", label: "🎤 Pitch Tuner", icon: "🎤" },
+    { id: "metronome", label: "🥁 Metronome", icon: "🥁" },
     { id: "practice", label: "📊 Practice", icon: "📊" },
-    { id: "library", label: "📚 Music Library", icon: "📚" },
+    // { id: "library", label: "📚 Music Library", icon: "📚" }, // Temporarily hidden
     { id: "notation", label: "🎼 Music Theory", icon: "🎼" },
   ];
 

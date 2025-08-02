@@ -56,38 +56,14 @@ export default function CollapsiblePiano({
 
       {/* Collapsed Bottom Bar - Only visible when collapsed */}
       {isCollapsed && (
-        <div className="h-16 flex items-center justify-between border-t border-white/10 flex-shrink-0 bg-white/5">
-          <div className="flex items-center gap-4 pl-2">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[var(--accent-red)]/20 rounded-full flex items-center justify-center">
-                <span className="text-[var(--text-dark)] font-bold text-lg">
-                  🎹
-                </span>
-              </div>
-              <span className="text-[var(--text-dark)] font-semibold">
-                Virtual Piano
-              </span>
-            </div>
-
-            {/* Mini Piano Keys Preview - only show when collapsed */}
-            <div className="flex gap-px">
-              {[...Array(7)].map((_, i) => (
-                <div
-                  key={i}
-                  className="w-3 h-8 bg-white/80 border border-gray-300/50 rounded-b-sm"
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 pr-2">
-            <button
-              onClick={handleToggleCollapse}
-              className="px-6 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 active:scale-95 bg-[var(--accent-red)] hover:bg-[var(--accent-red)]/80 text-white"
-            >
-              Open Piano
-            </button>
-          </div>
+        <div className="h-16 flex items-center justify-center border-t border-white/10 flex-shrink-0 bg-white/5">
+          <button
+            onClick={handleToggleCollapse}
+            className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-[var(--text-dark)] transition-all duration-200 hover:scale-110 flex items-center justify-center"
+            title="Open Piano"
+          >
+            <span className="text-xl">↑</span>
+          </button>
         </div>
       )}
     </div>

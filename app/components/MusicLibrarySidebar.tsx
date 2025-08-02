@@ -65,7 +65,7 @@ export default function MusicLibrarySidebar({
 }: MusicLibrarySidebarProps) {
   const themeClasses = useThemeClasses();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState<'library' | 'practice'>('library');
+  const [activeTab, setActiveTab] = useState<'library' | 'practice'>('practice'); // Changed default to practice
   
   // Practice Session State
   const [supabase] = useState(() => createClient());
@@ -304,7 +304,7 @@ export default function MusicLibrarySidebar({
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           {!isCollapsed && (
             <h2 className="text-xl font-semibold text-[var(--text-dark)] tracking-wide">
-              {activeTab === 'library' ? 'Music Library' : 'Practice Log'}
+              Practice Log
             </h2>
           )}
           <button
@@ -314,16 +314,16 @@ export default function MusicLibrarySidebar({
               text-[var(--text-dark)] hover:scale-105
               ${isCollapsed ? "mx-auto" : ""}
             `}
-            title={isCollapsed ? "Expand Library" : "Collapse Library"}
+            title={isCollapsed ? "Expand Practice" : "Collapse Practice"}
           >
             {isCollapsed ? "→" : "←"}
           </button>
         </div>
 
-        {/* Tab Navigation */}
+        {/* Tab Navigation - Library tab temporarily hidden */}
         {!isCollapsed && (
           <div className="flex border-b border-white/10">
-            <button
+            {/* <button
               onClick={() => setActiveTab('library')}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 ${
                 activeTab === 'library'
@@ -332,7 +332,7 @@ export default function MusicLibrarySidebar({
               }`}
             >
               📚 Library
-            </button>
+            </button> */}
             <button
               onClick={() => setActiveTab('practice')}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 ${
@@ -346,59 +346,10 @@ export default function MusicLibrarySidebar({
           </div>
         )}
 
-        {/* Library Tab Content */}
-        {!isCollapsed && activeTab === 'library' && (
-          <>
-            {/* Search Bar */}
-            <div className="p-4 border-b border-white/10">
-              <input
-                type="text"
-                placeholder="Search music pieces..."
-                className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-[var(--text-dark)] placeholder-[var(--neutral-gray)] focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/30 transition-all duration-200"
-              />
-            </div>
-
-            {/* Music Pieces List */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {musicPieces.map((piece) => (
-                <div
-                  key={piece.id}
-                  className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 hover:bg-white/15 transition-all duration-200 cursor-pointer group"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-[var(--text-dark)] group-hover:text-[var(--accent-red)] transition-colors">
-                        {piece.name}
-                      </h3>
-                      <p className="text-sm text-[var(--neutral-gray)] mb-2">
-                        {piece.artist}
-                      </p>
-                      <div className="flex items-center gap-4 text-xs text-[var(--neutral-gray)]">
-                        <span>Key: {piece.key}</span>
-                        <span>{piece.tempo}</span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xs text-[var(--neutral-gray)]">
-                        {piece.duration}
-                      </div>
-                      <div className="text-xs text-[var(--neutral-gray)] mt-1">
-                        Last: {piece.lastPlayed?.toLocaleDateString()}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Add New Piece Button */}
-            <div className="p-4 border-t border-white/10">
-              <button className="w-full px-4 py-3 bg-[var(--accent-red)] hover:bg-[var(--accent-red)]/80 text-white font-medium rounded-lg transition-all duration-200 hover:scale-105 active:scale-95">
-                + Add New Piece
-              </button>
-            </div>
-          </>
-        )}
+        {/* Library Tab Content - Temporarily hidden */}
+        {/* {!isCollapsed && activeTab === 'library' && (
+          // Library content would go here
+        )} */}
 
         {/* Practice Tab Content */}
         {!isCollapsed && activeTab === 'practice' && (
@@ -481,10 +432,10 @@ export default function MusicLibrarySidebar({
           </>
         )}
 
-        {/* Collapsed State - Show Icons Only */}
+        {/* Collapsed State - Show Icons Only, Library temporarily hidden */}
         {isCollapsed && (
           <div className="p-4 space-y-6">
-            <button
+            {/* <button
               onClick={() => setActiveTab('library')}
               className={`w-full text-center transition-all duration-200 ${
                 activeTab === 'library' ? 'text-[var(--accent-red)]' : 'text-[var(--neutral-gray)]'
@@ -492,7 +443,7 @@ export default function MusicLibrarySidebar({
             >
               <div className="text-2xl mb-1">📚</div>
               <div className="text-xs">Library</div>
-            </button>
+            </button> */}
             
             <button
               onClick={() => setActiveTab('practice')}
