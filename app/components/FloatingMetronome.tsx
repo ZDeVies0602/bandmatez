@@ -473,57 +473,50 @@ export default function FloatingMetronome({
 
             {/* Compact Metronome Visual */}
             <div className="flex justify-center mb-4">
-              <div className="relative w-24 h-20 flex justify-center items-start">
-                {/* Metronome Body - Using Same Classes as Original */}
-                <div className={`
-                  w-20 h-16 rounded-t-2xl rounded-b-lg
-                  ${themeClasses.metronomeBody}
-                  border-2 border-[var(--shape-color-1)]/80
-                  shadow-lg relative overflow-hidden
-                `}>
-                  {/* Center Line */}
-                  <div className="absolute top-1/2 left-1/2 w-0.5 h-8 bg-white/20 -translate-x-1/2 -translate-y-1/2"></div>
+              <div className="relative">
+                <svg width="60" height="70" viewBox="0 0 60 70" className="overflow-visible">
+                  {/* Base */}
+                  <rect x="10" y="65" width="40" height="4" fill="#374151" stroke="#1f2937" strokeWidth="0.5"/>
+                  
+                  {/* Triangle Body */}
+                  <polygon 
+                    points="30,10 15,65 45,65" 
+                    fill="#4b5563" 
+                    stroke="#374151" 
+                    strokeWidth="1"
+                  />
+                  
+                  {/* Pendulum Group - rotates around the apex (30,10) */}
+                  <g 
+                    transform={`rotate(${pendulumAngle}, 30, 10)`}
+                    style={{
+                      transformOrigin: '30px 10px',
+                      transition: 'transform 100ms ease-out'
+                    }}
+                  >
+                    {/* Pendulum Rod - Made Thicker */}
+                    <line x1="30" y1="10" x2="30" y2="45" stroke="#1f2937" strokeWidth="2"/>
+                    
+                    {/* Pendulum Weight - Made Bigger */}
+                    <circle cx="30" cy="32" r="6" fill="#1f2937" stroke="#374151" strokeWidth="1"/>
+                    <circle cx="30" cy="32" r="4" fill="#374151"/>
+                    <circle cx="30" cy="32" r="2" fill="#4b5563"/>
+                  </g>
                   
                   {/* Beat Indicators */}
-                  <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex gap-1">
-                    {Array.from({ length: timeSignature.beats }, (_, i) => (
-                      <div
+                  <g transform="translate(30, 55)">
+                    {Array.from({ length: Math.min(timeSignature.beats, 4) }, (_, i) => (
+                      <circle 
                         key={i}
-                        className={`w-2 h-2 rounded-full border transition-all duration-200 ${
-                          currentBeat === i + 1
-                            ? 'bg-yellow-400 border-yellow-300 shadow-lg'
-                            : 'bg-white/10 border-white/30'
-                        }`}
+                        cx={-6 + i * 4} 
+                        cy="0" 
+                        r="1.5"
+                        fill={currentBeat === i + 1 ? '#fbbf24' : '#6b7280'}
+                        className="transition-all duration-200"
                       />
                     ))}
-                  </div>
-
-                  {/* Decorative Elements */}
-                  <div className="absolute top-8 left-1/2 w-8 h-1 bg-white/10 rounded-full -translate-x-1/2"></div>
-                  <div className="absolute bottom-2 left-1/2 w-6 h-6 bg-white/5 rounded-full -translate-x-1/2"></div>
-                </div>
-
-                {/* Pendulum - Using Same Classes as Original */}
-                <div
-                  className={`
-                    absolute top-2 left-1/2 w-0.5 h-12 origin-top
-                    ${themeClasses.metronomePendulum}
-                    transition-transform duration-100 ease-out
-                    shadow-lg
-                  `}
-                  style={{
-                    transform: `translateX(-50%) rotate(${pendulumAngle}deg)`,
-                  }}
-                >
-                  {/* Pendulum Weight - Using Same Classes as Original */}
-                  <div className={`
-                    absolute bottom-0 w-3 h-3 rounded-full -translate-x-1/2
-                    ${themeClasses.metronomeWeight}
-                    shadow-lg border border-white/20
-                  `}>
-                    <div className="absolute inset-0.5 rounded-full bg-white/10"></div>
-                  </div>
-                </div>
+                  </g>
+                </svg>
               </div>
             </div>
 
