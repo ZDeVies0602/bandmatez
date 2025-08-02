@@ -169,59 +169,77 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="min-h-full flex flex-col items-center justify-center p-6">
                 {!children && (
                   <div className="w-full max-w-4xl">
-                    <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
-                      <div className="text-center">
-                        <div className="flex justify-center mb-6">
-                          <div className="relative">
-                            <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-3xl flex items-center justify-center shadow-2xl">
-                              <span className="text-4xl">🎵</span>
-                            </div>
-                            <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                              <span className="text-lg">✨</span>
-                            </div>
-                          </div>
-                        </div>
+                    {showInstructions && (
+                      <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.1)] relative">
+                        <button
+                          onClick={handleDismissInstructions}
+                          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 hover:border-red-500 flex items-center justify-center transition-all duration-200 group"
+                          title="Hide instructions"
+                        >
+                          <svg 
+                            className="w-4 h-4 text-red-400 group-hover:text-red-300" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                            strokeWidth={2.5}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
                         
-                        <h1 className="text-4xl font-bold text-[var(--text-dark)] mb-4">
-                          Welcome to BandMateZ
-                        </h1>
-                        <p className="text-lg text-[var(--neutral-gray)] mb-8 max-w-2xl mx-auto leading-relaxed">
-                          Your complete music practice companion
-                        </p>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-                          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                            <div className="text-2xl mb-2">🎼</div>
-                            <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Metronome</h3>
-                            <p className="text-xs text-[var(--neutral-gray)]">
-                              Advanced metronome with speed trainer as a floating component. Perfect for tempo practice and building consistency.
-                            </p>
+                        <div className="text-center">
+                          <div className="flex justify-center mb-6">
+                            <div className="relative">
+                              <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-3xl flex items-center justify-center shadow-2xl">
+                                <span className="text-4xl">🎵</span>
+                              </div>
+                              <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                <span className="text-lg">✨</span>
+                              </div>
+                            </div>
                           </div>
                           
-                          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                            <div className="text-2xl mb-2">🎹</div>
-                            <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Piano</h3>
-                            <p className="text-xs text-[var(--neutral-gray)]">
-                              Interactive piano keyboard at the bottom of the screen. Play along with your practice sessions.
-                            </p>
-                          </div>
-                          
-                          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                            <div className="text-2xl mb-2">🎚️</div>
-                            <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Tuner</h3>
-                            <p className="text-xs text-[var(--neutral-gray)]">
-                              Precision pitch tuner available as a floating component. Keep your instruments perfectly in tune.
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="mt-6 p-3 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl border border-purple-500/20">
-                          <p className="text-xs text-[var(--neutral-gray)]">
-                            <strong className="text-[var(--text-dark)]">Quick Start:</strong> Use the floating metronome and tuner components that you can drag around the screen, and play the piano at the bottom.
+                          <h1 className="text-4xl font-bold text-[var(--text-dark)] mb-4">
+                            Welcome to BandMateZ
+                          </h1>
+                          <p className="text-lg text-[var(--neutral-gray)] mb-8 max-w-2xl mx-auto leading-relaxed">
+                            Your complete music practice companion
                           </p>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                            <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                              <div className="text-2xl mb-2">🎼</div>
+                              <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Metronome</h3>
+                              <p className="text-xs text-[var(--neutral-gray)]">
+                                Advanced metronome with speed trainer as a floating component. Perfect for tempo practice and building consistency.
+                              </p>
+                            </div>
+                            
+                            <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                              <div className="text-2xl mb-2">🎹</div>
+                              <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Piano</h3>
+                              <p className="text-xs text-[var(--neutral-gray)]">
+                                Interactive piano keyboard at the bottom of the screen. Play along with your practice sessions.
+                              </p>
+                            </div>
+                            
+                            <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                              <div className="text-2xl mb-2">🎚️</div>
+                              <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Tuner</h3>
+                              <p className="text-xs text-[var(--neutral-gray)]">
+                                Precision pitch tuner available as a floating component. Keep your instruments perfectly in tune.
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="mt-6 p-3 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl border border-purple-500/20">
+                            <p className="text-xs text-[var(--neutral-gray)]">
+                              <strong className="text-[var(--text-dark)]">Quick Start:</strong> Use the floating metronome and tuner components that you can drag around the screen, and play the piano at the bottom.
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 )}
 
