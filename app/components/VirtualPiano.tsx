@@ -422,17 +422,17 @@ export default function VirtualPiano() {
               ${key.isBlack 
                 ? `pb-4 text-xs ${
                     isActive 
-                      ? 'text-black scale-y-95 font-semibold' 
+                      ? 'text-[var(--bg-light)] scale-y-95 font-semibold' 
                       : isHovered 
-                        ? 'text-white font-semibold'
-                        : 'text-white'
+                        ? 'text-[var(--text-dark)] font-semibold'
+                        : 'text-[var(--text-dark)]'
                   }`
                 : `pb-6 text-sm ${
                     isActive 
-                      ? 'text-black scale-y-95 font-semibold' 
+                      ? 'text-[var(--bg-light)] scale-y-95 font-semibold' 
                       : isHovered
-                        ? 'text-[#0a0a0a]'
-                        : 'text-[#1a1a1a]'
+                        ? 'text-[var(--text-dark)]'
+                        : 'text-[var(--text-dark)]'
                   }`
               }
             `}
@@ -441,7 +441,7 @@ export default function VirtualPiano() {
             {keyboardKey && (
               <div className={`
                 text-xs opacity-60 font-normal mt-1
-                ${key.isBlack ? 'text-gray-300' : 'text-gray-600'}
+                ${key.isBlack ? 'text-[var(--neutral-gray)]' : 'text-[var(--neutral-gray)]'}
               `}>
                 {keyboardKey === ' ' ? 'Space' : 
                  keyboardKey.length > 1 ? keyboardKey.substring(0, 3) : keyboardKey}
@@ -537,7 +537,7 @@ export default function VirtualPiano() {
           </div>
           
           {/* Subtle piano brand/model text */}
-          <div className="absolute bottom-2 right-3 text-xs text-gray-400/60 font-light select-none pointer-events-none z-20">
+          <div className="absolute bottom-2 right-3 text-xs text-[var(--neutral-gray)] opacity-60 font-light select-none pointer-events-none z-20">
             BandMatez Pro
           </div>
         </div>

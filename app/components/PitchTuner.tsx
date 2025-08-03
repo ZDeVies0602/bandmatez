@@ -117,21 +117,24 @@ export default function PitchTuner() {
     // Calculate frequency offset for calibration analysis
     const frequencyOffset = freq - closestFrequency;
 
-    // Apply ±10Hz buffer zone for "in tune" detection
+    // Calculate actual cents deviation first
+    const actualCentsDeviation = Math.round(1200 * Math.log2(freq / closestFrequency));
+    
+    // Apply ±7 cents buffer zone for "in tune" detection
     let centsDeviation;
-    let isInBuffer = Math.abs(frequencyOffset) <= 10;
+    let isInBuffer = Math.abs(actualCentsDeviation) <= 7;
     
     if (isInBuffer) {
-      // Within ±10Hz buffer - consider it "in tune"
+      // Within ±7 cents buffer - consider it "in tune"
       centsDeviation = 0;
     } else {
-      // Outside buffer - calculate actual cents deviation
-      centsDeviation = Math.round(1200 * Math.log2(freq / closestFrequency));
+      // Outside buffer - show actual cents deviation
+      centsDeviation = actualCentsDeviation;
     }
 
     // Enhanced debug logging
-    const bufferStatus = isInBuffer ? " [IN 10Hz BUFFER]" : "";
-    console.log(`🎼 Enhanced detection: ${freq.toFixed(2)}Hz → ${closestNote} (${closestFrequency}Hz) = ${centsDeviation} cents, offset: ${frequencyOffset.toFixed(2)}Hz${bufferStatus}`);
+    const bufferStatus = isInBuffer ? " [IN 7¢ BUFFER]" : "";
+    console.log(`🎼 Enhanced detection: ${freq.toFixed(2)}Hz → ${closestNote} (${closestFrequency}Hz) = ${centsDeviation} cents (actual: ${actualCentsDeviation}¢), offset: ${frequencyOffset.toFixed(2)}Hz${bufferStatus}`);
 
     // Track calibration data for known test frequencies
     const testFrequencies = [440.00, 261.63, 392.00, 329.63]; // A4, C4, G4, E4
@@ -150,6 +153,66 @@ export default function PitchTuner() {
       octave,
     };
   }, []);
+
+  // Circle of Fifths note arrangement (starting from C and going clockwise)
+  const circleOfFifths = [
+    'C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'
+  ];
+
+  // Get note name without octave (e.g., "C4" -> "C", "F#3" -> "F#")
+  const getNoteWithoutOctave = (noteName: string) => {
+    if (!noteName) return '';
+    return noteName.replace(/\d+$/, ''); // Remove trailing numbers
+  };
+
+  // Check if a note is currently detected (regardless of octave)
+  const isNoteActive = (circleNote: string) => {
+    if (!note) return false;
+    const currentNote = getNoteWithoutOctave(note);
+    // Handle enharmonic equivalents
+    const enharmonics: { [key: string]: string[] } = {
+      'C#': ['C#', 'Db'],
+      'Db': ['C#', 'Db'],
+      'D#': ['D#', 'Eb'],
+      'Eb': ['D#', 'Eb'],
+      'F#': ['F#', 'Gb'],
+      'Gb': ['F#', 'Gb'],
+      'G#': ['G#', 'Ab'],
+      'Ab': ['G#', 'Ab'],
+      'A#': ['A#', 'Bb'],
+      'Bb': ['A#', 'Bb']
+    };
+    
+    // Check direct match
+    if (currentNote === circleNote) return true;
+    
+    // Check enharmonic equivalents
+    if (enharmonics[currentNote]?.includes(circleNote)) return true;
+    if (enharmonics[circleNote]?.includes(currentNote)) return true;
+    
+    return false;
+  };
+
+  // Get tuning color classes
+  const getTuningColorClasses = () => {
+    if (!note) return { text: 'text-white', glow: '', bg: '' };
+    
+    const isInTune = cents === 0; // Within ±7 cents buffer (already handled in detection)
+    
+    if (isInTune) {
+      return {
+        text: 'text-green-400',
+        glow: 'drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]',
+        bg: 'bg-green-400/20'
+      };
+    } else {
+      return {
+        text: 'text-red-400', 
+        glow: 'drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]',
+        bg: 'bg-red-400/20'
+      };
+    }
+  };
 
   // Hybrid pitch detection - FFT + Autocorrelation for accuracy
   const detectPitch = useCallback(
@@ -453,7 +516,7 @@ export default function PitchTuner() {
         console.log(`🎚️ Audio processing: Echo cancellation=${true}, Noise suppression=${true}, Auto gain=${true}`);
         console.log(`📏 FFT buffer size: ${analyserRef.current?.fftSize}, Frequency bins: ${analyserRef.current?.frequencyBinCount}`);
         console.log(`🎛️ Frequency smoothing: 5-point weighted average + parabolic interpolation`);
-        console.log(`🎯 Buffer zone: ±10Hz around each note = "in tune"`);
+        console.log(`🎯 Buffer zone: ±7 cents around each note = "in tune"`);
         startAnimationLoop();
       }, 100);
     } catch (error) {
@@ -552,8 +615,8 @@ export default function PitchTuner() {
     const newY = e.clientY - dragOffset.y;
     
     // Keep within screen bounds - adjust for different sizes
-    const widgetWidth = isCollapsed ? 200 : 320; // Approximate widths
-    const widgetHeight = isCollapsed ? 80 : 300; // Approximate heights
+    const widgetWidth = isCollapsed ? 100 : 480; // Very compact width as requested
+    const widgetHeight = isCollapsed ? 100 : 480; // Increased for larger collapsed tuner
     const maxX = window.innerWidth - widgetWidth;
     const maxY = window.innerHeight - widgetHeight;
     
@@ -624,16 +687,6 @@ export default function PitchTuner() {
     }
   };
 
-  // Calculate needle angle based on cents (-45° to +45°)
-  const getNeedleAngle = () => {
-    if (!note || cents === 0) return 0; // Center position when in tune
-    
-    // Map cents to angle (±50 cents = ±45 degrees)
-    const maxCents = 50;
-    const clampedCents = Math.max(-maxCents, Math.min(maxCents, cents));
-    return (clampedCents / maxCents) * 45;
-  };
-
   return (
     <div className="fixed z-50"
          style={{ 
@@ -644,9 +697,10 @@ export default function PitchTuner() {
       {isCollapsed ? (
         // Collapsed state - floating draggable widget
         <div 
-          className={`bg-white/10 backdrop-blur-[10px] border border-white/20 rounded-2xl p-3 shadow-[0_8px_32px_rgba(0,0,0,0.2)] flex items-center gap-3 transition-all duration-300 hover:bg-white/15 cursor-grab ${
+          className={`bg-white/10 backdrop-blur-[10px] border border-white/20 rounded-2xl px-4 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)] flex items-center justify-between transition-all duration-300 hover:bg-white/15 cursor-grab ${
             isDragging ? 'scale-105 shadow-[0_12px_40px_rgba(0,0,0,0.3)] cursor-grabbing' : ''
           }`}
+          style={{ minWidth: '100px', width: '100px' }}
           onMouseDown={handleMouseDown}
         >
           <button
@@ -654,62 +708,52 @@ export default function PitchTuner() {
               e.stopPropagation(); // Prevent drag when clicking expand
               setIsCollapsed(false);
             }}
-            className="w-10 h-10 rounded-xl bg-[color:var(--accent-red)] hover:bg-[color:var(--text-dark)] flex items-center justify-center transition-all duration-300 shadow-lg border-2 border-[color:var(--accent-red)] hover:border-[color:var(--text-dark)]"
+            className="flex items-center justify-center transition-all duration-300 hover:scale-110"
+            style={{ marginLeft: '-8px' }}
             title="Expand tuner"
           >
-            <svg className="w-5 h-5 text-[color:var(--bg-light)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 14l5-5 5 5" />
-            </svg>
+            <span className="text-white text-lg">▼</span>
           </button>
           
-          {note && (
-            <span className="text-sm text-white font-medium">
-              {note} {cents === 0 ? "✓" : cents < 0 ? "♭" : "♯"}
-            </span>
-          )}
-          
-          {/* Mini microphone button */}
+          {/* Mini play button with note display */}
           <button
             onClick={(e) => {
-              e.stopPropagation(); // Prevent drag when clicking microphone
+              e.stopPropagation();
               if (isListening) {
                 stopListening();
               } else {
                 startListening();
               }
             }}
-            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
+            style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+            className={`flex-shrink-0 flex items-center justify-center transition-all duration-300 shadow-lg border-2 ${
               isListening 
-                ? "bg-[color:var(--accent-red)] hover:bg-[color:var(--text-dark)]" 
-                : "bg-white/20 hover:bg-white/30"
+                ? "bg-[color:var(--accent-red)] border-[color:var(--accent-red)] hover:bg-[color:var(--text-dark)] hover:border-[color:var(--text-dark)]" 
+                : "bg-white/30 border-white/50 hover:bg-white/40 hover:border-white/60"
             }`}
           >
-            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-              {isListening ? (
-                <>
-                  <rect x="6" y="5" width="2" height="10" rx="1" />
-                  <rect x="12" y="5" width="2" height="10" rx="1" />
-                </>
-              ) : (
-                <path fillRule="evenodd" d="M7 4a3 3 0 6 16 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 715 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
-              )}
-            </svg>
+            {note && isListening ? (
+              <span className={`text-lg font-black ${getTuningColorClasses().text}`} style={{ WebkitTextStroke: '0.5px currentColor' }}>
+                {getNoteWithoutOctave(note)}
+              </span>
+            ) : (
+              <span className="text-white text-lg font-bold">
+                {isListening ? "⏸" : "▶"}
+              </span>
+            )}
           </button>
 
-          {/* Drag indicator dots */}
-          <div className="flex flex-col gap-1 ml-1 opacity-60">
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-          </div>
         </div>
       ) : (
-        // Expanded state - compact floating tuner
-        <div className="bg-white/10 backdrop-blur-[10px] border border-white/20 rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.2)] w-80">
+        // Expanded state - large square tuner
+        <div 
+          className="bg-white/10 backdrop-blur-[10px] border border-white/20 rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.2)] flex flex-col relative"
+          style={{ width: '480px', height: '480px', minWidth: '480px', minHeight: '480px' }}
+        >
           
-          {/* Draggable Header */}
+          {/* Draggable Header - positioned absolutely */}
           <div 
-            className={`flex justify-between items-center p-4 pb-2 cursor-grab hover:bg-white/5 rounded-t-3xl transition-all duration-200 ${
+            className={`absolute top-0 left-0 right-0 flex justify-between items-center p-4 cursor-grab hover:bg-white/5 rounded-t-3xl transition-all duration-200 z-10 ${
               isDragging ? 'cursor-grabbing bg-white/10' : ''
             }`}
             onMouseDown={handleMouseDown}
@@ -718,174 +762,133 @@ export default function PitchTuner() {
               <h1 className="font-['Bebas_Neue'] text-lg font-normal text-white tracking-[1px]">
                 Tuner
               </h1>
-              {/* Drag indicator for expanded state */}
-              <div className="flex gap-1 opacity-50">
-                <div className="w-1 h-1 bg-white rounded-full"></div>
-                <div className="w-1 h-1 bg-white rounded-full"></div>
-                <div className="w-1 h-1 bg-white rounded-full"></div>
-                <div className="w-1 h-1 bg-white rounded-full"></div>
-                <div className="w-1 h-1 bg-white rounded-full"></div>
-                <div className="w-1 h-1 bg-white rounded-full"></div>
-              </div>
             </div>
             <button
               onClick={(e) => {
                 e.stopPropagation(); // Prevent drag when clicking collapse
                 setIsCollapsed(true);
               }}
-              className="w-6 h-6 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all duration-200"
+              className="flex items-center justify-center transition-all duration-300 hover:scale-110"
               title="Collapse tuner"
             >
-              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+              <span className="text-white text-xl">▲</span>
             </button>
           </div>
 
-          {/* Tuner Content */}
-          <div className="px-4 pb-4">
-            {/* Compact Tuner Gauge */}
-            <div className="flex flex-col items-center justify-center mb-4">
-              
-              {/* Smaller Tuner Gauge */}
-              <div className="relative w-48 h-24 mb-3">
+          {/* Tuner Content - centered in the container */}
+          <div className="flex-1 flex flex-col items-center justify-center gap-6">
+            {/* Circle of Fifths Section */}
+            <div className="flex justify-center">
+              {/* Circle of Fifths */}
+              <div className="relative w-72 h-72">
+                {/* Outer circle background */}
+                {/* Removed outer circle border as it was causing a vertical line artifact */}
                 
-                {/* Background semicircle */}
-                <div className="absolute left-1/2 bottom-0 -translate-x-1/2">
-                  <div className="w-40 h-20 rounded-t-full border-2 border-white/10 overflow-hidden">
-                    
-                    {/* Gradient arc using multiple colored segments */}
-                    <div className="relative w-full h-full">
-                      {/* Orange to red segment (left side - flat) */}
-                      <div className="absolute left-0 top-0 w-1/4 h-full bg-gradient-to-r from-orange-500 to-orange-400"></div>
-                      
-                      {/* Orange to yellow segment */}
-                      <div className="absolute left-1/4 top-0 w-1/4 h-full bg-gradient-to-r from-orange-400 to-yellow-400"></div>
-                      
-                      {/* Yellow to green segment */}
-                      <div className="absolute left-2/4 top-0 w-1/4 h-full bg-gradient-to-r from-yellow-400 to-green-400"></div>
-                      
-                      {/* Green segment (right side - in tune) */}
-                      <div className="absolute right-0 top-0 w-1/4 h-full bg-gradient-to-r from-green-400 to-green-500"></div>
-                      
-                      {/* Inner cutout to create arc effect */}
-                      <div className="absolute top-3 left-3 right-3 bottom-0 bg-[color:var(--bg-muted)] rounded-t-full"></div>
+                {/* Note positions around the circle */}
+                {circleOfFifths.map((circleNote, index) => {
+                  const angle = (index * 30) - 90; // 30 degrees per note, start at top
+                  const radian = (angle * Math.PI) / 180;
+                  const radius = 125; // Reduced for smaller w-72 h-72 circle
+                  const x = radius * Math.cos(radian);
+                  const y = radius * Math.sin(radian);
+                  
+                  const isActive = isNoteActive(circleNote);
+                  const tuningColors = getTuningColorClasses();
+                  
+                  return (
+                    <div
+                      key={circleNote}
+                      className={`absolute w-12 h-12 rounded-full border-2 flex items-center justify-center text-base font-bold transition-all duration-300 ${
+                        isActive 
+                          ? `${tuningColors.bg} ${tuningColors.text} ${tuningColors.glow} scale-110 shadow-lg border-white/40` 
+                          : 'bg-white/5 border-white/20 text-white/70 hover:bg-white/10'
+                      }`}
+                      style={{
+                        left: `calc(50% + ${x}px - 24px)`,
+                        top: `calc(50% + ${y}px - 24px)`,
+                      }}
+                    >
+                      {circleNote}
+                    </div>
+                  );
+                })}
+                
+                {/* Center display */}
+                <div className="absolute inset-0 z-20 pointer-events-none">
+                  {/* Current note display - positioned in upper portion of circle */}
+                  <div 
+                    className={`absolute left-1/2 transform -translate-x-1/2 text-center transition-all duration-300 pointer-events-auto ${getTuningColorClasses().glow}`}
+                    style={{ top: '90px' }}
+                  >
+                    <div className={`font-['Bebas_Neue'] text-6xl font-black leading-none tracking-wider ${getTuningColorClasses().text}`}>
+                      {note ? getNoteWithoutOctave(note) : '♪'}
+                    </div>
+                  </div>
+                  
+                  {/* Cents display - positioned in lower portion of circle */}
+                  <div 
+                    className="absolute left-1/2 transform -translate-x-1/2"
+                    style={{ bottom: '70px' }}
+                  >
+                    <div className="text-center h-14 flex flex-col justify-start">
+                      <div className={`text-xs font-medium ${getTuningColorClasses().text} h-5 w-20 flex items-center justify-center`}>
+                        {note ? (
+                          cents !== 0 ? (
+                            <span>{cents > 0 ? '+' : ''}{cents} cents</span>
+                          ) : (
+                            <span className="text-white/40">In Tune</span>
+                          )
+                        ) : (
+                          <span className="text-white/60">Play a note</span>
+                        )}
+                      </div>
+                      {frequency > 0 && (
+                        <div className="text-xs text-white/50 mt-2 h-5 w-20 flex items-center justify-center">
+                          {frequency.toFixed(1)}Hz
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
-
-                {/* Enhanced gradient overlay for smoother transitions */}
-                <div className="absolute left-1/2 bottom-0 -translate-x-1/2">
-                  <div 
-                    className="w-40 h-20 rounded-t-full overflow-hidden"
-                    style={{
-                      background: `conic-gradient(from 180deg, #f97316 0deg, #fbbf24 60deg, #a3e635 120deg, #22c55e 180deg)`,
-                      mask: 'radial-gradient(circle at center bottom, transparent 60px, black 70px)',
-                      WebkitMask: 'radial-gradient(circle at center bottom, transparent 60px, black 70px)'
-                    }}
-                  >
-                  </div>
-                </div>
-
-                {/* Smaller Needle */}
-                <div 
-                  className="absolute left-1/2 bottom-0 -translate-x-1/2 origin-bottom transition-transform duration-200 ease-out z-20"
-                  style={{
-                    transform: `translateX(-50%) rotate(${getNeedleAngle()}deg)`,
-                  }}
-                >
-                  {/* Needle line */}
-                  <div className="w-0.5 h-16 bg-green-400 rounded-full mx-auto mb-1 shadow-lg shadow-green-400/60"></div>
-                  {/* Needle base circle */}
-                  <div className="w-3 h-3 bg-green-400 rounded-full mx-auto shadow-lg shadow-green-400/60 -mt-0.5"></div>
-                </div>
-
-                {/* Flat symbol */}
-                <div className="absolute left-2 bottom-1 text-xl text-white/80 font-bold select-none z-30">
-                  b
-                </div>
-
-                {/* Sharp symbol */}
-                <div className="absolute right-2 bottom-1 text-xl text-white/80 font-bold select-none z-30">
-                  #
-                </div>
               </div>
+            </div>
 
-              {/* Compact Note Display */}
-              <div className="flex items-baseline justify-center mb-3">
-                <span className="font-['Bebas_Neue'] text-3xl font-black text-white leading-none tracking-wider">
-                  {note ? note.replace(/\d+/, '').replace('#', '') : 'A'}
-                </span>
-                {(note && note.includes('#')) ? (
-                  <span className="font-['Bebas_Neue'] text-xl font-black text-white ml-1 -mt-1">♯</span>
-                ) : null}
-                <span className="font-['Bebas_Neue'] text-lg font-normal text-white/70 ml-2 mt-1 tracking-wider">
-                  {note ? note.match(/\d+/)?.[0] : '4'}
-                </span>
-              </div>
-
-              {/* Status Text */}
-              <div className="text-sm text-white/80 mb-3 font-medium">
-                {note ? (
-                  cents === 0 ? "In tune" : cents < 0 ? "Tune up" : "Tune down"
-                ) : (
-                  "Play a note"
-                )}
-              </div>
-
-              {/* Compact Controls */}
-              <div className="flex items-center justify-center gap-3">
-                {/* Microphone Button */}
-                <button
-                  onClick={() => {
-                    if (isListening) {
-                      stopListening();
-                    } else {
-                      startListening();
-                    }
-                  }}
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 shadow-lg ${
-                    isListening 
-                      ? "bg-[color:var(--accent-red)] hover:bg-[color:var(--text-dark)]" 
-                      : "bg-white/10 hover:bg-white/20 border border-white/20"
-                  }`}
-                >
-                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    {isListening ? (
-                      <path fillRule="evenodd" d="M7 4a3 3 0 616 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 715 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
-                    ) : (
-                      <path fillRule="evenodd" d="M7 4a3 3 0 6 16 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 715 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
-                    )}
+            {/* Controls Section */}
+            <div className="flex flex-col items-center gap-4">
+              {/* Start/Stop Button underneath circle */}
+              <button
+                onClick={() => {
+                  if (isListening) {
+                    stopListening();
+                  } else {
+                    startListening();
+                  }
+                }}
+                className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg ${
+                  isListening 
+                    ? "bg-red-500 hover:bg-red-600 text-white" 
+                    : "bg-green-500 hover:bg-green-600 text-white"
+                }`}
+                title={isListening ? "Stop tuner" : "Start tuner"}
+              >
+                {isListening ? (
+                  // Pause/Stop icon
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="6" y="4" width="4" height="16" rx="1" />
+                    <rect x="14" y="4" width="4" height="16" rx="1" />
                   </svg>
-                </button>
-
-                {/* Compact Volume Level Bars */}
-                <div className="flex items-end gap-1">
-                  {[6, 8, 10, 12, 14].map((height, i) => (
-                    <div
-                      key={i}
-                      className={`w-1 rounded-sm transition-all duration-200 ${
-                        volume > (i + 1) * 4 ? 'bg-[color:var(--accent-red)]' : 'bg-white/20'
-                      }`}
-                      style={{ height: `${height}px` }}
-                    />
-                  ))}
-                </div>
-              </div>
+                ) : (
+                  // Play icon
+                  <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Debug Info (only in development) */}
-      {isListening && !isCollapsed && process.env.NODE_ENV === 'development' && (
-        <div className="absolute top-full left-0 mt-2 p-2 bg-black/80 backdrop-blur rounded-lg text-xs text-white w-64">
-          <div className="flex justify-between items-center">
-            <span>🎤 {frequency > 0 ? `${frequency.toFixed(1)}Hz` : "Listening..."}</span>
-            {note && <span>{note} {cents !== 0 && `(${cents > 0 ? '+' : ''}${cents} cents)`}</span>}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

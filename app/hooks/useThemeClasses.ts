@@ -141,11 +141,11 @@ export function getThemeSpecificClasses(theme: ThemeType) {
       light: "#F5F5DC",
     },
     "navy-geometric": {
-      primary: "#1A1F23",
-      secondary: "#002C60",
-      accent: "#C4CDD5",
+      primary: "#FFFFFF",
+      secondary: "#FFFFFF",
+      accent: "#FFFFFF",
       muted: "#506B8B",
-      light: "#FCFDFC",
+      light: "#D4E6F9",
     },
   };
 
