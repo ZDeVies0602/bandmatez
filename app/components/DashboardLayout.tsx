@@ -189,17 +189,38 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         
                         <div className="text-center">
                           <div className="flex justify-center mb-6">
-                            <div className="relative">
-                              <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-3xl flex items-center justify-center shadow-2xl">
-                                <span className="text-4xl">🎵</span>
-                              </div>
-                              <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                <span className="text-lg">✨</span>
+                            <div className="relative" style={{ width: '83px', height: '83px' }}>
+                              {/* White circle background - increased by 3px */}
+                              <div 
+                                className="absolute inset-0 bg-white border border-gray-300 rounded-full shadow-md z-0"
+                                style={{ width: '83px', height: '83px' }}
+                              ></div>
+                              {/* Logo image only - same container size */}
+                              <div 
+                                className="relative flex items-center justify-center z-10"
+                                style={{ width: '83px', height: '83px' }}
+                              >
+                                <img 
+                                  src="/images/bandmatez-logo.png" 
+                                  alt="BandMateZ Logo"
+                                  style={{ 
+                                    width: '90px', 
+                                    height: '90px',
+                                    maxWidth: 'none',
+                                    maxHeight: 'none',
+                                    minWidth: '90px',
+                                    minHeight: '90px',
+                                    objectFit: 'contain',
+                                    display: 'block',
+                                    margin: 'auto',
+                                    transform: 'translateY(-3px)'
+                                  }}
+                                />
                               </div>
                             </div>
                           </div>
                           
-                          <h1 className="text-4xl font-bold text-[var(--text-dark)] mb-4">
+                          <h1 className="!text-6xl font-bold text-[var(--text-dark)] mb-4" style={{ fontSize: '3.75rem' }}>
                             Welcome to BandMateZ
                           </h1>
                           <p className="text-lg text-[var(--neutral-gray)] mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -208,32 +229,32 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                           
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                             <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                              <div className="text-2xl mb-2">🎼</div>
-                              <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Metronome</h3>
-                              <p className="text-xs text-[var(--neutral-gray)]">
+                              <div className="text-4xl mb-2">🎼</div>
+                              <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-lg">Metronome</h3>
+                              <p className="text-sm text-[var(--neutral-gray)]">
                                 Advanced metronome with speed trainer as a floating component. Perfect for tempo practice and building consistency.
                               </p>
                             </div>
                             
                             <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                              <div className="text-2xl mb-2">🎹</div>
-                              <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Piano</h3>
-                              <p className="text-xs text-[var(--neutral-gray)]">
+                              <div className="text-4xl mb-2">🎹</div>
+                              <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-lg">Piano</h3>
+                              <p className="text-sm text-[var(--neutral-gray)]">
                                 Interactive piano keyboard at the bottom of the screen. Play along with your practice sessions.
                               </p>
                             </div>
                             
                             <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                              <div className="text-2xl mb-2">🎚️</div>
-                              <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-sm">Tuner</h3>
-                              <p className="text-xs text-[var(--neutral-gray)]">
+                              <div className="text-4xl mb-2">🎚️</div>
+                              <h3 className="font-semibold text-[var(--text-dark)] mb-2 text-lg">Tuner</h3>
+                              <p className="text-sm text-[var(--neutral-gray)]">
                                 Precision pitch tuner available as a floating component. Keep your instruments perfectly in tune.
                               </p>
                             </div>
                           </div>
 
                           <div className="mt-6 p-3 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl border border-purple-500/20">
-                            <p className="text-xs text-[var(--neutral-gray)]">
+                            <p className="text-sm text-[var(--neutral-gray)]">
                               <strong className="text-[var(--text-dark)]">Quick Start:</strong> Use the floating metronome and tuner components that you can drag around the screen, and play the piano at the bottom.
                             </p>
                           </div>

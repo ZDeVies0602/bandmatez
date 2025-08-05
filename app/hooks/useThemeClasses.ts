@@ -77,6 +77,10 @@ export function useThemeClasses() {
       metronomeBody:
         "bg-gradient-to-b from-[#002C60] via-[#506B8B] to-[#002C60]",
     },
+    "green-palette": {
+      metronomeBody:
+        "bg-gradient-to-b from-[#002005] via-[#164F29] to-[#002005]",
+    },
   };
 
   // Merge base classes with theme overrides
@@ -146,6 +150,13 @@ export function getThemeSpecificClasses(theme: ThemeType) {
       accent: "#FFFFFF",
       muted: "#506B8B",
       light: "#D4E6F9",
+    },
+    "green-palette": {
+      primary: "#002005",
+      secondary: "#164F29",
+      accent: "#3B7639",
+      muted: "#164F29",
+      light: "#B5C5B4",
     },
   };
 

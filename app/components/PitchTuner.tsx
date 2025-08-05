@@ -728,12 +728,16 @@ export default function PitchTuner() {
             style={{ width: '40px', height: '40px', borderRadius: '50%' }}
             className={`flex-shrink-0 flex items-center justify-center transition-all duration-300 shadow-lg border-2 ${
               isListening 
-                ? "bg-[color:var(--accent-red)] border-[color:var(--accent-red)] hover:bg-[color:var(--text-dark)] hover:border-[color:var(--text-dark)]" 
+                ? note 
+                  ? getTuningColorClasses().text === 'text-green-400'
+                    ? "bg-green-400 border-green-400 hover:bg-green-500 hover:border-green-500"
+                    : "bg-red-400 border-red-400 hover:bg-red-500 hover:border-red-500"
+                  : "bg-[color:var(--accent-red)] border-[color:var(--accent-red)] hover:bg-[color:var(--text-dark)] hover:border-[color:var(--text-dark)]"
                 : "bg-white/30 border-white/50 hover:bg-white/40 hover:border-white/60"
             }`}
           >
             {note && isListening ? (
-              <span className={`text-lg font-black ${getTuningColorClasses().text}`} style={{ WebkitTextStroke: '0.5px currentColor' }}>
+              <span className="text-lg font-black text-white" style={{ WebkitTextStroke: '0.5px currentColor' }}>
                 {getNoteWithoutOctave(note)}
               </span>
             ) : (

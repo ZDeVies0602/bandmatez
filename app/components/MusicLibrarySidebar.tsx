@@ -173,7 +173,7 @@ export default function MusicLibrarySidebar({
         .eq("user_id", userId)
         .not("end_time", "is", null)
         .order("start_time", { ascending: false })
-        .limit(10);
+        .limit(5);
 
       if (data && !error) {
         setPracticeHistory(data);
@@ -397,7 +397,7 @@ export default function MusicLibrarySidebar({
             </div>
 
             {/* Practice History */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 flex flex-col p-4">
               <h3 className="text-sm font-medium text-[var(--text-dark)] mb-3">Recent Sessions</h3>
               
               {practiceHistory.length === 0 ? (
@@ -405,7 +405,14 @@ export default function MusicLibrarySidebar({
                   No practice sessions yet. Start your first session above!
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div 
+                  className="space-y-3 pr-2"
+                  style={{ 
+                    height: '430px', 
+                    overflowY: 'auto',
+                    overflowX: 'hidden'
+                  }}
+                >
                   {practiceHistory.map((session) => (
                     <div
                       key={session.id}
@@ -420,7 +427,7 @@ export default function MusicLibrarySidebar({
                         </span>
                       </div>
                       {session.notes && (
-                        <p className="text-xs text-[var(--neutral-gray)] truncate">
+                        <p className="text-xs text-[var(--neutral-gray)] break-words overflow-hidden">
                           {session.notes}
                         </p>
                       )}

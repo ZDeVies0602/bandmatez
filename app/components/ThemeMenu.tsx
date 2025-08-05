@@ -45,6 +45,7 @@ export default function ThemeMenu({ className }: { className?: string }) {
     { value: "crimson-night", name: "Crimson Night" },
     { value: "forest-floor", name: "Forest Floor" },
     { value: "navy-geometric", name: "Navy Geometric" },
+    { value: "green-palette", name: "Nature's Palette" },
   ];
 
   return (
