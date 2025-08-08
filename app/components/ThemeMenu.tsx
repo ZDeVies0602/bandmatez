@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../contexts/ThemeContext";
 import { useThemeClasses } from "../hooks/useThemeClasses";
 import { ThemeType } from "../types";
 
@@ -10,42 +10,33 @@ export default function ThemeMenu({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const themeClasses = useThemeClasses();
 
-  // Apply theme to body
-  useEffect(() => {
-    document.body.className = `theme-${currentTheme}`;
-  }, [currentTheme]);
-
   const getThemePreviewClass = (themeKey: string) => {
     const previewClasses: { [key: string]: string } = {
       default: "bg-[#DCE0D9] border border-[#595959]",
-      "royal-gold":
-        "bg-gradient-to-br from-[#1A2C42] via-[#4C6AF5] to-[#6464FF]",
-      "terra-cotta":
-        "bg-gradient-to-br from-[#C73832] via-[#F28C28] to-[#E67E22]",
       "desert-clay":
         "bg-gradient-to-br from-[#262322] via-[#E07A5F] to-[#81A4B1]",
-      "dusty-lilac":
-        "bg-gradient-to-br from-[#F5F5F5] via-[#C8B6C8] to-[#2F4F4F]",
       "crimson-night":
-        "bg-gradient-to-br from-[#540101] via-[#8B0000] to-[#B22222]",
-      "forest-floor":
-        "bg-gradient-to-br from-[#5E454B] via-[#8F9779] to-[#6B8E23]",
+        "bg-gradient-to-br from-[#e55039] via-[#4a0000] to-[#B22222]",
       "navy-geometric":
         "bg-gradient-to-br from-[#002C60] via-[#506B8B] to-[#1A1F23]",
+      "green-palette":
+        "bg-gradient-to-br from-[#002005] via-[#164F29] to-[#3B7639]",
+      "university-gold":
+        "bg-gradient-to-br from-[#00274C] via-[#FFCB05] to-[#CFC096]",
+      "steel-crimson":
+        "bg-gradient-to-br from-[#1B4F72] via-[#990000] to-[#7BA8C5]",
     };
     return previewClasses[themeKey] || previewClasses["default"];
   };
 
   const themes: { value: ThemeType; name: string }[] = [
     { value: "default", name: "Geometric Dusk" },
-    { value: "royal-gold", name: "Royal Gold" },
-    { value: "terra-cotta", name: "Terra Cotta" },
     { value: "desert-clay", name: "Desert Clay" },
-    { value: "dusty-lilac", name: "Dusty Lilac" },
     { value: "crimson-night", name: "Crimson Night" },
-    { value: "forest-floor", name: "Forest Floor" },
     { value: "navy-geometric", name: "Navy Geometric" },
     { value: "green-palette", name: "Nature's Palette" },
+    { value: "university-gold", name: "University Gold" },
+    { value: "steel-crimson", name: "Steel Crimson" },
   ];
 
   return (
@@ -116,6 +107,7 @@ export default function ThemeMenu({ className }: { className?: string }) {
                   relative overflow-hidden
                 `}
                 onClick={() => {
+                  console.log('ThemeMenu: Setting theme to:', theme.value);
                   setTheme(theme.value);
                   setIsOpen(false);
                 }}

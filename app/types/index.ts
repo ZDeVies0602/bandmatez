@@ -13,13 +13,12 @@ export type TabType = 'metronome' | 'tuner' | 'piano';
 
 export type ThemeType = 
   | 'default' 
-  | 'royal-gold'
-  | 'terra-cotta'
   | 'desert-clay'
-  | 'dusty-lilac'
   | 'crimson-night'
-  | 'forest-floor'
-  | 'navy-geometric';
+  | 'navy-geometric'
+  | 'green-palette'
+  | 'university-gold'
+  | 'steel-crimson';
 
 export type WaveType = 'sine' | 'square' | 'sawtooth' | 'triangle';
 

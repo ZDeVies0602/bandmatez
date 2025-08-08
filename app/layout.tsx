@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Bangers } from "next/font/google";
 import "./styles/output.css";
 import { SoundProvider } from "./contexts/SoundContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import PracticeTracker from "./components/PracticeTracker";
 
 const bangers = Bangers({
@@ -32,8 +33,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={bangers.variable}>
-        {children}
-        <PracticeTracker />
+        <ThemeProvider>
+          {children}
+          <PracticeTracker />
+        </ThemeProvider>
       </body>
     </html>
   );

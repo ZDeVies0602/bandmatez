@@ -37,30 +37,6 @@ body.theme-default {
   --shape-color-4: #808f85;
   --shape-color-5: #dce0d9;
 }
-body.theme-royal-gold {
-  --bg-light: #e8e8ff;
-  --text-dark: #1a2c42;
-  --accent-red: #4c6af5;
-  --neutral-gray: #1a2c42;
-  --bg-muted: #d4a017;
-  --shape-color-1: #1a2c42;
-  --shape-color-2: #4c6af5;
-  --shape-color-3: #6464ff;
-  --shape-color-4: #d4a017;
-  --shape-color-5: #ffd700;
-}
-body.theme-terra-cotta {
-  --bg-light: #fdf5e6;
-  --text-dark: #c73832;
-  --accent-red: #f28c28;
-  --neutral-gray: #4a6d56;
-  --bg-muted: #f0d757;
-  --shape-color-1: #c73832;
-  --shape-color-2: #f28c28;
-  --shape-color-3: #f0d757;
-  --shape-color-4: #4a6d56;
-  --shape-color-5: #e67e22;
-}
 body.theme-desert-clay {
   --bg-light: #fff8f0;
   --text-dark: #262322;
@@ -73,18 +49,6 @@ body.theme-desert-clay {
   --shape-color-4: #81a4b1;
   --shape-color-5: #f4ddb5;
 }
-body.theme-dusty-lilac {
-  --bg-light: #f0f0f5;
-  --text-dark: #2f4f4f;
-  --accent-red: #c8b6c8;
-  --neutral-gray: #8a8a8a;
-  --bg-muted: #e6e6fa;
-  --shape-color-1: #f5f5f5;
-  --shape-color-2: #c8b6c8;
-  --shape-color-3: #d8bfd8;
-  --shape-color-4: #2f4f4f;
-  --shape-color-5: #e6e6fa;
-}
 body.theme-crimson-night {
   --bg-light: #fafafa;
   --text-dark: #ffffff;
@@ -96,18 +60,6 @@ body.theme-crimson-night {
   --shape-color-3: #b22222;
   --shape-color-4: #dc143c;
   --shape-color-5: #fafafa;
-}
-body.theme-forest-floor {
-  --bg-light: #f5f5dc;
-  --text-dark: #000000;
-  --accent-red: #8f9779;
-  --neutral-gray: #000000;
-  --bg-muted: #8f9779;
-  --shape-color-1: #5e454b;
-  --shape-color-2: #8f9779;
-  --shape-color-3: #6b8e23;
-  --shape-color-4: #b2b9a4;
-  --shape-color-5: #9acd32;
 }
 body.theme-navy-geometric {
   --bg-light: #d4e6f9;
@@ -133,17 +85,47 @@ body.theme-green-palette {
   --shape-color-4: #164f29;
   --shape-color-5: #b5c5b4;
 }
+body.theme-university-gold {
+  --bg-light: #001a33;
+  --text-dark: #ffffff;
+  --accent-red: #ffffff;
+  --neutral-gray: #ffffff;
+  --bg-muted: #002244;
+  --shape-color-1: #ffb81c;
+  --shape-color-2: #ffcb05;
+  --shape-color-3: #e6d4a3;
+  --shape-color-4: #989c97;
+  --shape-color-5: #e4e1df;
+  background: linear-gradient(
+    135deg,
+    #001a33 0%,
+    #002244 25%,
+    #002f55 50%,
+    #002244 75%,
+    #001a33 100%
+  ) !important;
+}
+body.theme-steel-crimson {
+  --bg-light: #f1f0ee;
+  --text-dark: #1a2332;
+  --accent-red: #990000;
+  --neutral-gray: #888888;
+  --bg-muted: #7ba8c5;
+  --shape-color-1: #1b4f72;
+  --shape-color-2: #990000;
+  --shape-color-3: #7ba8c5;
+  --shape-color-4: #888888;
+  --shape-color-5: #f1f0ee;
+}
 
 /* Apply base styles for all geometric themes */
 body.theme-default,
-body.theme-royal-gold,
-body.theme-terra-cotta,
 body.theme-desert-clay,
-body.theme-dusty-lilac,
 body.theme-crimson-night,
-body.theme-forest-floor,
 body.theme-navy-geometric,
-body.theme-green-palette {
+body.theme-green-palette,
+body.theme-university-gold,
+body.theme-steel-crimson {
   background: linear-gradient(
     135deg,
     var(--bg-light) 0%,
@@ -303,8 +285,8 @@ body::before {
   width: 8rem;
   height: 8rem;
   background: var(--shape-color-2);
-  bottom: 25%;
-  left: 20%;
+  bottom: 30%;
+  left: 25%;
   border-radius: 50%;
 }
 
@@ -649,46 +631,6 @@ body.theme-default .metronomeWeight {
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-body.theme-royal-gold .metronomePendulum {
-  background: linear-gradient(
-    to bottom,
-    rgba(76, 106, 245, 0.9) 0%,
-    rgba(100, 130, 255, 0.9) 100%
-  ) !important;
-  box-shadow: 0 0 12px rgba(76, 106, 245, 0.5) !important;
-}
-
-body.theme-royal-gold .metronomeWeight {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(212, 160, 23, 0.95) 0%,
-    rgba(255, 215, 0, 0.95) 70%,
-    rgba(184, 134, 11, 0.95) 100%
-  ) !important;
-  box-shadow: 0 0 20px rgba(212, 160, 23, 0.5),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
-}
-
-body.theme-terra-cotta .metronomePendulum {
-  background: linear-gradient(
-    to bottom,
-    rgba(242, 140, 40, 0.9) 0%,
-    rgba(255, 165, 0, 0.9) 100%
-  ) !important;
-  box-shadow: 0 0 12px rgba(242, 140, 40, 0.5) !important;
-}
-
-body.theme-terra-cotta .metronomeWeight {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(199, 56, 50, 0.95) 0%,
-    rgba(230, 126, 34, 0.95) 70%,
-    rgba(179, 46, 40, 0.95) 100%
-  ) !important;
-  box-shadow: 0 0 20px rgba(199, 56, 50, 0.5),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
-}
-
 body.theme-desert-clay .metronomePendulum {
   background: linear-gradient(
     to bottom,
@@ -709,26 +651,6 @@ body.theme-desert-clay .metronomeWeight {
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-body.theme-dusty-lilac .metronomePendulum {
-  background: linear-gradient(
-    to bottom,
-    rgba(200, 182, 200, 0.9) 0%,
-    rgba(184, 169, 184, 0.9) 100%
-  ) !important;
-  box-shadow: 0 0 12px rgba(200, 182, 200, 0.5) !important;
-}
-
-body.theme-dusty-lilac .metronomeWeight {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(47, 79, 79, 0.95) 0%,
-    rgba(200, 182, 200, 0.95) 70%,
-    rgba(37, 59, 59, 0.95) 100%
-  ) !important;
-  box-shadow: 0 0 20px rgba(47, 79, 79, 0.5),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
-}
-
 body.theme-crimson-night .metronomePendulum {
   background: linear-gradient(
     to bottom,
@@ -746,26 +668,6 @@ body.theme-crimson-night .metronomeWeight {
     rgba(64, 1, 1, 0.95) 100%
   ) !important;
   box-shadow: 0 0 20px rgba(84, 1, 1, 0.5),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
-}
-
-body.theme-forest-floor .metronomePendulum {
-  background: linear-gradient(
-    to bottom,
-    rgba(143, 151, 121, 0.9) 0%,
-    rgba(178, 185, 164, 0.9) 100%
-  ) !important;
-  box-shadow: 0 0 12px rgba(143, 151, 121, 0.5) !important;
-}
-
-body.theme-forest-floor .metronomeWeight {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(94, 69, 75, 0.95) 0%,
-    rgba(143, 151, 121, 0.95) 70%,
-    rgba(74, 69, 75, 0.95) 100%
-  ) !important;
-  box-shadow: 0 0 20px rgba(94, 69, 75, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
 }
 
@@ -807,6 +709,150 @@ body.theme-green-palette .metronomeWeight {
   ) !important;
   box-shadow: 0 0 20px rgba(107, 15, 26, 0.5),
     inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+body.theme-university-gold .metronomePendulum {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 39, 76, 0.9) 0%,
+    rgba(255, 203, 5, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(0, 39, 76, 0.5) !important;
+}
+
+body.theme-university-gold .metronomeWeight {
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(152, 156, 151, 0.95) 0%,
+    rgba(255, 203, 5, 0.95) 70%,
+    rgba(152, 156, 151, 0.95) 100%
+  ) !important;
+  box-shadow: 0 0 20px rgba(152, 156, 151, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+body.theme-steel-crimson .metronomePendulum {
+  background: linear-gradient(
+    to bottom,
+    rgba(153, 0, 0, 0.9) 0%,
+    rgba(136, 136, 136, 0.9) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(153, 0, 0, 0.5) !important;
+}
+
+body.theme-steel-crimson .metronomeWeight {
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(153, 0, 0, 0.95) 0%,
+    rgba(136, 136, 136, 0.95) 70%,
+    rgba(153, 0, 0, 0.95) 100%
+  ) !important;
+  box-shadow: 0 0 20px rgba(153, 0, 0, 0.5),
+    inset 0 4px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Steel Crimson theme - force specific text elements to be dark navy blue */
+body.theme-steel-crimson .text-gray-600,
+body.theme-steel-crimson .text-gray-700,
+body.theme-steel-crimson .text-gray-800,
+body.theme-steel-crimson .text-gray-900,
+body.theme-steel-crimson .text-gray-500 {
+  color: #1a2332 !important;
+}
+
+body.theme-steel-crimson .text-green-700,
+body.theme-steel-crimson .text-red-700 {
+  color: #1a2332 !important;
+}
+
+/* Keep some colors for specific UI states but make them darker */
+body.theme-steel-crimson .text-green-400 {
+  color: #16a34a !important; /* Keep green for success states */
+}
+
+body.theme-steel-crimson .text-red-400 {
+  color: #dc2626 !important; /* Keep red for error states */
+}
+
+body.theme-steel-crimson .text-blue-400 {
+  color: #3b82f6 !important; /* Keep blue for flat tuning */
+}
+
+/* Target specific text elements that should be dark navy blue */
+body.theme-steel-crimson h1:not(.text-white),
+body.theme-steel-crimson h2:not(.text-white), 
+body.theme-steel-crimson h3:not(.text-white),
+body.theme-steel-crimson h4:not(.text-white),
+body.theme-steel-crimson h5:not(.text-white),
+body.theme-steel-crimson h6:not(.text-white),
+body.theme-steel-crimson p:not(.text-white),
+body.theme-steel-crimson div:not(.bg-red-500):not(.bg-green-500):not(.text-green-400):not(.text-red-400):not(.text-blue-400),
+body.theme-steel-crimson label:not(.text-white),
+body.theme-steel-crimson span:not(.text-xs):not(.text-xl):not(.text-white):not(.text-green-400):not(.text-red-400):not(.text-blue-400),
+body.theme-steel-crimson button:not(.bg-red-500):not(.bg-green-500) {
+  color: #1a2332 !important;
+}
+
+/* Override input text colors */
+body.theme-steel-crimson input {
+  color: #1a2332 !important;
+}
+
+/* Keep specific arrows and controls white with high specificity */
+body.theme-steel-crimson span.text-xs,
+body.theme-steel-crimson span.text-xl,
+body.theme-steel-crimson button.bg-red-500,
+body.theme-steel-crimson button.bg-green-500 {
+  color: #ffffff !important;
+}
+
+/* Additional high-specificity selectors for arrow buttons */
+body.theme-steel-crimson .rounded-full span.text-xs,
+body.theme-steel-crimson .rounded-full span.text-xl,
+body.theme-steel-crimson .w-12.h-12 span,
+body.theme-steel-crimson .px-4.py-1 span,
+body.theme-steel-crimson button[title="Collapse Piano"] span,
+body.theme-steel-crimson button[title="Open Piano"] span,
+body.theme-steel-crimson .bg-red-500.hover\\:bg-red-600,
+body.theme-steel-crimson .bg-green-500.hover\\:bg-green-600 {
+  color: #ffffff !important;
+}
+
+/* Steel Crimson theme - make top right triangle darker */
+body.theme-steel-crimson .shape-3 {
+  background: #4a7ba7 !important;
+}
+
+/* Steel Crimson theme - make middle circle in three-circle graphic white */
+body.theme-steel-crimson .shape-6::before {
+  background: #ffffff !important;
+}
+
+/* Navy Geometric theme - swap leftmost and rightmost circle colors in three-circle graphic */
+body.theme-navy-geometric .shape-6 {
+  background: #c4cdd5 !important;
+}
+
+body.theme-navy-geometric .shape-6::after {
+  background: #002c60 !important;
+}
+
+/* University Gold theme - swap leftmost and rightmost circle colors in three-circle graphic */
+body.theme-university-gold .shape-6 {
+  background: #989c97 !important;
+}
+
+body.theme-university-gold .shape-6::after {
+  background: #ffcb05 !important;
+}
+
+/* Nature's Palette theme - swap middle and left circle colors in three-circle graphic */
+body.theme-green-palette .shape-6 {
+  background: #3b7639 !important;
+}
+
+body.theme-green-palette .shape-6::before {
+  background: #164f29 !important;
 }
 
 /* All text styles are now inline Tailwind classes */

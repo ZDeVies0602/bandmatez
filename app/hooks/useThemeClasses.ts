@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "./useTheme";
+import { useTheme } from "../contexts/ThemeContext";
 import { ThemeType } from "../types";
 
 export function useThemeClasses() {
@@ -49,29 +49,13 @@ export function useThemeClasses() {
   // Theme-specific overrides for special cases
   const themeOverrides: Record<ThemeType, Partial<typeof baseClasses>> = {
     default: {},
-    "royal-gold": {
-      metronomeBody:
-        "bg-gradient-to-b from-[#1A2C42] via-[#4C6AF5] to-[#1A2C42]",
-    },
-    "terra-cotta": {
-      metronomeBody:
-        "bg-gradient-to-b from-[#C73832] via-[#F28C28] to-[#C73832]",
-    },
     "desert-clay": {
       metronomeBody:
         "bg-gradient-to-b from-[#262322] via-[#E07A5F] to-[#262322]",
     },
-    "dusty-lilac": {
-      metronomeBody:
-        "bg-gradient-to-b from-[#2F4F4F] via-[#C8B6C8] to-[#2F4F4F]",
-    },
     "crimson-night": {
       metronomeBody:
         "bg-gradient-to-b from-[#540101] via-[#8B0000] to-[#540101]",
-    },
-    "forest-floor": {
-      metronomeBody:
-        "bg-gradient-to-b from-[#5E454B] via-[#8F9779] to-[#5E454B]",
     },
     "navy-geometric": {
       metronomeBody:
@@ -80,6 +64,14 @@ export function useThemeClasses() {
     "green-palette": {
       metronomeBody:
         "bg-gradient-to-b from-[#002005] via-[#164F29] to-[#002005]",
+    },
+    "university-gold": {
+      metronomeBody:
+        "bg-gradient-to-b from-[#00274C] via-[#FFCB05] to-[#00274C]",
+    },
+    "steel-crimson": {
+      metronomeBody:
+        "bg-gradient-to-b from-[#1B4F72] via-[#990000] to-[#1B4F72]",
     },
   };
 
@@ -102,20 +94,6 @@ export function getThemeSpecificClasses(theme: ThemeType) {
       muted: "#808F85",
       light: "#DCE0D9",
     },
-    "royal-gold": {
-      primary: "#1A2C42",
-      secondary: "#4C6AF5",
-      accent: "#D4A017",
-      muted: "#6464FF",
-      light: "#E8E8FF",
-    },
-    "terra-cotta": {
-      primary: "#C73832",
-      secondary: "#F28C28",
-      accent: "#4A6D56",
-      muted: "#F0D757",
-      light: "#FDF5E6",
-    },
     "desert-clay": {
       primary: "#262322",
       secondary: "#E07A5F",
@@ -123,26 +101,12 @@ export function getThemeSpecificClasses(theme: ThemeType) {
       muted: "#F4DDB5",
       light: "#FFF8F0",
     },
-    "dusty-lilac": {
-      primary: "#2F4F4F",
-      secondary: "#C8B6C8",
-      accent: "#8A8A8A",
-      muted: "#E6E6FA",
-      light: "#F0F0F5",
-    },
     "crimson-night": {
       primary: "#540101",
       secondary: "#8B0000",
       accent: "#B22222",
       muted: "#8B0000",
       light: "#FAFAFA",
-    },
-    "forest-floor": {
-      primary: "#5E454B",
-      secondary: "#8F9779",
-      accent: "#B2B9A4",
-      muted: "#8F9779",
-      light: "#F5F5DC",
     },
     "navy-geometric": {
       primary: "#FFFFFF",
@@ -157,6 +121,20 @@ export function getThemeSpecificClasses(theme: ThemeType) {
       accent: "#3B7639",
       muted: "#164F29",
       light: "#B5C5B4",
+    },
+    "university-gold": {
+      primary: "#00274C",
+      secondary: "#FFCB05",
+      accent: "#CFC096",
+      muted: "#989C97",
+      light: "#E4E1DF",
+    },
+    "steel-crimson": {
+      primary: "#1A2332",
+      secondary: "#990000",
+      accent: "#7BA8C5",
+      muted: "#888888",
+      light: "#F1F0EE",
     },
   };
 

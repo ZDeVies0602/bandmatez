@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useThemeClasses } from "../hooks/useThemeClasses";
+import { useTheme } from "../contexts/ThemeContext";
 import { SoundProvider } from "../contexts/SoundContext";
 import MusicLibrarySidebar from "./MusicLibrarySidebar";
 import FloatingMetronome from "./FloatingMetronome";
@@ -19,10 +20,18 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const themeClasses = useThemeClasses();
+  const { theme } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showInstructions, setShowInstructions] = useState(true);
+  const [forceUpdate, setForceUpdate] = useState(0);
   // Temporarily commented out for clean dashboard
   // const [activeTab, setActiveTab] = useState("practice");
+
+  // Force re-render when theme changes
+  useEffect(() => {
+    console.log('DashboardLayout: Theme changed to:', theme);
+    setForceUpdate(prev => prev + 1);
+  }, [theme]);
 
   // Handle sidebar state changes
   const handleSidebarToggle = (collapsed: boolean) => {
@@ -201,7 +210,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                 style={{ width: '83px', height: '83px' }}
                               >
                                 <img 
-                                  src="/images/bandmatez-logo.png" 
+                                  key={`${theme}-${forceUpdate}`}
+                                  src={
+                                    theme === 'university-gold' ? '/images/bandmatez-logo-blueandgold.png' :
+                                    theme === 'green-palette' ? '/images/bandmatez-logo-green.png' :
+                                    theme === 'steel-crimson' ? '/images/bandmatez-logo-steelcrimson.png' :
+                                    '/images/bandmatez-logo.png'
+                                  } 
                                   alt="BandMateZ Logo"
                                   style={{ 
                                     width: '90px', 
